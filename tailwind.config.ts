@@ -130,6 +130,20 @@ export default {
             boxShadow: "0 0 40px rgba(33, 150, 243, 0.6)"
           }
         },
+        "color-shift": {
+          "0%, 100%": {
+            filter: "hue-rotate(0deg) brightness(1)"
+          },
+          "25%": {
+            filter: "hue-rotate(15deg) brightness(1.15)"
+          },
+          "50%": {
+            filter: "hue-rotate(25deg) brightness(1.25)"
+          },
+          "75%": {
+            filter: "hue-rotate(15deg) brightness(1.15)"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -139,6 +153,7 @@ export default {
         "shimmer": "shimmer 2s linear infinite",
         "slide-up": "slide-up 0.6s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "color-shift": "color-shift 3s ease-in-out infinite",
       },
     },
   },

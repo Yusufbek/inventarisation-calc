@@ -184,7 +184,7 @@ export const Results = ({
 
               <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.9s', animationFillMode: 'backwards' }}>
                 <p className="text-xl md:text-2xl font-semibold drop-shadow-md">Taxminiy tejash:</p>
-                <div className="text-6xl md:text-8xl font-black transition-all duration-500 drop-shadow-2xl bg-gradient-to-b from-white to-white/80 bg-clip-text text-transparent" style={{ fontWeight: 900 }}>
+                <div className="text-6xl md:text-8xl font-black transition-all duration-500 drop-shadow-2xl bg-gradient-to-b from-white to-white/80 bg-clip-text text-transparent animate-color-shift" style={{ fontWeight: 900 }}>
                   +{formatNumber(animatedRecovered)}
                 </div>
                 <p className="text-2xl md:text-3xl font-bold drop-shadow-md">so'm / oy</p>
@@ -238,7 +238,7 @@ export const Results = ({
 
               <div className="pt-6 animate-slide-up" style={{ animationDelay: '1.4s', animationFillMode: 'backwards' }}>
                 <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105" onClick={onContactClick}>
-                  📞 BILLZ bilan bog'lanish
+                  BILLZ bilan bog'lanish
                 </Button>
               </div>
             </div>
