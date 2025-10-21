@@ -3,10 +3,10 @@ import { HeroSection } from "@/components/HeroSection";
 import { Calculator, CalculatorData } from "@/components/Calculator";
 import { Results } from "@/components/Results";
 import { LeadForm } from "@/components/LeadForm";
-import { FAQ } from "@/components/FAQ";
+import { ThankYou } from "@/components/ThankYou";
 import { Footer } from "@/components/Footer";
 
-type Screen = "hero" | "calculator" | "results" | "lead-form" | "faq";
+type Screen = "hero" | "calculator" | "results" | "lead-form" | "thank-you";
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
@@ -29,7 +29,13 @@ const Index = () => {
   };
 
   const handleLeadSuccess = () => {
-    setCurrentScreen("faq");
+    setCurrentScreen("thank-you");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleBackToHome = () => {
+    setCurrentScreen("hero");
+    setCalculatorData(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -52,14 +58,15 @@ const Index = () => {
       )}
 
       {currentScreen === "lead-form" && (
-        <LeadForm onSuccess={handleLeadSuccess} />
+        <LeadForm onSuccess={handleLeadSuccess} calculatorData={calculatorData} />
       )}
 
-      {(currentScreen === "faq" || currentScreen === "hero") && (
-        <>
-          <FAQ />
-          <Footer />
-        </>
+      {currentScreen === "thank-you" && (
+        <ThankYou onBackToHome={handleBackToHome} />
+      )}
+
+      {currentScreen === "hero" && (
+        <Footer />
       )}
     </div>
   );

@@ -9,9 +9,11 @@ import { format } from "date-fns";
 import { uz } from "date-fns/locale";
 import { CalendarIcon, Phone, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CalculatorData } from "./Calculator";
 
 interface LeadFormProps {
   onSuccess?: () => void;
+  calculatorData?: CalculatorData | null;
 }
 
 const timeSlots = [
@@ -20,7 +22,7 @@ const timeSlots = [
   "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
 ];
 
-export const LeadForm = ({ onSuccess }: LeadFormProps) => {
+export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -84,6 +86,14 @@ export const LeadForm = ({ onSuccess }: LeadFormProps) => {
       appointmentDate: format(date!, 'dd.MM.yyyy'),
       appointmentTime: selectedTime,
       timestamp: new Date().toISOString(),
+      // Calculator data
+      ...(calculatorData && {
+        storeType: calculatorData.storeType,
+        skuCount: calculatorData.skuCount,
+        inventoryFrequency: calculatorData.inventoryFrequency,
+        theftLevel: calculatorData.theftLevel,
+        avgPrice: calculatorData.avgPrice,
+      }),
     };
 
     try {

@@ -177,72 +177,157 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Solution Section */}
-      <section className="bg-gradient-to-br from-success to-emerald-500 px-4 py-12 md:py-20 text-white">
+      <section className="bg-background px-4 py-12 md:py-20">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
-              BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
+              BILLZ подойдет для
             </h2>
+            <p className="text-3xl md:text-4xl font-bold text-primary">
+              любого магазина
+            </p>
+          </div>
 
-            <div className="space-y-3">
-              <p className="text-xl md:text-2xl font-semibold">Taxminiy tejash:</p>
-              <div className="text-5xl md:text-6xl font-bold">
-                +{formatNumber(animatedRecovered)}
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 max-w-3xl mx-auto pt-4">
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">👕</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Магазин одежды</h3>
+                </div>
               </div>
-              <p className="text-2xl md:text-3xl font-bold">so'm / oy</p>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">👟</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Магазин обуви</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">🏪</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Канцелярский магазин</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">🔨</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Строительный магазин</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">💄</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Магазин косметики</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">💼</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Магазин аксессуаров</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">💻</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Магазин электроники</h3>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="text-4xl text-primary">🏠</div>
+                <div>
+                  <h3 className="font-bold text-lg text-foreground">Товары для дома</h3>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto pt-4">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl flex-shrink-0">✅</div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Avtomatik inventarizatsiya</h3>
-                  <p className="text-white/90">Real vaqtda stok nazorati</p>
+          <div className="bg-gradient-to-br from-success to-emerald-500 rounded-3xl p-8 md:p-12 text-white text-center shadow-2xl">
+            <div className="space-y-6">
+              <p className="text-2xl md:text-3xl font-bold">
+                BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
+              </p>
+
+              <div className="space-y-3">
+                <p className="text-xl md:text-2xl font-semibold">Taxminiy tejash:</p>
+                <div className="text-5xl md:text-6xl font-bold">
+                  +{formatNumber(animatedRecovered)}
+                </div>
+                <p className="text-2xl md:text-3xl font-bold">so'm / oy</p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl flex-shrink-0">✅</div>
+                    <div className="text-left">
+                      <h3 className="font-bold text-lg mb-1">Avtomatik inventarizatsiya</h3>
+                      <p className="text-white/90 text-sm">Real vaqtda stok nazorati</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl flex-shrink-0">✅</div>
+                    <div className="text-left">
+                      <h3 className="font-bold text-lg mb-1">Stok aniqligi 90%+</h3>
+                      <p className="text-white/90 text-sm">Xatolarni minimallashtirish</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl flex-shrink-0">✅</div>
+                    <div className="text-left">
+                      <h3 className="font-bold text-lg mb-1">Qayta sanash vaqti −40%</h3>
+                      <p className="text-white/90 text-sm">Xodimlar vaqtini tejang</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border border-white/20">
+                  <div className="flex items-start gap-3">
+                    <div className="text-2xl flex-shrink-0">✅</div>
+                    <div className="text-left">
+                      <h3 className="font-bold text-lg mb-1">Out-of-stock −30%</h3>
+                      <p className="text-white/90 text-sm">Mijozlarni yo'qotmang</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl flex-shrink-0">✅</div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Stok aniqligi 90%+</h3>
-                  <p className="text-white/90">Xatolarni minimallashtirish</p>
-                </div>
+              <div className="pt-6">
+                <Button
+                  size="lg"
+                  className="bg-white text-success hover:bg-white/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl"
+                  onClick={onContactClick}
+                >
+                  📞 BILLZ bilan bog'lanish
+                </Button>
               </div>
             </div>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl flex-shrink-0">✅</div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Qayta sanash vaqti −40%</h3>
-                  <p className="text-white/90">Xodimlar vaqtini tejang</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <div className="flex items-start gap-4">
-                <div className="text-3xl flex-shrink-0">✅</div>
-                <div>
-                  <h3 className="font-bold text-xl mb-2">Out-of-stock holatlari −30%</h3>
-                  <p className="text-white/90">Mijozlarni yo'qotmang</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="text-center pt-8">
-            <Button
-              size="lg"
-              className="bg-white text-success hover:bg-white/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl"
-              onClick={onContactClick}
-            >
-              📞 BILLZ bilan bog'lanish
-            </Button>
           </div>
         </div>
       </section>
