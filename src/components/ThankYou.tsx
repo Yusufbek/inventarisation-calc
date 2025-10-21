@@ -31,17 +31,32 @@ export const ThankYou = ({ onBackToHome }: ThankYouProps) => {
 
         <div className="bg-secondary rounded-2xl p-6 mb-8">
           <p className="font-semibold text-foreground mb-2">
-            📱 Qo'shimcha savollar bo'lsa
+            💡 Biznesni rivojlantirish sirlari
           </p>
           <p className="text-muted-foreground">
-            Bizga qo'ng'iroq qiling yoki WhatsApp orqali yozing
+            Telegram botimizga obuna bo'ling va har kuni foydali maslahatlar oling
           </p>
         </div>
 
         <Button
-          onClick={onBackToHome}
+          onClick={() => {
+            // Track Telegram bot subscription click
+            if ((window as any).fbq) {
+              (window as any).fbq('trackCustom', 'TelegramBotClick');
+            }
+            window.open('https://t.me/billzinfobot', '_blank');
+          }}
           size="lg"
           className="h-14 px-12 text-lg rounded-2xl"
+        >
+          Telegram botga obuna bo'lish
+        </Button>
+        
+        <Button
+          onClick={onBackToHome}
+          variant="ghost"
+          size="lg"
+          className="mt-4"
         >
           Bosh sahifaga qaytish
         </Button>
