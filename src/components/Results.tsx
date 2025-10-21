@@ -1,88 +1,73 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CalculatorData } from "./Calculator";
-
 interface ResultsProps {
   data: CalculatorData;
   onContactClick: () => void;
 }
-
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
-
   useEffect(() => {
     let startTime: number;
     let animationFrame: number;
-
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
-      
       setCount(Math.floor(progress * end));
-
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       }
     };
-
     animationFrame = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationFrame);
   }, [end, duration]);
-
   return count;
 };
-
 const formatNumber = (num: number): string => {
   return num.toLocaleString('uz-UZ');
 };
-
 const calculateLosses = (data: CalculatorData) => {
   const frequencyFactors: Record<string, number> = {
     hafta: 0.02,
     oy: 0.05,
     "3oy": 0.08,
-    hech: 0.12,
+    hech: 0.12
   };
-
   const errorFactors: Record<string, number> = {
     "tez-tez": 0.10,
     bazan: 0.05,
     kam: 0.02,
-    yoq: 0.00,
+    yoq: 0.00
   };
-
   const errorFactor = errorFactors[data.theftLevel] || 0.05;
   const frequencyFactor = frequencyFactors[data.inventoryFrequency] || 0.05;
-
   const inventoryLoss = Math.round(data.skuCount * data.avgPrice * errorFactor);
   const timeLoss = Math.round(data.skuCount * 1000 * frequencyFactor);
   const customerLoss = Math.round(inventoryLoss * 0.30);
   const totalMonthly = inventoryLoss + timeLoss + customerLoss;
   const totalYearly = totalMonthly * 12;
   const recoveredProfit = Math.round(totalMonthly * 0.60);
-
   return {
     inventoryLoss,
     timeLoss,
     customerLoss,
     totalMonthly,
     totalYearly,
-    recoveredProfit,
+    recoveredProfit
   };
 };
-
-export const Results = ({ data, onContactClick }: ResultsProps) => {
+export const Results = ({
+  data,
+  onContactClick
+}: ResultsProps) => {
   const losses = calculateLosses(data);
-  
   const animatedTotal = useCountUp(losses.totalMonthly);
   const animatedInventory = useCountUp(losses.inventoryLoss);
   const animatedTime = useCountUp(losses.timeLoss);
   const animatedCustomer = useCountUp(losses.customerLoss);
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
-
-  return (
-    <div className="w-full min-h-screen bg-background">
+  return <div className="w-full min-h-screen bg-background">
       {/* Loss Section */}
       <section className="bg-background px-4 py-12 md:py-20 animate-fade-in">
         <div className="max-w-4xl mx-auto space-y-10">
@@ -180,87 +165,11 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       <section className="bg-background px-4 py-12 md:py-20">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
-              BILLZ подойдет для
-            </h2>
-            <p className="text-3xl md:text-4xl font-bold text-primary">
-              любого магазина
-            </p>
+            
+            
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 max-w-3xl mx-auto pt-4">
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">👕</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Магазин одежды</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">👟</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Магазин обуви</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">🏪</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Канцелярский магазин</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">🔨</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Строительный магазин</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">💄</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Магазин косметики</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">💼</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Магазин аксессуаров</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">💻</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Магазин электроники</h3>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-secondary/50 hover:bg-secondary rounded-2xl p-6 transition-all hover:shadow-lg">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl text-primary">🏠</div>
-                <div>
-                  <h3 className="font-bold text-lg text-foreground">Товары для дома</h3>
-                </div>
-              </div>
-            </div>
-          </div>
+          
 
           <div className="bg-gradient-to-br from-success to-emerald-500 rounded-3xl p-8 md:p-12 text-white text-center shadow-2xl">
             <div className="space-y-6">
@@ -319,11 +228,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
               </div>
 
               <div className="pt-6">
-                <Button
-                  size="lg"
-                  className="bg-white text-success hover:bg-white/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl"
-                  onClick={onContactClick}
-                >
+                <Button size="lg" className="bg-white text-success hover:bg-white/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl" onClick={onContactClick}>
                   📞 BILLZ bilan bog'lanish
                 </Button>
               </div>
@@ -331,6 +236,5 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
