@@ -72,7 +72,7 @@ export const LeadForm = ({ onSuccess }: LeadFormProps) => {
 
     setIsSubmitting(true);
 
-    const webhookUrl = "YOUR_N8N_WEBHOOK_URL"; // User will replace this
+    const webhookUrl = "https://n8n-m.billz.work/webhook-test/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
     
     const leadData = {
       firstName: formData.firstName,
