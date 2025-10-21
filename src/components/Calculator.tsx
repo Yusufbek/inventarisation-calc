@@ -38,6 +38,7 @@ const frequencies = [
   { id: "oy", label: "Har oy" },
   { id: "3oy", label: "Har 3 oyda" },
   { id: "hech", label: "Hech qachon" },
+  { id: "bilmayman", label: "Bilmayman" },
 ];
 
 const theftLevels = [
@@ -49,10 +50,10 @@ const theftLevels = [
 
 const skuRanges = [
   { id: "0-100", label: "100 tagacha", value: 50 },
-  { id: "101-500", label: "101–500", value: 300 },
-  { id: "501-1000", label: "501–1 000", value: 750 },
-  { id: "1001-2000", label: "1 001–2 000", value: 1500 },
-  { id: "2001-5000", label: "2 001–5 000", value: 3500 },
+  { id: "101-500", label: "101 - 500", value: 300 },
+  { id: "501-1000", label: "501 - 1 000", value: 750 },
+  { id: "1001-2000", label: "1 001 - 2 000", value: 1500 },
+  { id: "2001-5000", label: "2 001 - 5 000", value: 3500 },
   { id: "5001+", label: "5 000+", value: 7000 },
 ];
 
@@ -181,7 +182,7 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
         {step === 2 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
-              Sizda nechta turdagi mahsulot mavjud?
+              Do'koningizda nechta mahsulot sotiladi?
             </h2>
             <p className="text-muted-foreground">
               {data.storeType && getStoreTypeHint(data.storeType)}
