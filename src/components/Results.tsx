@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 interface ResultsProps {
   data: CalculatorData;
@@ -71,6 +72,9 @@ export const Results = ({
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-10">
+          <div className="flex justify-center">
+            <BillzLogo className="h-10 md:h-12 text-foreground" />
+          </div>
           <div className="text-center space-y-4 animate-slide-up">
             <h2 className="text-2xl md:text-3xl font-bold text-destructive leading-tight">
               Sizning do'koningiz har oy

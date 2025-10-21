@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { uz } from "date-fns/locale";
 import { CalendarIcon, Phone, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 
 interface LeadFormProps {
@@ -143,6 +144,9 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 md:p-12 animate-scale-in">
+        <div className="flex justify-center mb-6">
+          <BillzLogo className="h-10 md:h-12 text-foreground" />
+        </div>
         <div className="text-center mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
             BILLZ bilan bog'lanish
