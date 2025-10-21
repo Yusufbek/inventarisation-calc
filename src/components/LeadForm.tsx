@@ -111,7 +111,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
         throw new Error(`Webhook error ${res.status}: ${text}`);
       }
 
-      // Track successful form submission with all data
+      // Track successful form submission
       if ((window as any).fbq) {
         (window as any).fbq('track', 'Contact', {
           firstName: leadData.firstName,
@@ -119,13 +119,6 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
           phoneNumber: leadData.phoneNumber,
           appointmentDate: leadData.appointmentDate,
           appointmentTime: leadData.appointmentTime,
-          ...(calculatorData && {
-            storeType: calculatorData.storeType,
-            skuCount: calculatorData.skuCount,
-            inventoryFrequency: calculatorData.inventoryFrequency,
-            theftLevel: calculatorData.theftLevel,
-            avgPrice: calculatorData.avgPrice,
-          }),
         });
       }
 

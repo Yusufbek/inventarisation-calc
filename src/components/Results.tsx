@@ -171,56 +171,65 @@ export const Results = ({
 
           
 
-          <div className="bg-gradient-to-br from-success to-emerald-500 rounded-3xl p-8 md:p-12 text-white text-center shadow-2xl border-4 border-primary/30 animate-scale-in" style={{ animationDelay: '0.7s', animationFillMode: 'backwards' }}>
-            <div className="space-y-6">
-              <p className="text-2xl md:text-3xl font-bold animate-slide-up" style={{ animationDelay: '0.8s', animationFillMode: 'backwards' }}>
+          <div className="relative rounded-3xl p-8 md:p-12 text-white text-center overflow-hidden animate-scale-in" style={{ animationDelay: '0.7s', animationFillMode: 'backwards' }}>
+            {/* Glassmorphism Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90 backdrop-blur-xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
+            <div className="absolute inset-0 border-2 border-white/20 rounded-3xl"></div>
+            
+            <div className="relative z-10 space-y-6">
+              <p className="text-2xl md:text-3xl font-bold animate-slide-up drop-shadow-lg" style={{ animationDelay: '0.8s', animationFillMode: 'backwards' }}>
                 BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
               </p>
 
               <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.9s', animationFillMode: 'backwards' }}>
-                <p className="text-xl md:text-2xl font-semibold">Taxminiy tejash:</p>
-                <div className="text-5xl md:text-6xl font-bold transition-all duration-500">
+                <p className="text-xl md:text-2xl font-semibold drop-shadow-md">Taxminiy tejash:</p>
+                <div className="text-6xl md:text-8xl font-black transition-all duration-500 drop-shadow-2xl bg-gradient-to-b from-white to-white/80 bg-clip-text text-transparent" style={{ fontWeight: 900 }}>
                   +{formatNumber(animatedRecovered)}
                 </div>
-                <p className="text-2xl md:text-3xl font-bold">so'm / oy</p>
+                <p className="text-2xl md:text-3xl font-bold drop-shadow-md">so'm / oy</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border-2 border-primary/40 hover:border-primary/70 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1s', animationFillMode: 'backwards' }}>
-                  <div className="flex items-start gap-3">
+                <div className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1s', animationFillMode: 'backwards' }}>
+                  <div className="absolute inset-0 bg-white/10"></div>
+                  <div className="relative flex items-start gap-3">
                     <div className="text-2xl flex-shrink-0">✅</div>
                     <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1">Avtomatik inventarizatsiya</h3>
+                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">Avtomatik inventarizatsiya</h3>
                       <p className="text-white/90 text-sm">Real vaqtda stok nazorati</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border-2 border-primary/40 hover:border-primary/70 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.1s', animationFillMode: 'backwards' }}>
-                  <div className="flex items-start gap-3">
+                <div className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.1s', animationFillMode: 'backwards' }}>
+                  <div className="absolute inset-0 bg-white/10"></div>
+                  <div className="relative flex items-start gap-3">
                     <div className="text-2xl flex-shrink-0">✅</div>
                     <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1">Stok aniqligi 90%+</h3>
+                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">Stok aniqligi 90%+</h3>
                       <p className="text-white/90 text-sm">Xatolarni minimallashtirish</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border-2 border-primary/40 hover:border-primary/70 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.2s', animationFillMode: 'backwards' }}>
-                  <div className="flex items-start gap-3">
+                <div className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.2s', animationFillMode: 'backwards' }}>
+                  <div className="absolute inset-0 bg-white/10"></div>
+                  <div className="relative flex items-start gap-3">
                     <div className="text-2xl flex-shrink-0">✅</div>
                     <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1">Qayta sanash vaqti −40%</h3>
+                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">Qayta sanash vaqti −40%</h3>
                       <p className="text-white/90 text-sm">Xodimlar vaqtini tejang</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border-2 border-primary/40 hover:border-primary/70 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.3s', animationFillMode: 'backwards' }}>
-                  <div className="flex items-start gap-3">
+                <div className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up" style={{ animationDelay: '1.3s', animationFillMode: 'backwards' }}>
+                  <div className="absolute inset-0 bg-white/10"></div>
+                  <div className="relative flex items-start gap-3">
                     <div className="text-2xl flex-shrink-0">✅</div>
                     <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1">Out-of-stock −30%</h3>
+                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">Out-of-stock −30%</h3>
                       <p className="text-white/90 text-sm">Mijozlarni yo'qotmang</p>
                     </div>
                   </div>
