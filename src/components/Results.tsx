@@ -69,16 +69,7 @@ export const Results = ({
   const animatedRecovered = useCountUp(losses.recoveredProfit);
   return <div className="w-full bg-background">
       {/* Loss Section */}
-      <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative pb-16 md:pb-20">
-        {/* Scroll indicator - visible on mobile */}
-        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 md:hidden animate-bounce z-10">
-          <div className="flex flex-col items-center gap-0.5 text-muted-foreground">
-            <span className="text-xs font-medium">Pastga suring</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </div>
-        </div>
+      <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-4 animate-slide-up">
             <h2 className="text-2xl md:text-3xl font-bold text-destructive leading-tight">
