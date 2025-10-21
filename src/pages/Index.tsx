@@ -1,48 +1,66 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { Calculator, CalculatorData } from "@/components/Calculator";
 import { Results } from "@/components/Results";
+import { LeadForm } from "@/components/LeadForm";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 
+type Screen = "hero" | "calculator" | "results" | "lead-form" | "faq";
+
 const Index = () => {
-  const [showCalculator, setShowCalculator] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
-  const calculatorRef = useRef<HTMLDivElement>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleStartCalculator = () => {
-    setShowCalculator(true);
-    setTimeout(() => {
-      calculatorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    setCurrentScreen("calculator");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleCalculatorComplete = (data: CalculatorData) => {
     setCalculatorData(data);
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    setCurrentScreen("results");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleContactClick = () => {
+    setCurrentScreen("lead-form");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleLeadSuccess = () => {
+    setCurrentScreen("faq");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection onStartCalculator={handleStartCalculator} />
-      
-      {showCalculator && (
-        <section ref={calculatorRef} id="calculator" className="w-full bg-white py-12">
+      {currentScreen === "hero" && (
+        <HeroSection onStartCalculator={handleStartCalculator} />
+      )}
+
+      {currentScreen === "calculator" && (
+        <section className="w-full bg-background py-12 min-h-screen">
           <Calculator onComplete={handleCalculatorComplete} />
         </section>
       )}
 
-      {calculatorData && (
-        <div ref={resultsRef}>
-          <Results data={calculatorData} />
+      {currentScreen === "results" && calculatorData && (
+        <div className="min-h-screen">
+          <Results data={calculatorData} onContactClick={handleContactClick} />
         </div>
       )}
 
-      <FAQ />
-      <Footer />
+      {currentScreen === "lead-form" && (
+        <LeadForm onSuccess={handleLeadSuccess} />
+      )}
+
+      {(currentScreen === "faq" || currentScreen === "hero") && (
+        <>
+          <FAQ />
+          <Footer />
+        </>
+      )}
     </div>
   );
 };

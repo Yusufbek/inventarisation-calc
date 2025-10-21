@@ -4,6 +4,7 @@ import { CalculatorData } from "./Calculator";
 
 interface ResultsProps {
   data: CalculatorData;
+  onContactClick: () => void;
 }
 
 const useCountUp = (end: number, duration: number = 2000) => {
@@ -70,7 +71,7 @@ const calculateLosses = (data: CalculatorData) => {
   };
 };
 
-export const Results = ({ data }: ResultsProps) => {
+export const Results = ({ data, onContactClick }: ResultsProps) => {
   const losses = calculateLosses(data);
   
   const animatedTotal = useCountUp(losses.totalMonthly);
@@ -81,117 +82,164 @@ export const Results = ({ data }: ResultsProps) => {
   const animatedRecovered = useCountUp(losses.recoveredProfit);
 
   return (
-    <div className="w-full space-y-12 py-8">
+    <div className="w-full min-h-screen bg-background">
       {/* Loss Section */}
-      <section className="bg-white px-4 py-12 md:py-16 animate-fade-in">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-destructive">
-            Sizning do'koningiz har oy{" "}
-            <span className="text-4xl md:text-5xl block mt-2">
+      <section className="bg-background px-4 py-12 md:py-20 animate-fade-in">
+        <div className="max-w-4xl mx-auto space-y-10">
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-destructive leading-tight">
+              Sizning do'koningiz har oy
+            </h2>
+            <div className="text-5xl md:text-6xl font-bold text-destructive">
               {formatNumber(animatedTotal)} so'm
-            </span>{" "}
-            yo'qotmoqda.
-          </h2>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b-2 border-border">
-                  <th className="text-left py-4 px-4 font-bold">Yo'qotish turi</th>
-                  <th className="text-right py-4 px-4 font-bold">Miqdor</th>
-                  <th className="text-left py-4 px-4 font-bold hidden md:table-cell">Izoh</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                <tr className="hover:bg-secondary/50 transition-colors">
-                  <td className="py-4 px-4 font-medium">Yo'qolgan mahsulotlar</td>
-                  <td className="py-4 px-4 text-right text-destructive font-bold">
-                    {formatNumber(animatedInventory)} so'm
-                  </td>
-                  <td className="py-4 px-4 text-sm text-muted-foreground hidden md:table-cell">
-                    Hisobda bor, amalda yo'q.
-                  </td>
-                </tr>
-                <tr className="hover:bg-secondary/50 transition-colors">
-                  <td className="py-4 px-4 font-medium">Qayta hisob (vaqt yo'qotishi)</td>
-                  <td className="py-4 px-4 text-right text-destructive font-bold">
-                    {formatNumber(animatedTime)} so'm
-                  </td>
-                  <td className="py-4 px-4 text-sm text-muted-foreground hidden md:table-cell">
-                    Xodimlar sarflagan soatlar.
-                  </td>
-                </tr>
-                <tr className="hover:bg-secondary/50 transition-colors">
-                  <td className="py-4 px-4 font-medium">Mijoz yo'qotilishi</td>
-                  <td className="py-4 px-4 text-right text-destructive font-bold">
-                    {formatNumber(animatedCustomer)} so'm
-                  </td>
-                  <td className="py-4 px-4 text-sm text-muted-foreground hidden md:table-cell">
-                    Omborda yo'q mahsulot sabab sotuv yo'qotish.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            </div>
+            <p className="text-xl md:text-2xl font-bold text-destructive">
+              yo'qotmoqda.
+            </p>
           </div>
 
-          <div className="pt-4 border-t-2 border-border">
-            <p className="text-xl md:text-2xl font-bold text-foreground">
-              Bu 12 oyda{" "}
-              <span className="text-destructive">
-                {formatNumber(animatedYearly)} so'm
-              </span>
-            </p>
+          <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <div className="min-w-full">
+                <div className="grid grid-cols-2 gap-px bg-border p-px">
+                  <div className="bg-secondary px-6 py-4 font-bold text-foreground">
+                    Yo'qotish turi
+                  </div>
+                  <div className="bg-secondary px-6 py-4 font-bold text-right text-foreground">
+                    Miqdor
+                  </div>
+                </div>
+                
+                <div className="divide-y divide-border">
+                  <div className="grid grid-cols-2 gap-px bg-border p-px">
+                    <div className="bg-white px-6 py-5">
+                      <div className="font-semibold text-foreground">Yo'qolgan mahsulotlar</div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Hisobda bor, amalda yo'q
+                      </div>
+                    </div>
+                    <div className="bg-white px-6 py-5 text-right">
+                      <div className="text-2xl font-bold text-destructive">
+                        {formatNumber(animatedInventory)}
+                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-px bg-border p-px">
+                    <div className="bg-white px-6 py-5">
+                      <div className="font-semibold text-foreground">Qayta hisob (vaqt yo'qotishi)</div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Xodimlar vaqti
+                      </div>
+                    </div>
+                    <div className="bg-white px-6 py-5 text-right">
+                      <div className="text-2xl font-bold text-destructive">
+                        {formatNumber(animatedTime)}
+                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-px bg-border p-px">
+                    <div className="bg-white px-6 py-5">
+                      <div className="font-semibold text-foreground">Mijoz yo'qotilishi</div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Out-of-stock holatlari
+                      </div>
+                    </div>
+                    <div className="bg-white px-6 py-5 text-right">
+                      <div className="text-2xl font-bold text-destructive">
+                        {formatNumber(animatedCustomer)}
+                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-secondary px-6 py-6 border-t-4 border-destructive">
+              <div className="flex justify-between items-center">
+                <p className="text-lg md:text-xl font-bold text-foreground">
+                  Bu 12 oyda
+                </p>
+                <div className="text-right">
+                  <div className="text-3xl md:text-4xl font-bold text-destructive">
+                    {formatNumber(animatedYearly)}
+                  </div>
+                  <div className="text-sm text-destructive font-medium">so'm</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Solution Section */}
-      <section className="bg-gradient-to-br from-success to-emerald-500 px-4 py-12 md:py-16 text-white animate-fade-in">
-        <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-3xl md:text-4xl font-bold">
-            BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
-          </h2>
+      <section className="bg-gradient-to-br from-success to-emerald-500 px-4 py-12 md:py-20 text-white">
+        <div className="max-w-4xl mx-auto space-y-10">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold leading-tight">
+              BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
+            </h2>
 
-          <div className="text-4xl md:text-5xl font-bold">
-            Taxminiy tejash: +{formatNumber(animatedRecovered)} so'm / oy
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4 text-left max-w-2xl mx-auto pt-6">
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">✅</div>
-              <div>
-                <h3 className="font-bold text-lg">Avtomatik inventarizatsiya</h3>
-                <p className="text-white/90 text-sm">Real vaqtda stok nazorati</p>
+            <div className="space-y-3">
+              <p className="text-xl md:text-2xl font-semibold">Taxminiy tejash:</p>
+              <div className="text-5xl md:text-6xl font-bold">
+                +{formatNumber(animatedRecovered)}
               </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">✅</div>
-              <div>
-                <h3 className="font-bold text-lg">Stok aniqligi 90%+</h3>
-                <p className="text-white/90 text-sm">Xatolarni minimallashtirish</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">✅</div>
-              <div>
-                <h3 className="font-bold text-lg">Qayta sanash vaqti −40%</h3>
-                <p className="text-white/90 text-sm">Xodimlar vaqtini tejang</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="text-2xl">✅</div>
-              <div>
-                <h3 className="font-bold text-lg">Out-of-stock holatlari −30%</h3>
-                <p className="text-white/90 text-sm">Mijozlarni yo'qotmang</p>
-              </div>
+              <p className="text-2xl md:text-3xl font-bold">so'm / oy</p>
             </div>
           </div>
 
-          <div className="pt-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto pt-4">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl flex-shrink-0">✅</div>
+                <div>
+                  <h3 className="font-bold text-xl mb-2">Avtomatik inventarizatsiya</h3>
+                  <p className="text-white/90">Real vaqtda stok nazorati</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl flex-shrink-0">✅</div>
+                <div>
+                  <h3 className="font-bold text-xl mb-2">Stok aniqligi 90%+</h3>
+                  <p className="text-white/90">Xatolarni minimallashtirish</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl flex-shrink-0">✅</div>
+                <div>
+                  <h3 className="font-bold text-xl mb-2">Qayta sanash vaqti −40%</h3>
+                  <p className="text-white/90">Xodimlar vaqtini tejang</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <div className="flex items-start gap-4">
+                <div className="text-3xl flex-shrink-0">✅</div>
+                <div>
+                  <h3 className="font-bold text-xl mb-2">Out-of-stock holatlari −30%</h3>
+                  <p className="text-white/90">Mijozlarni yo'qotmang</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center pt-8">
             <Button
               size="lg"
-              className="bg-white text-success hover:bg-white/90 h-14 px-12 text-lg rounded-2xl font-bold"
-              onClick={() => window.open('tel:+998781136014', '_self')}
+              className="bg-white text-success hover:bg-white/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl"
+              onClick={onContactClick}
             >
               📞 BILLZ bilan bog'lanish
             </Button>
