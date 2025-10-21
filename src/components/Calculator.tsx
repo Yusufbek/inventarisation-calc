@@ -105,7 +105,7 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       
       // Track calculator completion
       if ((window as any).fbq) {
-        (window as any).fbq('trackCustom', 'CalculatorCompleted', {
+        (window as any).fbq('trackCustom', 'FinishCalc', {
           storeType: data.storeType,
           skuCount: data.skuCount,
           inventoryFrequency: data.inventoryFrequency,

@@ -114,7 +114,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
 
       // Track successful form submission
       if ((window as any).fbq) {
-        (window as any).fbq('track', 'Contact', {
+        (window as any).fbq('track', 'Lead', {
           firstName: leadData.firstName,
           lastName: leadData.lastName,
           phoneNumber: leadData.phoneNumber,

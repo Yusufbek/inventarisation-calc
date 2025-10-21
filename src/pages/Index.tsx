@@ -26,7 +26,7 @@ const Index = () => {
   const handleContactClick = () => {
     // Track form opened event
     if ((window as any).fbq) {
-      (window as any).fbq('track', 'Lead');
+      (window as any).fbq('trackCustom', 'FormStart');
     }
     
     setCurrentScreen("lead-form");

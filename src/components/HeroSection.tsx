@@ -34,7 +34,7 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
               onClick={() => {
                 // Track calculator start event
                 if ((window as any).fbq) {
-                  (window as any).fbq('track', 'InitiateCheckout');
+                  (window as any).fbq('trackCustom', 'StartCalc');
                 }
                 onStartCalculator();
               }}
