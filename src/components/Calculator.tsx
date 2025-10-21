@@ -92,6 +92,18 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       setStep(step + 1);
     } else {
       setIsLoading(true);
+      
+      // Track calculator completion
+      if ((window as any).fbq) {
+        (window as any).fbq('trackCustom', 'CalculatorCompleted', {
+          storeType: data.storeType,
+          skuCount: data.skuCount,
+          inventoryFrequency: data.inventoryFrequency,
+          theftLevel: data.theftLevel,
+          avgPrice: data.avgPrice,
+        });
+      }
+      
       setTimeout(() => {
         onComplete(data as CalculatorData);
       }, 2500);

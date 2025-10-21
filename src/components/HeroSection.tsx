@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-confusion.jpg";
+import heroImage from "@/assets/hero-inventory.jpg";
 
 interface HeroSectionProps {
   onStartCalculator: () => void;
@@ -12,7 +12,7 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
         <div className="flex flex-col items-center text-center gap-8">
           <img 
             src={heroImage} 
-            alt="Confused seller with disorganized inventory" 
+            alt="Warehouse worker organizing colorful inventory boxes on shelves" 
             className="w-full max-w-2xl rounded-3xl shadow-lg animate-fade-in"
           />
           
@@ -27,7 +27,13 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
             
             <Button 
               size="lg"
-              onClick={onStartCalculator}
+              onClick={() => {
+                // Track calculator start event
+                if ((window as any).fbq) {
+                  (window as any).fbq('track', 'InitiateCheckout');
+                }
+                onStartCalculator();
+              }}
               className="w-full md:w-auto h-14 px-12 text-lg rounded-2xl"
             >
               Hisoblashni boshlash
