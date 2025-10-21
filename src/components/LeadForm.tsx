@@ -72,26 +72,34 @@ export const LeadForm = ({ onSuccess }: LeadFormProps) => {
 
     setIsSubmitting(true);
 
-    const webhookUrl = "https://n8n-m.billz.work/webhook-test/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
+    const webhookUrl = "https://n8n-m.billz.work/webhook/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
+    
+    const rawDigits = formData.phoneNumber.replace(/\D/g, '');
+    const phoneE164 = rawDigits.startsWith('998') ? `+${rawDigits}` : `+998${rawDigits}`;
     
     const leadData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: phoneE164,
       appointmentDate: format(date!, 'dd.MM.yyyy'),
       appointmentTime: selectedTime,
       timestamp: new Date().toISOString(),
     };
 
     try {
-      await fetch(webhookUrl, {
+      const res = await fetch(webhookUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        mode: "no-cors",
         body: JSON.stringify(leadData),
       });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`Webhook error ${res.status}: ${text}`);
+      }
 
       toast({
         title: "Muvaffaqiyatli!",
