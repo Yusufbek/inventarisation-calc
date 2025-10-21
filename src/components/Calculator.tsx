@@ -47,6 +47,15 @@ const theftLevels = [
   { id: "yoq", label: "Yo'q" },
 ];
 
+const skuRanges = [
+  { id: "0-100", label: "100 tagacha", value: 50 },
+  { id: "101-500", label: "101–500", value: 300 },
+  { id: "501-1000", label: "501–1 000", value: 750 },
+  { id: "1001-2000", label: "1 001–2 000", value: 1500 },
+  { id: "2001-5000", label: "2 001–5 000", value: 3500 },
+  { id: "5001+", label: "5 000+", value: 7000 },
+];
+
 const getStoreTypeHint = (storeTypeId: string): string => {
   const hints: Record<string, string> = {
     kiyim: "Odatda 200-500 turdagi mahsulot",
@@ -177,22 +186,24 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
             <p className="text-muted-foreground">
               {data.storeType && getStoreTypeHint(data.storeType)}
             </p>
-            <Input
-              type="number"
-              placeholder="Masalan: 300"
-              value={data.skuCount || ""}
-              onChange={(e) =>
-                setData({ ...data, skuCount: parseInt(e.target.value) || 0 })
-              }
-              className="h-14 text-lg rounded-2xl"
-            />
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed()}
-              className="w-full h-14 text-lg rounded-2xl"
-            >
-              Davom etish
-            </Button>
+            <div className="grid gap-3">
+              {skuRanges.map((range) => (
+                <button
+                  key={range.id}
+                  onClick={() => {
+                    setData({ ...data, skuCount: range.value });
+                    setTimeout(handleNext, 300);
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
+                    "font-medium text-lg",
+                    data.skuCount === range.value && "border-primary bg-secondary"
+                  )}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -259,12 +270,14 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
               {data.storeType && getPriceHint(data.storeType)}
             </p>
             <Input
-              type="number"
-              placeholder="Masalan: 250000"
-              value={data.avgPrice || ""}
-              onChange={(e) =>
-                setData({ ...data, avgPrice: parseInt(e.target.value) || 0 })
-              }
+              type="text"
+              placeholder="Masalan: 250 000"
+              value={data.avgPrice ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\s/g, '');
+                const numValue = parseInt(value) || 0;
+                setData({ ...data, avgPrice: numValue });
+              }}
               className="h-14 text-lg rounded-2xl"
             />
             <Button
