@@ -184,7 +184,7 @@ export const Results = ({
 
               <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.9s', animationFillMode: 'backwards' }}>
                 <p className="text-xl md:text-2xl font-semibold drop-shadow-md">Taxminiy tejash:</p>
-                <div className="text-6xl md:text-8xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent animate-color-shift" style={{ fontWeight: 900, textShadow: '0 0 60px rgba(255,255,255,0.8), 0 0 100px rgba(6,182,212,0.6)' }}>
+                <div className="text-6xl md:text-8xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent" style={{ fontWeight: 900, textShadow: '0 0 60px rgba(255,255,255,0.8), 0 0 100px rgba(6,182,212,0.6)' }}>
                   +{formatNumber(animatedRecovered)}
                 </div>
                 <p className="text-2xl md:text-3xl font-bold drop-shadow-md">so'm / oy</p>
