@@ -165,8 +165,44 @@ export const Results = ({
         </div>
       </section>
 
-      {/* Smooth Transition */}
-      <div className="h-8 md:h-12"></div>
+      {/* Eye-Catching Transition Section */}
+      <section className="relative py-16 md:py-24 px-4 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Animated background circles */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+        
+        <div className="relative max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
+          <div className="inline-block">
+            <div className="bg-primary/10 backdrop-blur-sm border-2 border-primary/30 rounded-2xl px-8 py-4 animate-scale-in">
+              <p className="text-sm md:text-base font-semibold text-primary uppercase tracking-wider">
+                ✨ Yechim topildi
+              </p>
+            </div>
+          </div>
+
+          <h3 className="text-3xl md:text-5xl font-bold text-foreground leading-tight animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+            Muammongizga <span className="text-primary">ideal yechim</span> bor
+          </h3>
+
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}>
+            BILLZ sizning yo'qotishlaringizni kamaytiradi va daromadingizni oshiradi
+          </p>
+
+          {/* Animated Arrow */}
+          <div className="pt-4 animate-slide-up" style={{ animationDelay: '0.4s', animationFillMode: 'backwards' }}>
+            <div className="inline-flex flex-col items-center gap-3">
+              <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-bounce">
+                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+              <p className="text-sm font-semibold text-primary uppercase tracking-wide">
+                Pastga qarang
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Solution Section */}
       <section className="bg-gradient-to-b from-background to-muted/30 px-4 py-12 md:py-20">
