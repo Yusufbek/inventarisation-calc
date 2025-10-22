@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { uz } from "date-fns/locale";
-import { CalendarIcon, Phone, User } from "lucide-react";
+import { CalendarIcon, Phone, User, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
@@ -97,6 +97,13 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       }),
     };
 
+    // Log submission attempt for debugging
+    console.log("📤 Submitting lead data:", {
+      url: webhookUrl,
+      data: leadData,
+      timestamp: new Date().toISOString()
+    });
+
     try {
       const res = await fetch(webhookUrl, {
         method: "POST",
@@ -107,10 +114,37 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
         body: JSON.stringify(leadData),
       });
 
+      console.log("📥 Webhook response:", {
+        status: res.status,
+        statusText: res.statusText,
+        ok: res.ok,
+        headers: Object.fromEntries(res.headers.entries())
+      });
+
       if (!res.ok) {
         const text = await res.text().catch(() => '');
-        throw new Error(`Webhook error ${res.status}: ${text}`);
+        console.error("❌ Webhook error response:", {
+          status: res.status,
+          statusText: res.statusText,
+          body: text
+        });
+        
+        // User-friendly error messages based on status
+        let errorMessage = "Qayta urinib ko'ring";
+        if (res.status === 404) {
+          errorMessage = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
+        } else if (res.status === 500) {
+          errorMessage = "Server xatosi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
+        } else if (res.status === 403 || res.status === 401) {
+          errorMessage = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
+        } else if (res.status >= 400 && res.status < 500) {
+          errorMessage = "Ma'lumotlar noto'g'ri. Iltimos, tekshirib qayta urinib ko'ring";
+        }
+        
+        throw new Error(`Webhook error ${res.status}: ${text || errorMessage}`);
       }
+
+      console.log("✅ Lead submitted successfully");
 
       // Track successful form submission
       if ((window as any).fbq) {
@@ -130,10 +164,28 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
 
       onSuccess?.();
     } catch (error) {
-      console.error("Error sending lead:", error);
+      console.error("❌ Error sending lead:", error);
+      
+      // Differentiate between network errors and server errors
+      let errorTitle = "Xato";
+      let errorDescription = "Qayta urinib ko'ring";
+      
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        errorTitle = "Internet aloqasi yo'q";
+        errorDescription = "Internet aloqangizni tekshirib qayta urinib ko'ring";
+      } else if (error instanceof Error) {
+        if (error.message.includes('404')) {
+          errorDescription = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
+        } else if (error.message.includes('500')) {
+          errorDescription = "Server xatosi. Biroz vaqtdan keyin qayta urinib ko'ring";
+        } else if (error.message.includes('403') || error.message.includes('401')) {
+          errorDescription = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
+        }
+      }
+      
       toast({
-        title: "Xato",
-        description: "Qayta urinib ko'ring",
+        title: errorTitle,
+        description: errorDescription,
         variant: "destructive",
       });
     } finally {
@@ -275,7 +327,14 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
             disabled={!canSubmit() || isSubmitting}
             className="w-full h-16 text-lg rounded-2xl font-bold"
           >
-            {isSubmitting ? "Yuborilmoqda..." : "Jo'natish"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Yuborilmoqda...
+              </>
+            ) : (
+              "Jo'natish"
+            )}
           </Button>
         </form>
       </div>
