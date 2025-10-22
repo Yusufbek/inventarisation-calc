@@ -166,29 +166,30 @@ export const Results = ({
       </section>
 
       {/* Eye-Catching Transition Section */}
-      <section className="relative py-8 md:py-12 px-4 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-        {/* Animated background circles */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+      <section className="relative py-16 md:py-24 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
+        {/* Animated background circles - more subtle and integrated */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-success/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-primary/8 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         
-        <div className="relative max-w-3xl mx-auto text-center space-y-6 animate-fade-in">
-          <h3 className="text-3xl md:text-5xl font-bold text-foreground leading-tight animate-slide-up">
+        <div className="relative max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
+          <h3 className="text-4xl md:text-6xl font-bold text-foreground leading-tight animate-slide-up">
             Muammongizga <span className="text-primary">ideal yechim</span> bor
           </h3>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto animate-slide-up leading-relaxed" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
             BILLZ sizning yo'qotishlaringizni kamaytiradi va daromadingizni oshiradi
           </p>
 
           {/* Animated Arrow */}
-          <div className="pt-2 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-            <div className="inline-flex flex-col items-center gap-3">
-              <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-bounce">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          <div className="pt-4 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+            <div className="inline-flex flex-col items-center gap-4">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 backdrop-blur-sm flex items-center justify-center animate-bounce shadow-lg border border-primary/10">
+                <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </div>
-              <p className="text-sm font-semibold text-primary uppercase tracking-wide">
+              <p className="text-base font-bold text-primary uppercase tracking-wider">
                 Pastga qarang
               </p>
             </div>
