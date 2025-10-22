@@ -38,11 +38,6 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleBackToHome = () => {
-    setCurrentScreen("hero");
-    setCalculatorData(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -67,7 +62,7 @@ const Index = () => {
       )}
 
       {currentScreen === "thank-you" && (
-        <ThankYou onBackToHome={handleBackToHome} />
+        <ThankYou />
       )}
 
       {currentScreen === "hero" && (
