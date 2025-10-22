@@ -166,30 +166,22 @@ export const Results = ({
       </section>
 
       {/* Eye-Catching Transition Section */}
-      <section className="relative py-16 md:py-24 px-4 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+      <section className="relative py-8 md:py-12 px-4 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
         {/* Animated background circles */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         
-        <div className="relative max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
-          <div className="inline-block">
-            <div className="bg-primary/10 backdrop-blur-sm border-2 border-primary/30 rounded-2xl px-8 py-4 animate-scale-in">
-              <p className="text-sm md:text-base font-semibold text-primary uppercase tracking-wider">
-                ✨ Yechim topildi
-              </p>
-            </div>
-          </div>
-
-          <h3 className="text-3xl md:text-5xl font-bold text-foreground leading-tight animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+        <div className="relative max-w-3xl mx-auto text-center space-y-6 animate-fade-in">
+          <h3 className="text-3xl md:text-5xl font-bold text-foreground leading-tight animate-slide-up">
             Muammongizga <span className="text-primary">ideal yechim</span> bor
           </h3>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s', animationFillMode: 'backwards' }}>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s', animationFillMode: 'backwards' }}>
             BILLZ sizning yo'qotishlaringizni kamaytiradi va daromadingizni oshiradi
           </p>
 
           {/* Animated Arrow */}
-          <div className="pt-4 animate-slide-up" style={{ animationDelay: '0.4s', animationFillMode: 'backwards' }}>
+          <div className="pt-2 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
             <div className="inline-flex flex-col items-center gap-3">
               <div className="w-16 h-16 rounded-full bg-primary/20 backdrop-blur-sm flex items-center justify-center animate-bounce">
                 <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,7 +197,7 @@ export const Results = ({
       </section>
 
       {/* Solution Section */}
-      <section className="bg-gradient-to-b from-background to-muted/30 px-4 py-12 md:py-20">
+      <section className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-6">
             
