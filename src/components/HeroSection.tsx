@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
-import heroImage from "@/assets/hero-inventory.jpg";
+import heroImage from "@/assets/hero-inventory.webp";
 
 interface HeroSectionProps {
   onStartCalculator: () => void;

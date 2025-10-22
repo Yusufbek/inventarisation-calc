@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { BillzLogo } from "@/components/BillzLogo";
-import telegramBotImage from "@/assets/telegram-bot.jpg";
+import telegramBotImage from "@/assets/telegram-bot.webp";
 
 export const ThankYou = () => {
   return (
