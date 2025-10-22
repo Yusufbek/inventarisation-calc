@@ -13,6 +13,12 @@ import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 import { z } from "zod";
 
+// ⚠️ WARNING: Bot token in client-side code is INSECURE!
+// Anyone can view this token in browser DevTools and abuse your bot.
+// Replace with your actual token from @BotFather
+const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE";
+const TELEGRAM_CHAT_ID = "-4875526331";
+
 interface LeadFormProps {
   onSuccess?: () => void;
   calculatorData?: CalculatorData | null;
@@ -83,57 +89,50 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     );
   };
 
-  // Non-blocking health check - just for diagnostics
-  const checkWebhookHealth = async (url: string, timeoutMs = 3000): Promise<{ ok: boolean; error?: string; isCORS?: boolean }> => {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-      
-      const response = await fetch(url, {
-        method: "OPTIONS",
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-      return { ok: response.ok || response.status === 204 };
-    } catch (error) {
-      if (error instanceof Error) {
-        // CORS issues often manifest as TypeError with "Failed to fetch"
-        const isCORS = error instanceof TypeError && 
-          (error.message.includes('Failed to fetch') || 
-           error.message.includes('NetworkError') ||
-           error.message.includes('CORS'));
-        
-        if (error.name === 'AbortError') {
-          return { ok: false, error: 'timeout', isCORS: false };
-        }
-        return { ok: false, error: isCORS ? 'cors' : 'network', isCORS };
-      }
-      return { ok: false, error: 'unknown' };
-    }
-  };
+  // Send message directly to Telegram
+  const sendToTelegram = async (data: any): Promise<boolean> => {
+    const message = `
+🆕 Yangi lead!
 
-  // Helper function to submit with timeout
-  const submitWithTimeout = async (url: string, data: any, timeoutMs = 10000) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-    
+👤 Ism: ${data.firstName} ${data.lastName}
+📱 Telefon: ${data.phoneNumber}
+📅 Sana: ${data.appointmentDate}
+⏰ Vaqt: ${data.appointmentTime}
+
+${data.storeType ? `
+💰 Hisoblash natijalari:
+🏪 Do'kon turi: ${data.storeType}
+📦 SKU soni: ${data.skuCount}
+📊 Inventarizatsiya: ${data.inventoryFrequency}
+🔒 O'g'irlik darajasi: ${data.theftLevel}
+💵 O'rtacha narx: $${data.avgPrice}
+` : ''}
+    `.trim();
+
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(data),
-        signal: controller.signal,
-      });
-      
-      clearTimeout(timeoutId);
-      return response;
+      const response = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: "HTML",
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Telegram API xatosi:", errorData);
+        return false;
+      }
+
+      return true;
     } catch (error) {
-      clearTimeout(timeoutId);
-      throw error;
+      console.error("Telegramga yuborishda xato:", error);
+      return false;
     }
   };
 
@@ -165,8 +164,6 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     setIsSubmitting(true);
     setRetryCount(0);
     setShowFallback(false);
-
-    const webhookUrl = "https://n8n-m.billz.work/webhook/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
     
     const rawDigits = formData.phoneNumber.replace(/\D/g, '');
     const phoneE164 = rawDigits.startsWith('998') ? `+${rawDigits}` : `+998${rawDigits}`;
@@ -178,7 +175,6 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       appointmentDate: format(date!, 'dd.MM.yyyy'),
       appointmentTime: selectedTime,
       timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
       // Calculator data
       ...(calculatorData && {
         storeType: calculatorData.storeType,
@@ -207,85 +203,23 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     // Save form data in case submission fails
     saveFormDataToLocal(leadData);
 
-    console.log("📤 Starting submission:", {
-      url: webhookUrl,
+    console.log("📤 Telegramga yuborilmoqda:", {
       timestamp: new Date().toISOString(),
       phone: maskPhone(phoneE164),
       name: `${formData.firstName} ${formData.lastName}`,
     });
 
-    // Step 1: Non-blocking health check (for diagnostics only)
-    console.log("🏥 Checking webhook health...");
-    const healthCheck = await checkWebhookHealth(webhookUrl);
-    
-    if (!healthCheck.ok) {
-      console.warn("⚠️ Health check failed but continuing:", {
-        error: healthCheck.error,
-        isCORS: healthCheck.isCORS
-      });
+    // Attempt submission with retries
+    const MAX_RETRIES = 3;
+
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      setRetryCount(attempt);
+      console.log(`📤 Urinish ${attempt}/${MAX_RETRIES}`);
       
-      if (healthCheck.isCORS) {
-        console.warn("🚨 CORS issue detected - webhook may need Access-Control-Allow-Origin header");
-      }
-    } else {
-      console.log("✅ Webhook is reachable");
-    }
+      const success = await sendToTelegram(leadData);
 
-    // Step 2: Attempt submission with retries
-    const maxRetries = 3;
-    let lastError: any = null;
-    let isCORSIssue = false;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        setRetryCount(attempt);
-        console.log(`📤 Submission attempt ${attempt}/${maxRetries}`);
-        
-        const res = await submitWithTimeout(webhookUrl, leadData, 10000);
-
-        console.log("📥 Webhook response:", {
-          attempt,
-          status: res.status,
-          statusText: res.statusText,
-          ok: res.ok,
-          headers: Object.fromEntries(res.headers.entries())
-        });
-
-        if (!res.ok) {
-          const text = await res.text().catch(() => '');
-          console.error("❌ Webhook error response:", {
-            attempt,
-            status: res.status,
-            statusText: res.statusText,
-            body: text
-          });
-          
-          // Don't retry on client errors (400-499), only on server errors (500+)
-          if (res.status >= 400 && res.status < 500) {
-            let errorDescription = "Ma'lumotlar noto'g'ri";
-            if (res.status === 404) {
-              errorDescription = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
-            } else if (res.status === 403 || res.status === 401) {
-              errorDescription = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
-            }
-            
-            throw new Error(`Client error ${res.status}: ${errorDescription}`);
-          }
-          
-          // Server error - will retry
-          lastError = new Error(`Server error ${res.status}: ${text}`);
-          
-          if (attempt < maxRetries) {
-            const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-            console.log(`⏳ Retrying in ${delay}ms...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-            continue;
-          }
-          
-          throw lastError;
-        }
-
-        console.log("✅ Lead submitted successfully on attempt", attempt);
+      if (success) {
+        console.log("✅ Telegram xabari muvaffaqiyatli yuborildi");
 
         // Clear saved form data on success
         localStorage.removeItem('billz_form_backup');
@@ -310,59 +244,25 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
         setRetryCount(0);
         onSuccess?.();
         return;
-        
-      } catch (error) {
-        lastError = error;
-        console.error(`❌ Attempt ${attempt} failed:`, error);
-        
-        // Detect CORS issues
-        if (error instanceof TypeError && 
-            (error.message.includes('Failed to fetch') || error.message.includes('CORS'))) {
-          isCORSIssue = true;
-        }
-        
-        // If it's a client error or last attempt, break
-        if (error instanceof Error && error.message.includes('Client error')) {
-          break;
-        }
-        
-        if (attempt < maxRetries) {
-          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
-          console.log(`⏳ Retrying in ${delay}ms...`);
-          await new Promise(resolve => setTimeout(resolve, delay));
-        }
+      }
+
+      // Retry with exponential backoff
+      if (attempt < MAX_RETRIES) {
+        const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+        console.log(`⏳ ${delay / 1000} soniyadan keyin qayta uriniladi...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
 
     // All attempts failed
-    console.error("❌ All submission attempts failed:", lastError);
+    console.error("❌ Barcha urinishlar muvaffaqiyatsiz tugadi");
     setIsSubmitting(false);
     setRetryCount(0);
     setShowFallback(true);
     
-    let errorTitle = "Xato";
-    let errorDescription = "Barcha urinishlar muvaffaqiyatsiz tugadi";
-    
-    if (lastError instanceof Error) {
-      if (lastError.name === 'AbortError' || lastError.message.includes('timeout')) {
-        errorTitle = "Vaqt tugadi";
-        errorDescription = "Server juda sekin javob bermoqda";
-      } else if (isCORSIssue || lastError.message.includes('Failed to fetch')) {
-        errorTitle = "Tarmoq xatosi";
-        errorDescription = "Serverga ulanishda muammo. Iltimos, pastdagi kontaktlar orqali bog'laning";
-      } else if (lastError.message.includes('Client error')) {
-        errorTitle = "Xato";
-        errorDescription = lastError.message.split(': ')[1] || "Ma'lumotlar noto'g'ri";
-        setShowFallback(false); // Don't show fallback for client errors
-      } else if (lastError.message.includes('Server error')) {
-        errorTitle = "Server xatosi";
-        errorDescription = "Iltimos, pastdagi kontaktlar orqali bog'laning";
-      }
-    }
-    
     toast({
-      title: errorTitle,
-      description: errorDescription,
+      title: "Xato",
+      description: "Xabar yuborilmadi. Iltimos, pastdagi kontaktlar orqali bog'laning",
       variant: "destructive",
     });
   };
