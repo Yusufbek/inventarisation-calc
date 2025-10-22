@@ -22,7 +22,7 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
           
           <div className="space-y-6 max-w-3xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-              Inventarizatsiyasiz har oy qancha pul yo'qotyapsiz?
+              <span className="text-primary">Inventarizatsiyasiz</span> har oy qancha pul yo'qotyapsiz?
             </h1>
             
             <p className="text-lg md:text-xl text-muted-foreground">
