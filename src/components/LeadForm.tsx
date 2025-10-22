@@ -32,6 +32,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [date, setDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   const formatPhoneNumber = (value: string) => {
     const digits = value.replace(/\D/g, '');
@@ -61,6 +62,69 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     );
   };
 
+  // Helper function to check webhook connectivity with timeout
+  const checkWebhookHealth = async (url: string, timeoutMs = 5000): Promise<{ ok: boolean; error?: string }> => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      
+      const response = await fetch(url, {
+        method: "OPTIONS",
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      return { ok: true };
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          return { ok: false, error: 'timeout' };
+        }
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          return { ok: false, error: 'network' };
+        }
+      }
+      return { ok: false, error: 'unknown' };
+    }
+  };
+
+  // Helper function to submit with timeout
+  const submitWithTimeout = async (url: string, data: any, timeoutMs = 10000) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
+    }
+  };
+
+  // Save form data to localStorage
+  const saveFormDataToLocal = (data: any) => {
+    try {
+      localStorage.setItem('billz_form_backup', JSON.stringify({
+        ...data,
+        savedAt: new Date().toISOString(),
+      }));
+      console.log("💾 Form data saved to localStorage");
+    } catch (error) {
+      console.error("Failed to save form data:", error);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -74,6 +138,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     }
 
     setIsSubmitting(true);
+    setRetryCount(0);
 
     const webhookUrl = "https://n8n-m.billz.work/webhook/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
     
@@ -87,6 +152,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       appointmentDate: format(date!, 'dd.MM.yyyy'),
       appointmentTime: selectedTime,
       timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
       // Calculator data
       ...(calculatorData && {
         storeType: calculatorData.storeType,
@@ -97,90 +163,32 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       }),
     };
 
-    // Log submission attempt for debugging
-    console.log("📤 Submitting lead data:", {
+    // Save form data in case submission fails
+    saveFormDataToLocal(leadData);
+
+    console.log("📤 Starting submission process:", {
       url: webhookUrl,
-      data: leadData,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      data: leadData
     });
 
-    try {
-      const res = await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(leadData),
-      });
-
-      console.log("📥 Webhook response:", {
-        status: res.status,
-        statusText: res.statusText,
-        ok: res.ok,
-        headers: Object.fromEntries(res.headers.entries())
-      });
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        console.error("❌ Webhook error response:", {
-          status: res.status,
-          statusText: res.statusText,
-          body: text
-        });
-        
-        // User-friendly error messages based on status
-        let errorMessage = "Qayta urinib ko'ring";
-        if (res.status === 404) {
-          errorMessage = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
-        } else if (res.status === 500) {
-          errorMessage = "Server xatosi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
-        } else if (res.status === 403 || res.status === 401) {
-          errorMessage = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
-        } else if (res.status >= 400 && res.status < 500) {
-          errorMessage = "Ma'lumotlar noto'g'ri. Iltimos, tekshirib qayta urinib ko'ring";
-        }
-        
-        throw new Error(`Webhook error ${res.status}: ${text || errorMessage}`);
-      }
-
-      console.log("✅ Lead submitted successfully");
-
-      // Track successful form submission
-      if ((window as any).fbq) {
-        (window as any).fbq('track', 'Lead', {
-          firstName: leadData.firstName,
-          lastName: leadData.lastName,
-          phoneNumber: leadData.phoneNumber,
-          appointmentDate: leadData.appointmentDate,
-          appointmentTime: leadData.appointmentTime,
-        });
-      }
-
-      toast({
-        title: "Muvaffaqiyatli!",
-        description: "Tez orada siz bilan bog'lanamiz",
-      });
-
-      onSuccess?.();
-    } catch (error) {
-      console.error("❌ Error sending lead:", error);
+    // Step 1: Check webhook health
+    console.log("🏥 Checking webhook health...");
+    const healthCheck = await checkWebhookHealth(webhookUrl);
+    
+    if (!healthCheck.ok) {
+      console.error("❌ Webhook health check failed:", healthCheck.error);
+      setIsSubmitting(false);
       
-      // Differentiate between network errors and server errors
       let errorTitle = "Xato";
       let errorDescription = "Qayta urinib ko'ring";
       
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        errorTitle = "Internet aloqasi yo'q";
-        errorDescription = "Internet aloqangizni tekshirib qayta urinib ko'ring";
-      } else if (error instanceof Error) {
-        if (error.message.includes('404')) {
-          errorDescription = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
-        } else if (error.message.includes('500')) {
-          errorDescription = "Server xatosi. Biroz vaqtdan keyin qayta urinib ko'ring";
-        } else if (error.message.includes('403') || error.message.includes('401')) {
-          errorDescription = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
-        }
+      if (healthCheck.error === 'timeout') {
+        errorTitle = "Vaqt tugadi";
+        errorDescription = "Server javob bermadi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
+      } else if (healthCheck.error === 'network') {
+        errorTitle = "Tarmoq xatosi";
+        errorDescription = "Internet aloqangizni tekshiring yoki biroz vaqtdan keyin qayta urinib ko'ring";
       }
       
       toast({
@@ -188,9 +196,136 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
         description: errorDescription,
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
+      return;
     }
+    
+    console.log("✅ Webhook is reachable");
+
+    // Step 2: Attempt submission with retries
+    const maxRetries = 3;
+    let lastError: any = null;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        setRetryCount(attempt);
+        console.log(`📤 Submission attempt ${attempt}/${maxRetries}`);
+        
+        const res = await submitWithTimeout(webhookUrl, leadData, 10000);
+
+        console.log("📥 Webhook response:", {
+          attempt,
+          status: res.status,
+          statusText: res.statusText,
+          ok: res.ok,
+          headers: Object.fromEntries(res.headers.entries())
+        });
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          console.error("❌ Webhook error response:", {
+            attempt,
+            status: res.status,
+            statusText: res.statusText,
+            body: text
+          });
+          
+          // Don't retry on client errors (400-499), only on server errors (500+)
+          if (res.status >= 400 && res.status < 500) {
+            let errorDescription = "Ma'lumotlar noto'g'ri";
+            if (res.status === 404) {
+              errorDescription = "Webhook topilmadi. Texnik xizmat bilan bog'laning";
+            } else if (res.status === 403 || res.status === 401) {
+              errorDescription = "Ruxsat yo'q. Texnik xizmat bilan bog'laning";
+            }
+            
+            throw new Error(`Client error ${res.status}: ${errorDescription}`);
+          }
+          
+          // Server error - will retry
+          lastError = new Error(`Server error ${res.status}: ${text}`);
+          
+          if (attempt < maxRetries) {
+            const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
+            console.log(`⏳ Retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            continue;
+          }
+          
+          throw lastError;
+        }
+
+        console.log("✅ Lead submitted successfully on attempt", attempt);
+
+        // Clear saved form data on success
+        localStorage.removeItem('billz_form_backup');
+
+        // Track successful form submission
+        if ((window as any).fbq) {
+          (window as any).fbq('track', 'Lead', {
+            firstName: leadData.firstName,
+            lastName: leadData.lastName,
+            phoneNumber: leadData.phoneNumber,
+            appointmentDate: leadData.appointmentDate,
+            appointmentTime: leadData.appointmentTime,
+          });
+        }
+
+        toast({
+          title: "Muvaffaqiyatli!",
+          description: "Tez orada siz bilan bog'lanamiz",
+        });
+
+        setIsSubmitting(false);
+        setRetryCount(0);
+        onSuccess?.();
+        return;
+        
+      } catch (error) {
+        lastError = error;
+        console.error(`❌ Attempt ${attempt} failed:`, error);
+        
+        // If it's a client error or last attempt, break
+        if (error instanceof Error && error.message.includes('Client error')) {
+          break;
+        }
+        
+        if (attempt < maxRetries) {
+          const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
+          console.log(`⏳ Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    // All attempts failed
+    console.error("❌ All submission attempts failed:", lastError);
+    setIsSubmitting(false);
+    setRetryCount(0);
+    
+    let errorTitle = "Xato";
+    let errorDescription = "Barcha urinishlar muvaffaqiyatsiz tugadi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
+    
+    if (lastError instanceof Error) {
+      if (lastError.name === 'AbortError' || lastError.message.includes('timeout')) {
+        errorTitle = "Vaqt tugadi";
+        errorDescription = "Server juda sekin javob bermoqda. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
+      } else if (lastError.message.includes('Failed to fetch') || lastError.message.includes('NetworkError')) {
+        errorTitle = "Tarmoq xatosi";
+        errorDescription = "Internet aloqangizni tekshiring va qayta urinib ko'ring";
+      } else if (lastError.message.includes('Client error')) {
+        errorTitle = "Xato";
+        errorDescription = lastError.message.split(': ')[1] || "Ma'lumotlar noto'g'ri";
+      } else if (lastError.message.includes('Server error')) {
+        errorTitle = "Server xatosi";
+        errorDescription = "Server bilan bog'lanishda muammo. Biroz vaqtdan keyin qayta urinib ko'ring";
+      }
+    }
+    
+    toast({
+      title: errorTitle,
+      description: errorDescription,
+      variant: "destructive",
+    });
   };
 
   return (
@@ -330,7 +465,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Yuborilmoqda...
+                {retryCount > 0 ? `Qayta urinilmoqda... (${retryCount}/3)` : "Yuborilmoqda..."}
               </>
             ) : (
               "Jo'natish"
