@@ -7,21 +7,35 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { uz } from "date-fns/locale";
-import { CalendarIcon, Phone, User, Loader2 } from "lucide-react";
+import { CalendarIcon, Phone, User, Loader2, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
+import { z } from "zod";
 
 interface LeadFormProps {
   onSuccess?: () => void;
   calculatorData?: CalculatorData | null;
 }
 
+// Validation schema
+const leadFormSchema = z.object({
+  firstName: z.string().trim().min(1, "Ism kiritilishi shart").max(100, "Ism juda uzun"),
+  lastName: z.string().trim().min(1, "Familiya kiritilishi shart").max(100, "Familiya juda uzun"),
+  phoneNumber: z.string().regex(/^\+998\d{9}$/, "Telefon raqam noto'g'ri"),
+  appointmentDate: z.string(),
+  appointmentTime: z.string(),
+});
+
 const timeSlots = [
   "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
   "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
   "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
 ];
+
+// Contact info for fallback
+const BILLZ_PHONE = "+998712009900";
+const BILLZ_WHATSAPP = `https://wa.me/998712009900?text=${encodeURIComponent("Assalomu alaykum, BILLZ haqida ma'lumot olmoqchiman")}`;
 
 export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [formData, setFormData] = useState({
@@ -33,6 +47,13 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const [showFallback, setShowFallback] = useState(false);
+
+  // Mask phone for safe logging
+  const maskPhone = (phone: string) => {
+    if (phone.length < 7) return phone;
+    return phone.slice(0, -6) + "******";
+  };
 
   const formatPhoneNumber = (value: string) => {
     const digits = value.replace(/\D/g, '');
@@ -62,8 +83,8 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     );
   };
 
-  // Helper function to check webhook connectivity with timeout
-  const checkWebhookHealth = async (url: string, timeoutMs = 5000): Promise<{ ok: boolean; error?: string }> => {
+  // Non-blocking health check - just for diagnostics
+  const checkWebhookHealth = async (url: string, timeoutMs = 3000): Promise<{ ok: boolean; error?: string; isCORS?: boolean }> => {
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -74,15 +95,19 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       });
       
       clearTimeout(timeoutId);
-      return { ok: true };
+      return { ok: response.ok || response.status === 204 };
     } catch (error) {
       if (error instanceof Error) {
+        // CORS issues often manifest as TypeError with "Failed to fetch"
+        const isCORS = error instanceof TypeError && 
+          (error.message.includes('Failed to fetch') || 
+           error.message.includes('NetworkError') ||
+           error.message.includes('CORS'));
+        
         if (error.name === 'AbortError') {
-          return { ok: false, error: 'timeout' };
+          return { ok: false, error: 'timeout', isCORS: false };
         }
-        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-          return { ok: false, error: 'network' };
-        }
+        return { ok: false, error: isCORS ? 'cors' : 'network', isCORS };
       }
       return { ok: false, error: 'unknown' };
     }
@@ -139,6 +164,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
 
     setIsSubmitting(true);
     setRetryCount(0);
+    setShowFallback(false);
 
     const webhookUrl = "https://n8n-m.billz.work/webhook/2cf1c5b0-09c8-4be3-87f2-262e01436d5d";
     
@@ -146,8 +172,8 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     const phoneE164 = rawDigits.startsWith('998') ? `+${rawDigits}` : `+998${rawDigits}`;
     
     const leadData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
+      firstName: formData.firstName.trim(),
+      lastName: formData.lastName.trim(),
       phoneNumber: phoneE164,
       appointmentDate: format(date!, 'dd.MM.yyyy'),
       appointmentTime: selectedTime,
@@ -163,47 +189,52 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
       }),
     };
 
+    // Validate with zod
+    try {
+      leadFormSchema.parse(leadData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Xato",
+          description: error.errors[0]?.message || "Ma'lumotlar noto'g'ri",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+    }
+
     // Save form data in case submission fails
     saveFormDataToLocal(leadData);
 
-    console.log("📤 Starting submission process:", {
+    console.log("📤 Starting submission:", {
       url: webhookUrl,
       timestamp: new Date().toISOString(),
-      data: leadData
+      phone: maskPhone(phoneE164),
+      name: `${formData.firstName} ${formData.lastName}`,
     });
 
-    // Step 1: Check webhook health
+    // Step 1: Non-blocking health check (for diagnostics only)
     console.log("🏥 Checking webhook health...");
     const healthCheck = await checkWebhookHealth(webhookUrl);
     
     if (!healthCheck.ok) {
-      console.error("❌ Webhook health check failed:", healthCheck.error);
-      setIsSubmitting(false);
-      
-      let errorTitle = "Xato";
-      let errorDescription = "Qayta urinib ko'ring";
-      
-      if (healthCheck.error === 'timeout') {
-        errorTitle = "Vaqt tugadi";
-        errorDescription = "Server javob bermadi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
-      } else if (healthCheck.error === 'network') {
-        errorTitle = "Tarmoq xatosi";
-        errorDescription = "Internet aloqangizni tekshiring yoki biroz vaqtdan keyin qayta urinib ko'ring";
-      }
-      
-      toast({
-        title: errorTitle,
-        description: errorDescription,
-        variant: "destructive",
+      console.warn("⚠️ Health check failed but continuing:", {
+        error: healthCheck.error,
+        isCORS: healthCheck.isCORS
       });
-      return;
+      
+      if (healthCheck.isCORS) {
+        console.warn("🚨 CORS issue detected - webhook may need Access-Control-Allow-Origin header");
+      }
+    } else {
+      console.log("✅ Webhook is reachable");
     }
-    
-    console.log("✅ Webhook is reachable");
 
     // Step 2: Attempt submission with retries
     const maxRetries = 3;
     let lastError: any = null;
+    let isCORSIssue = false;
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -284,6 +315,12 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
         lastError = error;
         console.error(`❌ Attempt ${attempt} failed:`, error);
         
+        // Detect CORS issues
+        if (error instanceof TypeError && 
+            (error.message.includes('Failed to fetch') || error.message.includes('CORS'))) {
+          isCORSIssue = true;
+        }
+        
         // If it's a client error or last attempt, break
         if (error instanceof Error && error.message.includes('Client error')) {
           break;
@@ -301,23 +338,25 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     console.error("❌ All submission attempts failed:", lastError);
     setIsSubmitting(false);
     setRetryCount(0);
+    setShowFallback(true);
     
     let errorTitle = "Xato";
-    let errorDescription = "Barcha urinishlar muvaffaqiyatsiz tugadi. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
+    let errorDescription = "Barcha urinishlar muvaffaqiyatsiz tugadi";
     
     if (lastError instanceof Error) {
       if (lastError.name === 'AbortError' || lastError.message.includes('timeout')) {
         errorTitle = "Vaqt tugadi";
-        errorDescription = "Server juda sekin javob bermoqda. Iltimos, biroz vaqtdan keyin qayta urinib ko'ring";
-      } else if (lastError.message.includes('Failed to fetch') || lastError.message.includes('NetworkError')) {
+        errorDescription = "Server juda sekin javob bermoqda";
+      } else if (isCORSIssue || lastError.message.includes('Failed to fetch')) {
         errorTitle = "Tarmoq xatosi";
-        errorDescription = "Internet aloqangizni tekshiring va qayta urinib ko'ring";
+        errorDescription = "Serverga ulanishda muammo. Iltimos, pastdagi kontaktlar orqali bog'laning";
       } else if (lastError.message.includes('Client error')) {
         errorTitle = "Xato";
         errorDescription = lastError.message.split(': ')[1] || "Ma'lumotlar noto'g'ri";
+        setShowFallback(false); // Don't show fallback for client errors
       } else if (lastError.message.includes('Server error')) {
         errorTitle = "Server xatosi";
-        errorDescription = "Server bilan bog'lanishda muammo. Biroz vaqtdan keyin qayta urinib ko'ring";
+        errorDescription = "Iltimos, pastdagi kontaktlar orqali bog'laning";
       }
     }
     
@@ -471,6 +510,46 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
               "Jo'natish"
             )}
           </Button>
+
+          {showFallback && (
+            <div className="mt-6 p-6 bg-secondary/50 border-2 border-primary/20 rounded-2xl animate-fade-in">
+              <h3 className="font-bold text-lg mb-3 text-center">
+                Boshqa yo'l bilan bog'laning
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4 text-center">
+                Sizning ma'lumotlaringiz saqlab qolindi. Iltimos, quyidagi yo'llardan biri orqali bog'laning:
+              </p>
+              <div className="space-y-3">
+                <a
+                  href={BILLZ_WHATSAPP}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full p-4 bg-[#25D366] hover:bg-[#20BA5A] text-white rounded-xl transition-colors font-medium"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                  WhatsApp orqali yozish
+                </a>
+                <a
+                  href={`tel:${BILLZ_PHONE}`}
+                  className="flex items-center justify-center gap-3 w-full p-4 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl transition-colors font-medium"
+                >
+                  <Phone className="h-5 w-5" />
+                  {BILLZ_PHONE} ga qo'ng'iroq
+                </a>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setShowFallback(false);
+                    handleSubmit(new Event('submit') as any);
+                  }}
+                  className="w-full h-12 rounded-xl"
+                >
+                  Qayta urinib ko'rish
+                </Button>
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </div>
