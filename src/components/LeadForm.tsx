@@ -104,8 +104,79 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     );
   };
 
+  // Calculate losses from calculator data
+  const calculateLosses = (calcData: CalculatorData) => {
+    const baseInventoryHours = calcData.inventoryFrequency === "Hech qachon" ? 0 : 40;
+    const inventoryMultiplier = {
+      "Haftada bir marta": 4,
+      "Oyiga bir marta": 1,
+      "Yiliga bir marta": 0.08,
+      "Hech qachon": 0,
+    }[calcData.inventoryFrequency] || 1;
+
+    const inventoryHoursPerMonth = baseInventoryHours * inventoryMultiplier;
+    const inventoryCostPerMonth = inventoryHoursPerMonth * 15000;
+
+    const dailyTimeLoss = 2;
+    const monthlyTimeLoss = dailyTimeLoss * 30 * 15000;
+
+    const theftMultiplier = {
+      "Past (1-3%)": 0.02,
+      "O'rtacha (3-5%)": 0.04,
+      "Yuqori (5%+)": 0.07,
+    }[calcData.theftLevel] || 0.04;
+
+    const monthlyRevenue = calcData.skuCount * calcData.avgPrice * 10;
+    const monthlyTheftLoss = monthlyRevenue * theftMultiplier;
+
+    const customerLossRate = 0.15;
+    const monthlyCustomerLoss = monthlyRevenue * customerLossRate;
+
+    const totalMonthly = inventoryCostPerMonth + monthlyTimeLoss + monthlyTheftLoss + monthlyCustomerLoss;
+    const totalYearly = totalMonthly * 12;
+    const recoveredProfit = totalMonthly * 0.7;
+
+    return {
+      inventoryCost: Math.round(inventoryCostPerMonth),
+      timeLoss: Math.round(monthlyTimeLoss),
+      theftLoss: Math.round(monthlyTheftLoss),
+      customerLoss: Math.round(monthlyCustomerLoss),
+      totalMonthly: Math.round(totalMonthly),
+      totalYearly: Math.round(totalYearly),
+      recoveredProfit: Math.round(recoveredProfit),
+    };
+  };
+
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString("uz-UZ");
+  };
+
   // Send message directly to Telegram
   const sendToTelegram = async (data: any): Promise<boolean> => {
+    let lossesText = "";
+    
+    if (calculatorData) {
+      const losses = calculateLosses(calculatorData);
+      lossesText = `
+💰 Hisoblash natijalari:
+🏪 Do'kon turi: ${calculatorData.storeType}
+📦 SKU soni: ${calculatorData.skuCount}
+📊 Inventarizatsiya: ${calculatorData.inventoryFrequency}
+🔒 O'g'irlik darajasi: ${calculatorData.theftLevel}
+💵 O'rtacha narx: $${calculatorData.avgPrice}
+
+📊 Yo'qotishlar tahlili:
+📦 Inventarizatsiya yo'qotishi: ${formatNumber(losses.inventoryCost)} so'm/oy
+⏰ Vaqt yo'qotishi: ${formatNumber(losses.timeLoss)} so'm/oy
+🔒 O'g'irlik yo'qotishi: ${formatNumber(losses.theftLoss)} so'm/oy
+👥 Mijoz yo'qotishi: ${formatNumber(losses.customerLoss)} so'm/oy
+
+💸 Jami oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm
+📅 Jami yillik yo'qotish: ${formatNumber(losses.totalYearly)} so'm
+✅ BILLZ bilan tejash mumkin: ${formatNumber(losses.recoveredProfit)} so'm/oy
+`;
+    }
+
     const message = `
 🆕 Yangi lead!
 
@@ -113,19 +184,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
 📱 Telefon: ${data.phoneNumber}
 📅 Sana: ${data.appointmentDate}
 ⏰ Vaqt: ${data.appointmentTime}
-
-${
-  data.storeType
-    ? `
-💰 Hisoblash natijalari:
-🏪 Do'kon turi: ${data.storeType}
-📦 SKU soni: ${data.skuCount}
-📊 Inventarizatsiya: ${data.inventoryFrequency}
-🔒 O'g'irlik darajasi: ${data.theftLevel}
-💵 O'rtacha narx: $${data.avgPrice}
-`
-    : ""
-}
+${lossesText}
     `.trim();
 
     try {
