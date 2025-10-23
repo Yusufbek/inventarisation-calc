@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { jsPDF } from "jspdf";
 
 export interface CalculatorData {
   storeType: string;
@@ -134,53 +135,74 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       const metadata = await getUserMetadata();
       const losses = calculateLosses(calcData);
       
-  const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
-  const TELEGRAM_CHAT_ID = "-4875526331";
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_CHAT_ID = "-4875526331";
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
       const frequencyLabel = frequencies.find(f => f.id === calcData.inventoryFrequency)?.label || calcData.inventoryFrequency;
       const theftLabel = theftLevels.find(l => l.id === calcData.theftLevel)?.label || calcData.theftLevel;
       
-      const message = `🧮 CALCULATOR NATIJA
-
-📊 Do'kon ma'lumotlari:
-🏪 Turi: ${storeTypeLabel}
-📦 SKU soni: ${calcData.skuCount.toLocaleString('uz-UZ')}
-📋 Inventarizatsiya: ${frequencyLabel}
-🔒 O'g'irlik: ${theftLabel}
-💵 O'rtacha narx: ${calcData.avgPrice.toLocaleString('uz-UZ')} so'm
-
-💸 Hisoblangan yo'qotishlar:
-📉 Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm
-📅 Yillik yo'qotish: ${losses.totalYearly.toLocaleString('uz-UZ')} so'm
-✅ Tejash mumkin: ${losses.recoveredProfit.toLocaleString('uz-UZ')} so'm/oy
-
-💡 Yo'qotishlar tarkibi:
-  • Inventar: ${losses.inventoryLoss.toLocaleString('uz-UZ')} so'm
-  • Vaqt: ${losses.timeLoss.toLocaleString('uz-UZ')} so'm
-  • Mijoz: ${losses.customerLoss.toLocaleString('uz-UZ')} so'm
-
-👤 Foydalanuvchi ma'lumotlari:
-🌐 IP: ${metadata.ip}
-📍 Joylashuv: ${metadata.location}
-🖥️ Brauzer: ${metadata.userAgent}
-📱 Ekran: ${metadata.screenSize}
-🕐 Vaqt: ${metadata.timestamp}
-🆔 Session: ${metadata.sessionId}`;
-
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      // Generate PDF
+      const doc = new jsPDF();
+      
+      // Set font
+      doc.setFontSize(20);
+      doc.text("BILLZ Calculator Natijasi", 105, 20, { align: "center" });
+      
+      // Store Information
+      doc.setFontSize(16);
+      doc.text("Do'kon ma'lumotlari:", 20, 40);
+      doc.setFontSize(12);
+      doc.text(`Turi: ${storeTypeLabel}`, 20, 50);
+      doc.text(`SKU soni: ${calcData.skuCount.toLocaleString('uz-UZ')}`, 20, 58);
+      doc.text(`Inventarizatsiya: ${frequencyLabel}`, 20, 66);
+      doc.text(`O'g'irlik darajasi: ${theftLabel}`, 20, 74);
+      doc.text(`O'rtacha narx: ${calcData.avgPrice.toLocaleString('uz-UZ')} so'm`, 20, 82);
+      
+      // Losses
+      doc.setFontSize(16);
+      doc.text("Hisoblangan yo'qotishlar:", 20, 100);
+      doc.setFontSize(12);
+      doc.text(`Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm`, 20, 110);
+      doc.text(`Yillik yo'qotish: ${losses.totalYearly.toLocaleString('uz-UZ')} so'm`, 20, 118);
+      doc.text(`BILLZ bilan tejash mumkin: ${losses.recoveredProfit.toLocaleString('uz-UZ')} so'm/oy`, 20, 126);
+      
+      // Loss breakdown
+      doc.setFontSize(16);
+      doc.text("Yo'qotishlar tarkibi:", 20, 144);
+      doc.setFontSize(12);
+      doc.text(`Inventar yo'qotishi: ${losses.inventoryLoss.toLocaleString('uz-UZ')} so'm`, 20, 154);
+      doc.text(`Vaqt yo'qotishi: ${losses.timeLoss.toLocaleString('uz-UZ')} so'm`, 20, 162);
+      doc.text(`Mijoz yo'qotishi: ${losses.customerLoss.toLocaleString('uz-UZ')} so'm`, 20, 170);
+      
+      // User metadata
+      doc.setFontSize(16);
+      doc.text("Foydalanuvchi ma'lumotlari:", 20, 188);
+      doc.setFontSize(12);
+      doc.text(`IP: ${metadata.ip}`, 20, 198);
+      doc.text(`Joylashuv: ${metadata.location}`, 20, 206);
+      doc.text(`Brauzer: ${metadata.userAgent.substring(0, 60)}`, 20, 214);
+      doc.text(`Ekran: ${metadata.screenSize}`, 20, 222);
+      doc.text(`Vaqt: ${metadata.timestamp}`, 20, 230);
+      doc.text(`Session ID: ${metadata.sessionId}`, 20, 238);
+      
+      // Convert PDF to blob
+      const pdfBlob = doc.output('blob');
+      
+      // Send PDF to Telegram
+      const formData = new FormData();
+      formData.append('chat_id', TELEGRAM_CHAT_ID);
+      formData.append('document', pdfBlob, `calculator-${metadata.sessionId}.pdf`);
+      formData.append('caption', `🧮 Calculator natijasi - ${storeTypeLabel}\n💰 Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm`);
+      
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`;
       
       await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: "HTML",
-        }),
+        body: formData,
       });
     } catch (error) {
-      console.error("Failed to send calculator data to Telegram:", error);
+      console.error("Failed to send calculator PDF to Telegram:", error);
     }
   };
 
