@@ -97,7 +97,7 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
     setStep(2);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
@@ -113,11 +113,140 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
           avgPrice: data.avgPrice,
         });
       }
+
+      // Track with Yandex Metrika
+      if ((window as any).ym) {
+        (window as any).ym(50093230, 'reachGoal', 'calculator_complete');
+      }
+      
+      // Send calculator data to Telegram
+      sendCalculatorToTelegram(data as CalculatorData).catch(console.error);
       
       setTimeout(() => {
         onComplete(data as CalculatorData);
       }, 2500);
     }
+  };
+
+  const sendCalculatorToTelegram = async (calcData: CalculatorData) => {
+    try {
+      // Get user metadata
+      const metadata = await getUserMetadata();
+      const losses = calculateLosses(calcData);
+      
+      const TELEGRAM_BOT_TOKEN = "7832648044:AAHxNbWmxaHnDbLTH1C6FcJUtknCF3y41Zc";
+      const TELEGRAM_CHAT_ID = "-4594294361";
+      
+      const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
+      const frequencyLabel = frequencies.find(f => f.id === calcData.inventoryFrequency)?.label || calcData.inventoryFrequency;
+      const theftLabel = theftLevels.find(l => l.id === calcData.theftLevel)?.label || calcData.theftLevel;
+      
+      const message = `🧮 CALCULATOR NATIJA
+
+📊 Do'kon ma'lumotlari:
+🏪 Turi: ${storeTypeLabel}
+📦 SKU soni: ${calcData.skuCount.toLocaleString('uz-UZ')}
+📋 Inventarizatsiya: ${frequencyLabel}
+🔒 O'g'irlik: ${theftLabel}
+💵 O'rtacha narx: ${calcData.avgPrice.toLocaleString('uz-UZ')} so'm
+
+💸 Hisoblangan yo'qotishlar:
+📉 Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm
+📅 Yillik yo'qotish: ${losses.totalYearly.toLocaleString('uz-UZ')} so'm
+✅ Tejash mumkin: ${losses.recoveredProfit.toLocaleString('uz-UZ')} so'm/oy
+
+💡 Yo'qotishlar tarkibi:
+  • Inventar: ${losses.inventoryLoss.toLocaleString('uz-UZ')} so'm
+  • Vaqt: ${losses.timeLoss.toLocaleString('uz-UZ')} so'm
+  • Mijoz: ${losses.customerLoss.toLocaleString('uz-UZ')} so'm
+
+👤 Foydalanuvchi ma'lumotlari:
+🌐 IP: ${metadata.ip}
+📍 Joylashuv: ${metadata.location}
+🖥️ Brauzer: ${metadata.userAgent}
+📱 Ekran: ${metadata.screenSize}
+🕐 Vaqt: ${metadata.timestamp}
+🆔 Session: ${metadata.sessionId}`;
+
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: "HTML",
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to send calculator data to Telegram:", error);
+    }
+  };
+
+  const getUserMetadata = async () => {
+    let ip = "Unknown";
+    let location = "Unknown";
+    
+    try {
+      const ipResponse = await fetch("https://api.ipify.org?format=json");
+      const ipData = await ipResponse.json();
+      ip = ipData.ip;
+      
+      const locationResponse = await fetch(`https://ipapi.co/${ip}/json/`);
+      const locationData = await locationResponse.json();
+      location = `${locationData.city || "Unknown"}, ${locationData.country_name || "Unknown"}`;
+    } catch (error) {
+      console.error("Failed to fetch user metadata:", error);
+    }
+    
+    const sessionId = localStorage.getItem("sessionId") || generateSessionId();
+    localStorage.setItem("sessionId", sessionId);
+    
+    return {
+      ip,
+      location,
+      userAgent: navigator.userAgent.substring(0, 100),
+      screenSize: `${window.screen.width}x${window.screen.height}`,
+      timestamp: new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' }),
+      sessionId,
+    };
+  };
+
+  const generateSessionId = () => {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+  const calculateLosses = (calcData: CalculatorData) => {
+    const frequencyFactors: Record<string, number> = {
+      hafta: 0.02,
+      oy: 0.05,
+      "3oy": 0.08,
+      hech: 0.12,
+      bilmayman: 0.05,
+    };
+    const errorFactors: Record<string, number> = {
+      "tez-tez": 0.10,
+      bazan: 0.05,
+      kam: 0.02,
+      yoq: 0.00,
+    };
+    const errorFactor = errorFactors[calcData.theftLevel] || 0.05;
+    const frequencyFactor = frequencyFactors[calcData.inventoryFrequency] || 0.05;
+    const inventoryLoss = Math.round(calcData.skuCount * calcData.avgPrice * errorFactor);
+    const timeLoss = Math.round(calcData.skuCount * 1000 * frequencyFactor);
+    const customerLoss = Math.round(inventoryLoss * 0.30);
+    const totalMonthly = inventoryLoss + timeLoss + customerLoss;
+    const totalYearly = totalMonthly * 12;
+    const recoveredProfit = Math.round(totalMonthly * 0.60);
+    return {
+      inventoryLoss,
+      timeLoss,
+      customerLoss,
+      totalMonthly,
+      totalYearly,
+      recoveredProfit,
+    };
   };
 
   const canProceed = () => {

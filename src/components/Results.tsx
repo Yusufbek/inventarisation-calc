@@ -166,7 +166,7 @@ export const Results = ({
       </section>
 
       {/* Eye-Catching Transition Section */}
-      <section className="relative py-16 md:py-24 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
+      <section className="relative py-8 md:py-12 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
         {/* Animated background circles - more subtle and integrated */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-success/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }}></div>
@@ -182,16 +182,13 @@ export const Results = ({
           </p>
 
           {/* Animated Arrow */}
-          <div className="pt-4 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
-            <div className="inline-flex flex-col items-center gap-4">
+          <div className="pt-2 animate-slide-up" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+            <div className="inline-flex flex-col items-center gap-2">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 backdrop-blur-sm flex items-center justify-center animate-bounce shadow-lg border border-primary/10">
                 <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                 </svg>
               </div>
-              <p className="text-base font-bold text-primary uppercase tracking-wider">
-                Pastga qarang
-              </p>
             </div>
           </div>
         </div>
