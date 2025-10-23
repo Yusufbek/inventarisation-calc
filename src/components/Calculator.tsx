@@ -134,8 +134,8 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       const metadata = await getUserMetadata();
       const losses = calculateLosses(calcData);
       
-      const TELEGRAM_BOT_TOKEN = "7832648044:AAHxNbWmxaHnDbLTH1C6FcJUtknCF3y41Zc";
-      const TELEGRAM_CHAT_ID = "-4594294361";
+  const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+  const TELEGRAM_CHAT_ID = "-4875526331";
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
       const frequencyLabel = frequencies.find(f => f.id === calcData.inventoryFrequency)?.label || calcData.inventoryFrequency;
