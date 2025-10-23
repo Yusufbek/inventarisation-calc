@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { jsPDF } from "jspdf";
+import { calculateLosses, formatNumber } from "@/lib/calculations";
 
 export interface CalculatorData {
   storeType: string;
@@ -239,37 +240,7 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
 
-  const calculateLosses = (calcData: CalculatorData) => {
-    const frequencyFactors: Record<string, number> = {
-      hafta: 0.02,
-      oy: 0.05,
-      "3oy": 0.08,
-      hech: 0.12,
-      bilmayman: 0.05,
-    };
-    const errorFactors: Record<string, number> = {
-      "tez-tez": 0.10,
-      bazan: 0.05,
-      kam: 0.02,
-      yoq: 0.00,
-    };
-    const errorFactor = errorFactors[calcData.theftLevel] || 0.05;
-    const frequencyFactor = frequencyFactors[calcData.inventoryFrequency] || 0.05;
-    const inventoryLoss = Math.round(calcData.skuCount * calcData.avgPrice * errorFactor);
-    const timeLoss = Math.round(calcData.skuCount * 1000 * frequencyFactor);
-    const customerLoss = Math.round(inventoryLoss * 0.30);
-    const totalMonthly = inventoryLoss + timeLoss + customerLoss;
-    const totalYearly = totalMonthly * 12;
-    const recoveredProfit = Math.round(totalMonthly * 0.60);
-    return {
-      inventoryLoss,
-      timeLoss,
-      customerLoss,
-      totalMonthly,
-      totalYearly,
-      recoveredProfit,
-    };
-  };
+  // Import centralized calculation logic - no need for duplicate function
 
   const canProceed = () => {
     switch (step) {

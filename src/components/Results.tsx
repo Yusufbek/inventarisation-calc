@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
+import { ArrowRight, TrendingUp, CheckCircle2, Clock, Users, Package, LineChart } from "lucide-react";
+import { calculateLosses, formatNumber } from "@/lib/calculations";
 interface ResultsProps {
   data: CalculatorData;
   onContactClick: () => void;
@@ -24,39 +26,7 @@ const useCountUp = (end: number, duration: number = 2000) => {
   }, [end, duration]);
   return count;
 };
-const formatNumber = (num: number): string => {
-  return num.toLocaleString('uz-UZ');
-};
-const calculateLosses = (data: CalculatorData) => {
-  const frequencyFactors: Record<string, number> = {
-    hafta: 0.02,
-    oy: 0.05,
-    "3oy": 0.08,
-    hech: 0.12
-  };
-  const errorFactors: Record<string, number> = {
-    "tez-tez": 0.10,
-    bazan: 0.05,
-    kam: 0.02,
-    yoq: 0.00
-  };
-  const errorFactor = errorFactors[data.theftLevel] || 0.05;
-  const frequencyFactor = frequencyFactors[data.inventoryFrequency] || 0.05;
-  const inventoryLoss = Math.round(data.skuCount * data.avgPrice * errorFactor);
-  const timeLoss = Math.round(data.skuCount * 1000 * frequencyFactor);
-  const customerLoss = Math.round(inventoryLoss * 0.30);
-  const totalMonthly = inventoryLoss + timeLoss + customerLoss;
-  const totalYearly = totalMonthly * 12;
-  const recoveredProfit = Math.round(totalMonthly * 0.60);
-  return {
-    inventoryLoss,
-    timeLoss,
-    customerLoss,
-    totalMonthly,
-    totalYearly,
-    recoveredProfit
-  };
-};
+// formatNumber is now imported from lib/calculations
 export const Results = ({
   data,
   onContactClick
