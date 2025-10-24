@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { LiteCalculator } from "@/components/LiteCalculator";
 import { LiteResults } from "@/components/LiteResults";
 import { CalculatorData } from "@/components/Calculator";
+import { pageView } from "@/lib/fpixel";
 
 const CalcLite = () => {
   const [showResults, setShowResults] = useState(false);
-  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
+  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(
+    null
+  );
 
   const handleComplete = (data: CalculatorData) => {
     setCalculatorData(data);
@@ -14,15 +17,13 @@ const CalcLite = () => {
 
   // Track PageView on mount
   useEffect(() => {
-    if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'PageView');
-    }
+    pageView();
   }, []);
 
   // Scroll to top when results show
   useEffect(() => {
     if (showResults) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [showResults]);
 

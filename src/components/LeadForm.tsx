@@ -3,16 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { uz } from "date-fns/locale";
-import { CalendarIcon, Phone, User, Loader2, MessageCircle } from "lucide-react";
+import {
+  CalendarIcon,
+  Phone,
+  User,
+  Loader2,
+  MessageCircle,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 import { z } from "zod";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
+import { eventCustom } from "@/lib/fpixel";
 
 // ⚠️ WARNING: Bot token in client-side code is INSECURE!
 // Anyone can view this token in browser DevTools and abuse your bot.
@@ -27,8 +38,16 @@ interface LeadFormProps {
 
 // Validation schema
 const leadFormSchema = z.object({
-  firstName: z.string().trim().min(1, "Ism kiritilishi shart").max(100, "Ism juda uzun"),
-  lastName: z.string().trim().min(1, "Familiya kiritilishi shart").max(100, "Familiya juda uzun"),
+  firstName: z
+    .string()
+    .trim()
+    .min(1, "Ism kiritilishi shart")
+    .max(100, "Ism juda uzun"),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, "Familiya kiritilishi shart")
+    .max(100, "Familiya juda uzun"),
   phoneNumber: z.string().regex(/^\+998\d{9}$/, "Telefon raqam noto'g'ri"),
   appointmentDate: z.string(),
   appointmentTime: z.string(),
@@ -57,7 +76,9 @@ const timeSlots = [
 
 // Contact info for fallback
 const BILLZ_PHONE = "+998712009900";
-const BILLZ_WHATSAPP = `https://wa.me/998712009900?text=${encodeURIComponent("Assalomu alaykum, BILLZ haqida ma'lumot olmoqchiman")}`;
+const BILLZ_WHATSAPP = `https://wa.me/998712009900?text=${encodeURIComponent(
+  "Assalomu alaykum, BILLZ haqida ma'lumot olmoqchiman"
+)}`;
 
 export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [formData, setFormData] = useState({
@@ -92,7 +113,9 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
 
   const isPhoneValid = () => {
     const digits = formData.phoneNumber.replace(/\D/g, "");
-    return digits.length === 9 || (digits.startsWith("998") && digits.length === 12);
+    return (
+      digits.length === 9 || (digits.startsWith("998") && digits.length === 12)
+    );
   };
 
   const canSubmit = () => {
@@ -110,7 +133,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   // Send message directly to Telegram
   const sendToTelegram = async (data: any): Promise<boolean> => {
     let lossesText = "";
-    
+
     if (calculatorData) {
       const losses = calculateLosses(calculatorData);
       lossesText = `
@@ -143,15 +166,18 @@ ${lossesText}
     `.trim();
 
     try {
-      const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text: message,
-          parse_mode: "HTML",
-        }),
-      });
+      const response = await fetch(
+        `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: "HTML",
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -174,7 +200,7 @@ ${lossesText}
         JSON.stringify({
           ...data,
           savedAt: new Date().toISOString(),
-        }),
+        })
       );
       console.log("💾 Form data saved to localStorage");
     } catch (error) {
@@ -199,7 +225,9 @@ ${lossesText}
     setShowFallback(false);
 
     const rawDigits = formData.phoneNumber.replace(/\D/g, "");
-    const phoneE164 = rawDigits.startsWith("998") ? `+${rawDigits}` : `+998${rawDigits}`;
+    const phoneE164 = rawDigits.startsWith("998")
+      ? `+${rawDigits}`
+      : `+998${rawDigits}`;
 
     const leadData = {
       firstName: formData.firstName.trim(),
@@ -258,11 +286,12 @@ ${lossesText}
         localStorage.removeItem("billz_form_backup");
 
         // Track Lead event
-        if (typeof (window as any).fbq === 'function') {
-          (window as any).fbq('track', 'Lead', {
-            content_name: 'Inventory loss calculator'
-          });
-        }
+
+        eventCustom("Lead", {
+          content_name: "Inventory loss calculator",
+          phone: maskPhone(phoneE164),
+          name: `${formData.firstName} ${formData.lastName}`,
+        });
 
         toast({
           title: "Muvaffaqiyatli!",
@@ -291,7 +320,8 @@ ${lossesText}
 
     toast({
       title: "Xato",
-      description: "Xabar yuborilmadi. Iltimos, pastdagi kontaktlar orqali bog'laning",
+      description:
+        "Xabar yuborilmadi. Iltimos, pastdagi kontaktlar orqali bog'laning",
       variant: "destructive",
     });
   };
@@ -303,8 +333,12 @@ ${lossesText}
           <BillzLogo className="h-10 md:h-12 text-foreground" />
         </div>
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">BILLZ bilan bog'lanish</h2>
-          <p className="text-muted-foreground text-lg">Ma'lumotlaringizni qoldiring, biz tez orada bog'lanamiz</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
+            BILLZ bilan bog'lanish
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            Ma'lumotlaringizni qoldiring, biz tez orada bog'lanamiz
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -318,7 +352,9 @@ ${lossesText}
                 <Input
                   id="firstName"
                   value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, firstName: e.target.value })
+                  }
                   placeholder="Ismingiz"
                   className="h-14 pl-12 text-lg rounded-2xl"
                 />
@@ -334,7 +370,9 @@ ${lossesText}
                 <Input
                   id="lastName"
                   value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, lastName: e.target.value })
+                  }
                   placeholder="Familiyangiz"
                   className="h-14 pl-12 text-lg rounded-2xl"
                 />
@@ -348,7 +386,9 @@ ${lossesText}
             </Label>
             <div className="relative">
               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <div className="absolute left-12 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">+998</div>
+              <div className="absolute left-12 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
+                +998
+              </div>
               <Input
                 id="phone"
                 type="tel"
@@ -359,19 +399,23 @@ ${lossesText}
               />
             </div>
             {formData.phoneNumber && !isPhoneValid() && (
-              <p className="text-sm text-destructive">Telefon raqam noto'g'ri</p>
+              <p className="text-sm text-destructive">
+                Telefon raqam noto'g'ri
+              </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label className="text-base font-medium">Qo'ng'iroq sanasini tanlang</Label>
+            <Label className="text-base font-medium">
+              Qo'ng'iroq sanasini tanlang
+            </Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
                     "w-full h-14 justify-start text-left font-normal text-lg rounded-2xl",
-                    !date && "text-muted-foreground",
+                    !date && "text-muted-foreground"
                   )}
                 >
                   <CalendarIcon className="mr-3 h-5 w-5" />
@@ -402,7 +446,7 @@ ${lossesText}
                     "p-3 rounded-xl border-2 transition-all font-medium",
                     selectedTime === time
                       ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border hover:border-primary hover:bg-secondary",
+                      : "border-border hover:border-primary hover:bg-secondary"
                   )}
                 >
                   {time}
@@ -419,7 +463,9 @@ ${lossesText}
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                {retryCount > 0 ? `Qayta urinilmoqda... (${retryCount}/3)` : "Yuborilmoqda..."}
+                {retryCount > 0
+                  ? `Qayta urinilmoqda... (${retryCount}/3)`
+                  : "Yuborilmoqda..."}
               </>
             ) : (
               "Jo'natish"
@@ -428,9 +474,12 @@ ${lossesText}
 
           {showFallback && (
             <div className="mt-6 p-6 bg-secondary/50 border-2 border-primary/20 rounded-2xl animate-fade-in">
-              <h3 className="font-bold text-lg mb-3 text-center">Boshqa yo'l bilan bog'laning</h3>
+              <h3 className="font-bold text-lg mb-3 text-center">
+                Boshqa yo'l bilan bog'laning
+              </h3>
               <p className="text-sm text-muted-foreground mb-4 text-center">
-                Sizning ma'lumotlaringiz saqlab qolindi. Iltimos, quyidagi yo'llardan biri orqali bog'laning:
+                Sizning ma'lumotlaringiz saqlab qolindi. Iltimos, quyidagi
+                yo'llardan biri orqali bog'laning:
               </p>
               <div className="space-y-3">
                 <a

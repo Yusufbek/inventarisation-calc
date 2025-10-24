@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { Calculator, CalculatorData } from "@/components/Calculator";
 import { Results } from "@/components/Results";
 import { LeadForm } from "@/components/LeadForm";
 import { ThankYou } from "@/components/ThankYou";
 import { Footer } from "@/components/Footer";
+import { eventCustom } from "@/lib/fpixel";
 
 type Screen = "hero" | "calculator" | "results" | "lead-form" | "thank-you";
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
-  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
+  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(
+    null
+  );
 
   const handleStartCalculator = () => {
     setCurrentScreen("calculator");
@@ -33,6 +36,11 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  useEffect(() => {
+    eventCustom("CalculatorFinished", {
+      content_name: "Inventory loss calculator",
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,16 +61,15 @@ const Index = () => {
       )}
 
       {currentScreen === "lead-form" && (
-        <LeadForm onSuccess={handleLeadSuccess} calculatorData={calculatorData} />
+        <LeadForm
+          onSuccess={handleLeadSuccess}
+          calculatorData={calculatorData}
+        />
       )}
 
-      {currentScreen === "thank-you" && (
-        <ThankYou />
-      )}
+      {currentScreen === "thank-you" && <ThankYou />}
 
-      {currentScreen === "hero" && (
-        <Footer />
-      )}
+      {currentScreen === "hero" && <Footer />}
     </div>
   );
 };

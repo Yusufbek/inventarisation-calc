@@ -7,6 +7,7 @@ import { CalculatorData } from "./Calculator";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { eventCustom } from "@/lib/fpixel";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -34,16 +35,19 @@ interface LiteResultsProps {
 const lossExplanations = {
   inventory: {
     title: "Yo'qolgan mahsulotlar",
-    explanation: "Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar. Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi."
+    explanation:
+      "Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar. Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.",
   },
   time: {
     title: "Xodimlar vaqti",
-    explanation: "Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan shug'ullana olmaydilar."
+    explanation:
+      "Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan shug'ullana olmaydilar.",
   },
   customer: {
     title: "Out-of-stock (mijoz yo'qotilishi)",
-    explanation: "Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir."
-  }
+    explanation:
+      "Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.",
+  },
 };
 
 export const LiteResults = ({ data }: LiteResultsProps) => {
@@ -54,7 +58,7 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
   const [expandedInfo, setExpandedInfo] = useState<string | null>(null);
 
   const losses = calculateLosses(data);
-  
+
   const animatedTotal = useCountUp(losses.totalMonthly);
   const animatedInventory = useCountUp(losses.inventoryLoss);
   const animatedTime = useCountUp(losses.timeLoss);
@@ -64,45 +68,43 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
   // Track CalculatorFinished when results are shown
   useEffect(() => {
-    if (typeof (window as any).fbq === 'function') {
-      (window as any).fbq('track', 'CalculatorFinished', {
-        content_name: 'Inventory loss calculator lite'
-      });
-    }
+    eventCustom("CalculatorFinished", {
+      content_name: "Inventory loss calculator lite",
+    });
   }, []);
 
   // Format phone number as user types
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '');
-    
+    const value = e.target.value.replace(/\D/g, "");
+
     // Limit to 9 digits
     const limitedValue = value.slice(0, 9);
-    
+
     // Format: (90) 123-45-67
-    let formatted = '';
+    let formatted = "";
     if (limitedValue.length > 0) {
-      formatted = '(' + limitedValue.slice(0, 2);
+      formatted = "(" + limitedValue.slice(0, 2);
       if (limitedValue.length >= 2) {
-        formatted += ') ' + limitedValue.slice(2, 5);
+        formatted += ") " + limitedValue.slice(2, 5);
       }
       if (limitedValue.length >= 5) {
-        formatted += '-' + limitedValue.slice(5, 7);
+        formatted += "-" + limitedValue.slice(5, 7);
       }
       if (limitedValue.length >= 7) {
-        formatted += '-' + limitedValue.slice(7, 9);
+        formatted += "-" + limitedValue.slice(7, 9);
       }
     }
     setPhone(formatted);
   };
 
   const isPhoneValid = () => {
-    const digits = phone.replace(/\D/g, '');
+    const digits = phone.replace(/\D/g, "");
     return digits.length === 9;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim() || !isPhoneValid()) {
       return;
     }
@@ -110,13 +112,20 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
     setIsSubmitting(true);
 
     try {
-      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_BOT_TOKEN =
+        "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
 
-      const phoneDigits = phone.replace(/\D/g, '');
+      const phoneDigits = phone.replace(/\D/g, "");
       const fullPhone = `+998${phoneDigits}`;
 
-      const message = `🆕 Yangi lead (Lite Calculator)!\n\n👤 Ism: ${name}\n📱 Telefon: ${fullPhone}\n💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${data.storeType}\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${data.theftLevel}\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
+      const message = `🆕 Yangi lead (Lite Calculator)!\n\n👤 Ism: ${name}\n📱 Telefon: ${fullPhone}\n💰 Oylik yo'qotish: ${formatNumber(
+        losses.totalMonthly
+      )} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${
+        data.storeType
+      }\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${
+        data.theftLevel
+      }\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -131,13 +140,14 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
       if (response.ok) {
         setIsSubmitted(true);
-        
+
         // Track Lead event
-        if (typeof (window as any).fbq === 'function') {
-          (window as any).fbq('track', 'Lead', {
-            content_name: 'Inventory loss calculator lite'
-          });
-        }
+
+        eventCustom("Lead", {
+          content_name: "Inventory loss calculator lite",
+          name,
+          phone: fullPhone,
+        });
       } else {
         console.error("Telegram API error:", await response.text());
       }
@@ -168,40 +178,62 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
               yo'qotyapsiz.
             </p>
             <p className="text-muted-foreground max-w-xl mx-auto">
-              Inventarizatsiya qilinmagani, noto'g'ri hisob va stokdagi xatolar tufayli.
+              Inventarizatsiya qilinmagani, noto'g'ri hisob va stokdagi xatolar
+              tufayli.
             </p>
           </div>
 
           {/* Short Table */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="grid grid-cols-2 bg-secondary text-sm md:text-base font-semibold">
-              <div className="px-4 md:px-6 py-3 text-foreground">Yo'qotish turi</div>
-              <div className="px-4 md:px-6 py-3 text-right text-foreground">Miqdor</div>
+              <div className="px-4 md:px-6 py-3 text-foreground">
+                Yo'qotish turi
+              </div>
+              <div className="px-4 md:px-6 py-3 text-right text-foreground">
+                Miqdor
+              </div>
             </div>
-            
+
             <div className="divide-y divide-border">
               <div className="group">
                 <div className="grid grid-cols-2 gap-px bg-border p-px">
                   <div className="bg-white px-4 md:px-6 py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">Yo'qolgan mahsulotlar</span>
+                      <span className="font-semibold text-foreground">
+                        Yo'qolgan mahsulotlar
+                      </span>
                       <button
-                        onClick={() => setExpandedInfo(expandedInfo === 'inventory' ? null : 'inventory')}
+                        onClick={() =>
+                          setExpandedInfo(
+                            expandedInfo === "inventory" ? null : "inventory"
+                          )
+                        }
                         className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
-                    {expandedInfo === 'inventory' && (
+                    {expandedInfo === "inventory" && (
                       <div className="p-4 bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border border-destructive/20 animate-fade-in">
                         <p className="text-sm text-foreground leading-relaxed">
-                          <span className="font-semibold text-destructive">Nima?</span> Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar.
+                          <span className="font-semibold text-destructive">
+                            Nima?
+                          </span>{" "}
+                          Inventarizatsiya qilishda amalda yo'q, lekin hisobda
+                          ko'rsatilgan mahsulotlar.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-destructive">Sabab:</span> O'g'irlik, xato hisoblash, mahsulot buzilishi yoki yo'qolishi.
+                          <span className="font-semibold text-destructive">
+                            Sabab:
+                          </span>{" "}
+                          O'g'irlik, xato hisoblash, mahsulot buzilishi yoki
+                          yo'qolishi.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-destructive">Ta'sir:</span> Siz pulini to'lagan mahsulot yo'q — sof zarar.
+                          <span className="font-semibold text-destructive">
+                            Ta'sir:
+                          </span>{" "}
+                          Siz pulini to'lagan mahsulot yo'q — sof zarar.
                         </p>
                       </div>
                     )}
@@ -210,7 +242,9 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                     <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedInventory)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">so'm</div>
+                    <div className="text-sm text-destructive font-medium">
+                      so'm
+                    </div>
                   </div>
                 </div>
               </div>
@@ -219,24 +253,41 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                 <div className="grid grid-cols-2 gap-px bg-border p-px">
                   <div className="bg-white px-4 md:px-6 py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">Xodimlar vaqti</span>
+                      <span className="font-semibold text-foreground">
+                        Xodimlar vaqti
+                      </span>
                       <button
-                        onClick={() => setExpandedInfo(expandedInfo === 'time' ? null : 'time')}
+                        onClick={() =>
+                          setExpandedInfo(
+                            expandedInfo === "time" ? null : "time"
+                          )
+                        }
                         className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
-                    {expandedInfo === 'time' && (
+                    {expandedInfo === "time" && (
                       <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 animate-fade-in">
                         <p className="text-sm text-foreground leading-relaxed">
-                          <span className="font-semibold text-orange-600">Nima?</span> Xodimlarning inventarizatsiya, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti.
+                          <span className="font-semibold text-orange-600">
+                            Nima?
+                          </span>{" "}
+                          Xodimlarning inventarizatsiya, qayta sanash va
+                          farqlarni tuzatish uchun sarflaydigan vaqti.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-orange-600">Sabab:</span> Tizim yo'q, manual hisob, xatolarni qidirish.
+                          <span className="font-semibold text-orange-600">
+                            Sabab:
+                          </span>{" "}
+                          Tizim yo'q, manual hisob, xatolarni qidirish.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-orange-600">Ta'sir:</span> Bu vaqtda sotish, mijoz xizmati yoki boshqa muhim ishlar bilan shug'ullanish mumkin emas.
+                          <span className="font-semibold text-orange-600">
+                            Ta'sir:
+                          </span>{" "}
+                          Bu vaqtda sotish, mijoz xizmati yoki boshqa muhim
+                          ishlar bilan shug'ullanish mumkin emas.
                         </p>
                       </div>
                     )}
@@ -245,7 +296,9 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                     <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedTime)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">so'm</div>
+                    <div className="text-sm text-destructive font-medium">
+                      so'm
+                    </div>
                   </div>
                 </div>
               </div>
@@ -254,24 +307,42 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                 <div className="grid grid-cols-2 gap-px bg-border p-px">
                   <div className="bg-white px-4 md:px-6 py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">Out-of-stock (mijoz yo'qotilishi)</span>
+                      <span className="font-semibold text-foreground">
+                        Out-of-stock (mijoz yo'qotilishi)
+                      </span>
                       <button
-                        onClick={() => setExpandedInfo(expandedInfo === 'customer' ? null : 'customer')}
+                        onClick={() =>
+                          setExpandedInfo(
+                            expandedInfo === "customer" ? null : "customer"
+                          )
+                        }
                         className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
-                    {expandedInfo === 'customer' && (
+                    {expandedInfo === "customer" && (
                       <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 animate-fade-in">
                         <p className="text-sm text-foreground leading-relaxed">
-                          <span className="font-semibold text-blue-600">Nima?</span> Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydi.
+                          <span className="font-semibold text-blue-600">
+                            Nima?
+                          </span>{" "}
+                          Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda
+                          mijozlar kerakli mahsulotni topa olmaydi.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-blue-600">Sabab:</span> Stok noto'g'ri, real vaqt nazorat yo'q, buyurtma berish kechikadi.
+                          <span className="font-semibold text-blue-600">
+                            Sabab:
+                          </span>{" "}
+                          Stok noto'g'ri, real vaqt nazorat yo'q, buyurtma
+                          berish kechikadi.
                         </p>
                         <p className="text-sm text-foreground leading-relaxed mt-2">
-                          <span className="font-semibold text-blue-600">Ta'sir:</span> Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va obro' zarari.
+                          <span className="font-semibold text-blue-600">
+                            Ta'sir:
+                          </span>{" "}
+                          Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va
+                          obro' zarari.
                         </p>
                       </div>
                     )}
@@ -280,7 +351,9 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                     <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedCustomer)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">so'm</div>
+                    <div className="text-sm text-destructive font-medium">
+                      so'm
+                    </div>
                   </div>
                 </div>
               </div>
@@ -294,7 +367,9 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                     <div className="text-3xl md:text-4xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedYearly)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">so'm</div>
+                    <div className="text-sm text-destructive font-medium">
+                      so'm
+                    </div>
                   </div>
                 </div>
               </div>
@@ -311,14 +386,16 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
             <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
             <div className="absolute inset-0 border-2 border-white/20 rounded-3xl"></div>
-            
+
             <div className="relative z-10 space-y-6">
               <p className="text-xl md:text-2xl font-bold text-center">
-                BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
+                BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish
+                mumkin.
               </p>
 
               <p className="text-center text-white/90">
-                Avtomatik inventarizatsiya, real-vaqt stok nazorati va xatolarni kamaytirish orqali.
+                Avtomatik inventarizatsiya, real-vaqt stok nazorati va xatolarni
+                kamaytirish orqali.
               </p>
 
               <div className="text-center space-y-2 py-4">
@@ -343,7 +420,8 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                   Rahmat!
                 </h3>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  Bizning ekspertimiz tez orada siz bilan bog'lanadi va do'koningizni tahlil qilishga yordam beradi.
+                  Bizning ekspertimiz tez orada siz bilan bog'lanadi va
+                  do'koningizni tahlil qilishga yordam beradi.
                 </p>
               </div>
             ) : (
@@ -353,13 +431,18 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                     BILLZ siz izlayotgan yechim bo'lishi mumkin.
                   </h3>
                   <p className="text-muted-foreground max-w-2xl mx-auto">
-                    Bizning chakana ekspertimiz siz bilan do'koningizni tahlil qilib chiqadi va aynan siz uchun qanday yechimlar eng foydali bo'lishini ko'rsatadi.
+                    Bizning chakana ekspertimiz siz bilan do'koningizni tahlil
+                    qilib chiqadi va aynan siz uchun qanday yechimlar eng
+                    foydali bo'lishini ko'rsatadi.
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-3">
-                    <Label htmlFor="name" className="text-base font-semibold text-foreground">
+                    <Label
+                      htmlFor="name"
+                      className="text-base font-semibold text-foreground"
+                    >
                       Ismingiz
                     </Label>
                     <Input
@@ -372,9 +455,12 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                       className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors"
                     />
                   </div>
-                  
+
                   <div className="space-y-3">
-                    <Label htmlFor="phone" className="text-base font-semibold text-foreground">
+                    <Label
+                      htmlFor="phone"
+                      className="text-base font-semibold text-foreground"
+                    >
                       Telefon raqam
                     </Label>
                     <div className="relative">
@@ -392,16 +478,20 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                       />
                     </div>
                     {phone && !isPhoneValid() && (
-                      <p className="text-sm text-destructive">9 ta raqam kiriting</p>
+                      <p className="text-sm text-destructive">
+                        9 ta raqam kiriting
+                      </p>
                     )}
                   </div>
-                  
+
                   <Button
                     type="submit"
                     disabled={isSubmitting || !name.trim() || !isPhoneValid()}
                     className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
                   >
-                    {isSubmitting ? "Yuborilmoqda..." : "BILLZ bilan bog'lanish"}
+                    {isSubmitting
+                      ? "Yuborilmoqda..."
+                      : "BILLZ bilan bog'lanish"}
                   </Button>
                 </form>
 
