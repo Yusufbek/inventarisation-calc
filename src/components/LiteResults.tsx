@@ -121,11 +121,16 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
       });
 
       if (response.ok) {
-        // Track Lead event
-        if (window.fbq) {
-          window.fbq('track', 'Lead');
-        }
         setIsSubmitted(true);
+        
+        // Track Lead event with parameters
+        if (typeof window.fbq === 'function') {
+          window.fbq('track', 'Lead', {
+            content_name: 'Lite Calculator Lead',
+            value: losses.totalMonthly,
+            currency: 'UZS'
+          });
+        }
       } else {
         console.error("Telegram API error:", await response.text());
       }

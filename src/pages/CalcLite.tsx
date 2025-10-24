@@ -7,13 +7,6 @@ const CalcLite = () => {
   const [showResults, setShowResults] = useState(false);
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
-  // Track page view on mount
-  useEffect(() => {
-    if (window.fbq) {
-      window.fbq('track', 'PageView');
-    }
-  }, []);
-
   const handleComplete = (data: CalculatorData) => {
     setCalculatorData(data);
     setShowResults(true);
