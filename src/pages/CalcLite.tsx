@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LiteCalculator } from "@/components/LiteCalculator";
 import { LiteResults } from "@/components/LiteResults";
 import { CalculatorData } from "@/components/Calculator";
@@ -11,6 +11,13 @@ const CalcLite = () => {
     setCalculatorData(data);
     setShowResults(true);
   };
+
+  // Scroll to top when results show
+  useEffect(() => {
+    if (showResults) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [showResults]);
 
   return (
     <div className="min-h-screen bg-background">

@@ -48,7 +48,7 @@ const lossExplanations = {
 
 export const LiteResults = ({ data }: LiteResultsProps) => {
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("+998");
+  const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState<string | null>(null);
@@ -62,19 +62,56 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
 
+  // Format phone number as user types
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    
+    // Limit to 9 digits
+    const limitedValue = value.slice(0, 9);
+    
+    // Format: (90) 123-45-67
+    let formatted = '';
+    if (limitedValue.length > 0) {
+      formatted = '(' + limitedValue.slice(0, 2);
+      if (limitedValue.length >= 2) {
+        formatted += ') ' + limitedValue.slice(2, 5);
+      }
+      if (limitedValue.length >= 5) {
+        formatted += '-' + limitedValue.slice(5, 7);
+      }
+      if (limitedValue.length >= 7) {
+        formatted += '-' + limitedValue.slice(7, 9);
+      }
+    }
+    setPhone(formatted);
+  };
+
+  const isPhoneValid = () => {
+    const digits = phone.replace(/\D/g, '');
+    return digits.length === 9;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!name.trim() || !isPhoneValid()) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
 
-      const message = `🆕 Yangi lead (Lite Calculator)!\n\n👤 Ism: ${name}\n📱 Telefon: ${phone}\n💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${data.storeType}\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${data.theftLevel}\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
+      const phoneDigits = phone.replace(/\D/g, '');
+      const fullPhone = `+998${phoneDigits}`;
+
+      const message = `🆕 Yangi lead (Lite Calculator)!\n\n👤 Ism: ${name}\n📱 Telefon: ${fullPhone}\n💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${data.storeType}\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${data.theftLevel}\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-      await fetch(url, {
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,7 +120,11 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
         }),
       });
 
-      setIsSubmitted(true);
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        console.error("Telegram API error:", await response.text());
+      }
     } catch (error) {
       console.error("Failed to send lead to Telegram:", error);
     } finally {
@@ -123,78 +164,122 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
             </div>
             
             <div className="divide-y divide-border">
-              <div className="grid grid-cols-2">
-                <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  <div className="flex items-center gap-2">
-                    <span>Yo'qolgan mahsulotlar</span>
-                    <button
-                      onClick={() => setExpandedInfo(expandedInfo === 'inventory' ? null : 'inventory')}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Info className="w-4 h-4" />
-                    </button>
-                  </div>
-                  {expandedInfo === 'inventory' && (
-                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
-                      {lossExplanations.inventory.explanation}
+              <div className="group">
+                <div className="grid grid-cols-2 gap-px bg-border p-px">
+                  <div className="bg-white px-4 md:px-6 py-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-foreground">Yo'qolgan mahsulotlar</span>
+                      <button
+                        onClick={() => setExpandedInfo(expandedInfo === 'inventory' ? null : 'inventory')}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                      >
+                        <Info className="w-4 h-4" />
+                      </button>
                     </div>
-                  )}
-                </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
-                  {formatNumber(animatedInventory)} so'm
+                    {expandedInfo === 'inventory' && (
+                      <div className="p-4 bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border border-destructive/20 animate-fade-in">
+                        <p className="text-sm text-foreground leading-relaxed">
+                          <span className="font-semibold text-destructive">Nima?</span> Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-destructive">Sabab:</span> O'g'irlik, xato hisoblash, mahsulot buzilishi yoki yo'qolishi.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-destructive">Ta'sir:</span> Siz pulini to'lagan mahsulot yo'q — sof zarar.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white px-4 md:px-6 py-5 text-right">
+                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedInventory)}
+                    </div>
+                    <div className="text-sm text-destructive font-medium">so'm</div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2">
-                <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  <div className="flex items-center gap-2">
-                    <span>Xodimlar vaqti</span>
-                    <button
-                      onClick={() => setExpandedInfo(expandedInfo === 'time' ? null : 'time')}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Info className="w-4 h-4" />
-                    </button>
-                  </div>
-                  {expandedInfo === 'time' && (
-                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
-                      {lossExplanations.time.explanation}
+              <div className="group">
+                <div className="grid grid-cols-2 gap-px bg-border p-px">
+                  <div className="bg-white px-4 md:px-6 py-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-foreground">Xodimlar vaqti</span>
+                      <button
+                        onClick={() => setExpandedInfo(expandedInfo === 'time' ? null : 'time')}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                      >
+                        <Info className="w-4 h-4" />
+                      </button>
                     </div>
-                  )}
-                </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
-                  {formatNumber(animatedTime)} so'm
+                    {expandedInfo === 'time' && (
+                      <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 animate-fade-in">
+                        <p className="text-sm text-foreground leading-relaxed">
+                          <span className="font-semibold text-orange-600">Nima?</span> Xodimlarning inventarizatsiya, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-orange-600">Sabab:</span> Tizim yo'q, manual hisob, xatolarni qidirish.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-orange-600">Ta'sir:</span> Bu vaqtda sotish, mijoz xizmati yoki boshqa muhim ishlar bilan shug'ullanish mumkin emas.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white px-4 md:px-6 py-5 text-right">
+                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedTime)}
+                    </div>
+                    <div className="text-sm text-destructive font-medium">so'm</div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2">
-                <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  <div className="flex items-center gap-2">
-                    <span>Out-of-stock (mijoz yo'qotilishi)</span>
-                    <button
-                      onClick={() => setExpandedInfo(expandedInfo === 'customer' ? null : 'customer')}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Info className="w-4 h-4" />
-                    </button>
-                  </div>
-                  {expandedInfo === 'customer' && (
-                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
-                      {lossExplanations.customer.explanation}
+              <div className="group">
+                <div className="grid grid-cols-2 gap-px bg-border p-px">
+                  <div className="bg-white px-4 md:px-6 py-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="font-semibold text-foreground">Out-of-stock (mijoz yo'qotilishi)</span>
+                      <button
+                        onClick={() => setExpandedInfo(expandedInfo === 'customer' ? null : 'customer')}
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                      >
+                        <Info className="w-4 h-4" />
+                      </button>
                     </div>
-                  )}
-                </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
-                  {formatNumber(animatedCustomer)} so'm
+                    {expandedInfo === 'customer' && (
+                      <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 animate-fade-in">
+                        <p className="text-sm text-foreground leading-relaxed">
+                          <span className="font-semibold text-blue-600">Nima?</span> Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydi.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-blue-600">Sabab:</span> Stok noto'g'ri, real vaqt nazorat yo'q, buyurtma berish kechikadi.
+                        </p>
+                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                          <span className="font-semibold text-blue-600">Ta'sir:</span> Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va obro' zarari.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white px-4 md:px-6 py-5 text-right">
+                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedCustomer)}
+                    </div>
+                    <div className="text-sm text-destructive font-medium">so'm</div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 bg-secondary/50">
-                <div className="px-4 md:px-6 py-4 font-bold text-foreground">
-                  Yiliga jami:
-                </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-lg transition-all duration-500">
-                  {formatNumber(animatedYearly)} so'm
+              <div className="bg-secondary/80 px-4 md:px-6 py-6 border-t-4 border-destructive">
+                <div className="flex justify-between items-center">
+                  <p className="text-lg md:text-xl font-bold text-foreground">
+                    Yiliga jami:
+                  </p>
+                  <div className="text-right">
+                    <div className="text-3xl md:text-4xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedYearly)}
+                    </div>
+                    <div className="text-sm text-destructive font-medium">so'm</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -256,39 +341,49 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-base font-medium">
-                      Ism
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="name" className="text-base font-semibold text-foreground">
+                      Ismingiz
                     </Label>
                     <Input
                       id="name"
                       type="text"
-                      placeholder="Ismingiz"
+                      placeholder="Ismingizni kiriting"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="h-14 text-lg rounded-2xl"
+                      className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-base font-medium">
+                  
+                  <div className="space-y-3">
+                    <Label htmlFor="phone" className="text-base font-semibold text-foreground">
                       Telefon raqam
                     </Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+998 90 123 45 67"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      required
-                      className="h-14 text-lg rounded-2xl"
-                    />
+                    <div className="relative">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-muted-foreground">
+                        +998
+                      </div>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="(90) 123-45-67"
+                        value={phone}
+                        onChange={handlePhoneChange}
+                        required
+                        className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors pl-20"
+                      />
+                    </div>
+                    {phone && !isPhoneValid() && (
+                      <p className="text-sm text-destructive">9 ta raqam kiriting</p>
+                    )}
                   </div>
+                  
                   <Button
                     type="submit"
-                    disabled={isSubmitting || !name.trim() || phone.length < 13}
-                    className="w-full h-14 text-lg rounded-2xl"
+                    disabled={isSubmitting || !name.trim() || !isPhoneValid()}
+                    className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
                   >
                     {isSubmitting ? "Yuborilmoqda..." : "BILLZ bilan bog'lanish"}
                   </Button>
