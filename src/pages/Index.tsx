@@ -36,12 +36,6 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  useEffect(() => {
-    eventCustom("CalculatorFinished", {
-      content_name: "Inventory loss calculator",
-    });
-  }, []);
-
   return (
     <div className="min-h-screen bg-background">
       {currentScreen === "hero" && (
