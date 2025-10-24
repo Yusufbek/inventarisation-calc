@@ -239,27 +239,40 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                O'tgan oyda do'koningiz tushumi (taxminan) qancha bo'lgan?
+                O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
               </h2>
               <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
                 <span className="text-lg">💡</span>
                 <span>Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.</span>
               </p>
             </div>
-            <Input
-              type="text"
-              placeholder="Masalan: 50 000 000"
-              value={data.revenue ? data.revenue.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, '');
-                const numValue = parseInt(value) || 0;
-                setData({ ...data, revenue: numValue });
-              }}
-              className="h-14 text-lg rounded-2xl"
-            />
+            <div className="grid gap-3">
+              {[
+                { id: "0-50", label: "< 50 mln so'm", value: 25000000 },
+                { id: "50-100", label: "50–100 mln so'm", value: 75000000 },
+                { id: "100-200", label: "100–200 mln so'm", value: 150000000 },
+                { id: "200-500", label: "200–500 mln so'm", value: 350000000 },
+                { id: "500+", label: "500 mln+ so'm", value: 750000000 },
+              ].map((range) => (
+                <button
+                  key={range.id}
+                  onClick={() => {
+                    setData({ ...data, revenue: range.value });
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
+                    "font-medium text-lg",
+                    data.revenue === range.value && "border-primary bg-secondary"
+                  )}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
             <div className="space-y-3">
               <Button
                 onClick={handleNext}
+                disabled={!data.revenue}
                 className="w-full h-14 text-lg rounded-2xl"
               >
                 Natijani ko'rish

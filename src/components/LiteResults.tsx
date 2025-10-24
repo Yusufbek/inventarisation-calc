@@ -1,21 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const useCountUp = (end: number, duration: number = 2000) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    let startTime: number;
+    let animationFrame: number;
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(animate);
+      }
+    };
+    animationFrame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration]);
+  return count;
+};
 
 interface LiteResultsProps {
   data: CalculatorData;
 }
 
+const lossExplanations = {
+  inventory: {
+    title: "Yo'qolgan mahsulotlar",
+    explanation: "Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar. Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi."
+  },
+  time: {
+    title: "Xodimlar vaqti",
+    explanation: "Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan shug'ullana olmaydilar."
+  },
+  customer: {
+    title: "Out-of-stock (mijoz yo'qotilishi)",
+    explanation: "Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir."
+  }
+};
+
 export const LiteResults = ({ data }: LiteResultsProps) => {
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("+998");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [expandedInfo, setExpandedInfo] = useState<string | null>(null);
 
   const losses = calculateLosses(data);
+  
+  const animatedTotal = useCountUp(losses.totalMonthly);
+  const animatedInventory = useCountUp(losses.inventoryLoss);
+  const animatedTime = useCountUp(losses.timeLoss);
+  const animatedCustomer = useCountUp(losses.customerLoss);
+  const animatedYearly = useCountUp(losses.totalYearly);
+  const animatedRecovered = useCountUp(losses.recoveredProfit);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +70,7 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
 
-      const message = `🆕 Yangi lead (Lite Calculator)!\n\n📱 Telefon: ${phone}\n💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${data.storeType}\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${data.theftLevel}\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
+      const message = `🆕 Yangi lead (Lite Calculator)!\n\n👤 Ism: ${name}\n📱 Telefon: ${phone}\n💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\n\n📊 Hisoblash natijalari:\n🏪 Do'kon turi: ${data.storeType}\n📦 SKU soni: ${data.skuCount}\n🔒 O'g'irlik darajasi: ${data.theftLevel}\n💵 O'rtacha narx: ${formatNumber(data.avgPrice)} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -59,8 +104,8 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
             <h2 className="text-2xl md:text-3xl font-bold text-destructive">
               Siz har oy o'rtacha
             </h2>
-            <div className="text-5xl md:text-6xl font-bold text-destructive">
-              {formatNumber(losses.totalMonthly)} so'm
+            <div className="text-5xl md:text-6xl font-bold text-destructive transition-all duration-500">
+              {formatNumber(animatedTotal)} so'm
             </div>
             <p className="text-xl md:text-2xl font-bold text-destructive">
               yo'qotyapsiz.
@@ -80,28 +125,67 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
             <div className="divide-y divide-border">
               <div className="grid grid-cols-2">
                 <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  Yo'qolgan mahsulotlar
+                  <div className="flex items-center gap-2">
+                    <span>Yo'qolgan mahsulotlar</span>
+                    <button
+                      onClick={() => setExpandedInfo(expandedInfo === 'inventory' ? null : 'inventory')}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {expandedInfo === 'inventory' && (
+                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
+                      {lossExplanations.inventory.explanation}
+                    </div>
+                  )}
                 </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base">
-                  {formatNumber(losses.inventoryLoss)} so'm
+                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
+                  {formatNumber(animatedInventory)} so'm
                 </div>
               </div>
 
               <div className="grid grid-cols-2">
                 <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  Xodimlar vaqti
+                  <div className="flex items-center gap-2">
+                    <span>Xodimlar vaqti</span>
+                    <button
+                      onClick={() => setExpandedInfo(expandedInfo === 'time' ? null : 'time')}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {expandedInfo === 'time' && (
+                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
+                      {lossExplanations.time.explanation}
+                    </div>
+                  )}
                 </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base">
-                  {formatNumber(losses.timeLoss)} so'm
+                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
+                  {formatNumber(animatedTime)} so'm
                 </div>
               </div>
 
               <div className="grid grid-cols-2">
                 <div className="px-4 md:px-6 py-4 text-sm md:text-base text-foreground">
-                  Out-of-stock (mijoz yo'qotilishi)
+                  <div className="flex items-center gap-2">
+                    <span>Out-of-stock (mijoz yo'qotilishi)</span>
+                    <button
+                      onClick={() => setExpandedInfo(expandedInfo === 'customer' ? null : 'customer')}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      <Info className="w-4 h-4" />
+                    </button>
+                  </div>
+                  {expandedInfo === 'customer' && (
+                    <div className="mt-2 p-3 bg-secondary/50 rounded-lg text-xs text-muted-foreground animate-fade-in">
+                      {lossExplanations.customer.explanation}
+                    </div>
+                  )}
                 </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base">
-                  {formatNumber(losses.customerLoss)} so'm
+                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-sm md:text-base transition-all duration-500">
+                  {formatNumber(animatedCustomer)} so'm
                 </div>
               </div>
 
@@ -109,8 +193,8 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                 <div className="px-4 md:px-6 py-4 font-bold text-foreground">
                   Yiliga jami:
                 </div>
-                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-lg">
-                  {formatNumber(losses.totalYearly)} so'm
+                <div className="px-4 md:px-6 py-4 text-right font-bold text-destructive text-lg transition-all duration-500">
+                  {formatNumber(animatedYearly)} so'm
                 </div>
               </div>
             </div>
@@ -138,8 +222,8 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
               <div className="text-center space-y-2 py-4">
                 <p className="text-lg font-semibold">Taxminiy tejash:</p>
-                <div className="text-4xl md:text-5xl font-black">
-                  +{formatNumber(losses.recoveredProfit)} so'm / oy
+                <div className="text-4xl md:text-5xl font-black transition-all duration-500">
+                  +{formatNumber(animatedRecovered)} so'm / oy
                 </div>
               </div>
             </div>
@@ -173,17 +257,37 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <Input
-                    type="tel"
-                    placeholder="📞 Telefon raqam"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                    className="h-14 text-lg rounded-2xl"
-                  />
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="text-base font-medium">
+                      Ism
+                    </Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Ismingiz"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="h-14 text-lg rounded-2xl"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-base font-medium">
+                      Telefon raqam
+                    </Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="+998 90 123 45 67"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="h-14 text-lg rounded-2xl"
+                    />
+                  </div>
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !name.trim() || phone.length < 13}
                     className="w-full h-14 text-lg rounded-2xl"
                   >
                     {isSubmitting ? "Yuborilmoqda..." : "BILLZ bilan bog'lanish"}
