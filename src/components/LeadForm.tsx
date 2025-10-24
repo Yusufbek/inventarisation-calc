@@ -236,6 +236,15 @@ ${lossesText}
     // Save form data in case submission fails
     saveFormDataToLocal(leadData);
 
+    // Track Lead event early (not dependent on Telegram). No PII per Meta policy
+    if (typeof window.fbq === 'function') {
+      const value = calculatorData ? calculateLosses(calculatorData).totalMonthly : undefined;
+      window.fbq('track', 'Lead', {
+        content_name: 'Main Calculator Lead',
+        ...(typeof value === 'number' ? { value, currency: 'UZS' } : {})
+      });
+    }
+
     console.log("📤 Telegramga yuborilmoqda:", {
       timestamp: new Date().toISOString(),
       phone: maskPhone(phoneE164),
@@ -257,16 +266,7 @@ ${lossesText}
         // Clear saved form data on success
         localStorage.removeItem("billz_form_backup");
 
-        // Track successful form submission
-        if ((window as any).fbq) {
-          (window as any).fbq("track", "Lead", {
-            firstName: leadData.firstName,
-            lastName: leadData.lastName,
-            phoneNumber: leadData.phoneNumber,
-            appointmentDate: leadData.appointmentDate,
-            appointmentTime: leadData.appointmentTime,
-          });
-        }
+        // Lead event already tracked earlier
 
         toast({
           title: "Muvaffaqiyatli!",
