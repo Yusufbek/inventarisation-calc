@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { jsPDF } from "jspdf";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 
 export interface CalculatorData {
@@ -132,112 +131,28 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
 
   const sendCalculatorToTelegram = async (calcData: CalculatorData) => {
     try {
-      // Get user metadata
-      const metadata = await getUserMetadata();
       const losses = calculateLosses(calcData);
       
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
-      const frequencyLabel = frequencies.find(f => f.id === calcData.inventoryFrequency)?.label || calcData.inventoryFrequency;
-      const theftLabel = theftLevels.find(l => l.id === calcData.theftLevel)?.label || calcData.theftLevel;
       
-      // Generate PDF
-      const doc = new jsPDF();
+      const message = `🧮 Calculator yakunlandi\n🏪 ${storeTypeLabel}\n💰 ${formatNumber(losses.totalMonthly)} so'm/oy`;
       
-      // Set font
-      doc.setFontSize(20);
-      doc.text("BILLZ Calculator Natijasi", 105, 20, { align: "center" });
-      
-      // Store Information
-      doc.setFontSize(16);
-      doc.text("Do'kon ma'lumotlari:", 20, 40);
-      doc.setFontSize(12);
-      doc.text(`Turi: ${storeTypeLabel}`, 20, 50);
-      doc.text(`SKU soni: ${calcData.skuCount.toLocaleString('uz-UZ')}`, 20, 58);
-      doc.text(`Inventarizatsiya: ${frequencyLabel}`, 20, 66);
-      doc.text(`O'g'irlik darajasi: ${theftLabel}`, 20, 74);
-      doc.text(`O'rtacha narx: ${calcData.avgPrice.toLocaleString('uz-UZ')} so'm`, 20, 82);
-      
-      // Losses
-      doc.setFontSize(16);
-      doc.text("Hisoblangan yo'qotishlar:", 20, 100);
-      doc.setFontSize(12);
-      doc.text(`Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm`, 20, 110);
-      doc.text(`Yillik yo'qotish: ${losses.totalYearly.toLocaleString('uz-UZ')} so'm`, 20, 118);
-      doc.text(`BILLZ bilan tejash mumkin: ${losses.recoveredProfit.toLocaleString('uz-UZ')} so'm/oy`, 20, 126);
-      
-      // Loss breakdown
-      doc.setFontSize(16);
-      doc.text("Yo'qotishlar tarkibi:", 20, 144);
-      doc.setFontSize(12);
-      doc.text(`Inventar yo'qotishi: ${losses.inventoryLoss.toLocaleString('uz-UZ')} so'm`, 20, 154);
-      doc.text(`Vaqt yo'qotishi: ${losses.timeLoss.toLocaleString('uz-UZ')} so'm`, 20, 162);
-      doc.text(`Mijoz yo'qotishi: ${losses.customerLoss.toLocaleString('uz-UZ')} so'm`, 20, 170);
-      
-      // User metadata
-      doc.setFontSize(16);
-      doc.text("Foydalanuvchi ma'lumotlari:", 20, 188);
-      doc.setFontSize(12);
-      doc.text(`IP: ${metadata.ip}`, 20, 198);
-      doc.text(`Joylashuv: ${metadata.location}`, 20, 206);
-      doc.text(`Brauzer: ${metadata.userAgent.substring(0, 60)}`, 20, 214);
-      doc.text(`Ekran: ${metadata.screenSize}`, 20, 222);
-      doc.text(`Vaqt: ${metadata.timestamp}`, 20, 230);
-      doc.text(`Session ID: ${metadata.sessionId}`, 20, 238);
-      
-      // Convert PDF to blob
-      const pdfBlob = doc.output('blob');
-      
-      // Send PDF to Telegram
-      const formData = new FormData();
-      formData.append('chat_id', TELEGRAM_CHAT_ID);
-      formData.append('document', pdfBlob, `calculator-${metadata.sessionId}.pdf`);
-      formData.append('caption', `🧮 Calculator natijasi - ${storeTypeLabel}\n💰 Oylik yo'qotish: ${losses.totalMonthly.toLocaleString('uz-UZ')} so'm`);
-      
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`;
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       
       await fetch(url, {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+        }),
       });
     } catch (error) {
-      console.error("Failed to send calculator PDF to Telegram:", error);
+      console.error("Failed to send calculator notification to Telegram:", error);
     }
-  };
-
-  const getUserMetadata = async () => {
-    let ip = "Unknown";
-    let location = "Unknown";
-    
-    try {
-      const ipResponse = await fetch("https://api.ipify.org?format=json");
-      const ipData = await ipResponse.json();
-      ip = ipData.ip;
-      
-      const locationResponse = await fetch(`https://ipapi.co/${ip}/json/`);
-      const locationData = await locationResponse.json();
-      location = `${locationData.city || "Unknown"}, ${locationData.country_name || "Unknown"}`;
-    } catch (error) {
-      console.error("Failed to fetch user metadata:", error);
-    }
-    
-    const sessionId = localStorage.getItem("sessionId") || generateSessionId();
-    localStorage.setItem("sessionId", sessionId);
-    
-    return {
-      ip,
-      location,
-      userAgent: navigator.userAgent.substring(0, 100),
-      screenSize: `${window.screen.width}x${window.screen.height}`,
-      timestamp: new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' }),
-      sessionId,
-    };
-  };
-
-  const generateSessionId = () => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   };
 
   // Import centralized calculation logic - no need for duplicate function
