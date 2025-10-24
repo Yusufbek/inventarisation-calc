@@ -121,6 +121,10 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
       });
 
       if (response.ok) {
+        // Track Lead event
+        if (window.fbq) {
+          window.fbq('track', 'Lead');
+        }
         setIsSubmitted(true);
       } else {
         console.error("Telegram API error:", await response.text());
