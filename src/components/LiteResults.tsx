@@ -8,6 +8,7 @@ import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { eventCustom } from "@/lib/fpixel";
+import { sha256 } from "js-sha256";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -142,11 +143,11 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
         setIsSubmitted(true);
 
         // Track Lead event
-
+        console.log("Lead event tracked", fullPhone, name);
         eventCustom("Lead", {
           content_name: "Inventory loss calculator lite",
           name,
-          phone: fullPhone,
+          ph: sha256(fullPhone),
         });
       } else {
         console.error("Telegram API error:", await response.text());

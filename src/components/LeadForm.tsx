@@ -24,6 +24,7 @@ import { CalculatorData } from "./Calculator";
 import { z } from "zod";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
+import { sha256 } from "js-sha256";
 
 // ⚠️ WARNING: Bot token in client-side code is INSECURE!
 // Anyone can view this token in browser DevTools and abuse your bot.
@@ -289,7 +290,7 @@ ${lossesText}
 
         eventCustom("Lead", {
           content_name: "Inventory loss calculator",
-          phone: maskPhone(phoneE164),
+          ph: sha256(maskPhone(phoneE164)),
           name: `${formData.firstName} ${formData.lastName}`,
         });
 
