@@ -62,6 +62,15 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
 
+  // Track CalculatorFinished when results are shown
+  useEffect(() => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'CalculatorFinished', {
+        content_name: 'Inventory loss calculator lite'
+      });
+    }
+  }, []);
+
   // Format phone number as user types
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
@@ -122,6 +131,13 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
       if (response.ok) {
         setIsSubmitted(true);
+        
+        // Track Lead event
+        if (typeof (window as any).fbq === 'function') {
+          (window as any).fbq('track', 'Lead', {
+            content_name: 'Inventory loss calculator lite'
+          });
+        }
       } else {
         console.error("Telegram API error:", await response.text());
       }

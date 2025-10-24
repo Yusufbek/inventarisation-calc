@@ -38,6 +38,15 @@ export const Results = ({
   const animatedCustomer = useCountUp(losses.customerLoss);
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
+
+  // Track CalculatorFinished when results are shown
+  useEffect(() => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'CalculatorFinished', {
+        content_name: 'Inventory loss calculator'
+      });
+    }
+  }, []);
   return <div className="w-full bg-background">
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative">

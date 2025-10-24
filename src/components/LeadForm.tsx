@@ -257,7 +257,12 @@ ${lossesText}
         // Clear saved form data on success
         localStorage.removeItem("billz_form_backup");
 
-        // Lead event already tracked earlier
+        // Track Lead event
+        if (typeof (window as any).fbq === 'function') {
+          (window as any).fbq('track', 'Lead', {
+            content_name: 'Inventory loss calculator'
+          });
+        }
 
         toast({
           title: "Muvaffaqiyatli!",

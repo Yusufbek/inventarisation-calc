@@ -12,6 +12,13 @@ const CalcLite = () => {
     setShowResults(true);
   };
 
+  // Track PageView on mount
+  useEffect(() => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'PageView');
+    }
+  }, []);
+
   // Scroll to top when results show
   useEffect(() => {
     if (showResults) {
