@@ -31,13 +31,7 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
             
             <Button 
               size="lg"
-              onClick={() => {
-                // Track calculator start event
-                if ((window as any).fbq) {
-                  (window as any).fbq('trackCustom', 'StartCalc');
-                }
-                onStartCalculator();
-              }}
+              onClick={onStartCalculator}
               className="w-full md:w-auto h-14 px-12 text-lg rounded-2xl"
             >
               Hisoblashni boshlash

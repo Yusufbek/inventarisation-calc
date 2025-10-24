@@ -50,13 +50,7 @@ export const ThankYou = () => {
 
           {/* CTA Button */}
           <Button
-            onClick={() => {
-              // Track Telegram bot subscription click
-              if ((window as any).fbq) {
-                (window as any).fbq('trackCustom', 'TelegramBotClick');
-              }
-              window.open('https://t.me/billzinfobot', '_blank');
-            }}
+            onClick={() => window.open('https://t.me/billzinfobot', '_blank')}
             size="lg"
             className="h-14 px-12 text-lg rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >

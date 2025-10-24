@@ -24,11 +24,6 @@ const Index = () => {
   };
 
   const handleContactClick = () => {
-    // Track form opened event
-    if ((window as any).fbq) {
-      (window as any).fbq('trackCustom', 'FormStart');
-    }
-    
     setCurrentScreen("lead-form");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

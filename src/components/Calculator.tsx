@@ -103,17 +103,6 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       setStep(step + 1);
     } else {
       setIsLoading(true);
-      
-      // Track calculator completion
-      if ((window as any).fbq) {
-        (window as any).fbq('trackCustom', 'FinishCalc', {
-          storeType: data.storeType,
-          skuCount: data.skuCount,
-          inventoryFrequency: data.inventoryFrequency,
-          theftLevel: data.theftLevel,
-          avgPrice: data.avgPrice,
-        });
-      }
 
       // Track with Yandex Metrika
       if ((window as any).ym) {

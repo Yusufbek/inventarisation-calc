@@ -236,15 +236,6 @@ ${lossesText}
     // Save form data in case submission fails
     saveFormDataToLocal(leadData);
 
-    // Track Lead event early (not dependent on Telegram). No PII per Meta policy
-    if (typeof window.fbq === 'function') {
-      const value = calculatorData ? calculateLosses(calculatorData).totalMonthly : undefined;
-      window.fbq('track', 'Lead', {
-        content_name: 'Main Calculator Lead',
-        ...(typeof value === 'number' ? { value, currency: 'UZS' } : {})
-      });
-    }
-
     console.log("📤 Telegramga yuborilmoqda:", {
       timestamp: new Date().toISOString(),
       phone: maskPhone(phoneE164),

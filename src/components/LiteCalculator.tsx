@@ -57,13 +57,6 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
-  // Track CalcStart when component mounts
-  useEffect(() => {
-    if (window.fbq) {
-      window.fbq('trackCustom', 'CalcStart');
-    }
-  }, []);
-
   const handleStoreTypeSelect = (type: string) => {
     const selected = storeTypes.find((t) => t.id === type);
     setData({ ...data, storeType: type, avgPrice: selected?.avgPrice || 150000 });
@@ -101,10 +94,6 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      // Track CalcFinish
-      if (window.fbq) {
-        window.fbq('trackCustom', 'CalcFinish');
-      }
       // Fire-and-forget Telegram notification on completion
       sendCalculatorToTelegram(data as CalculatorData & { revenue?: number });
       onComplete(data as CalculatorData & { revenue?: number });
@@ -112,10 +101,6 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
   };
 
   const handleSkip = () => {
-    // Track CalcFinish
-    if (window.fbq) {
-      window.fbq('trackCustom', 'CalcFinish');
-    }
     // Fire-and-forget Telegram notification even if revenue skipped
     sendCalculatorToTelegram(data as CalculatorData & { revenue?: number });
     onComplete(data as CalculatorData & { revenue?: number });

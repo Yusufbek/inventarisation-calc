@@ -100,15 +100,6 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
     setIsSubmitting(true);
 
-    // Track Lead event early (not dependent on Telegram)
-    if (typeof window.fbq === 'function') {
-      window.fbq('track', 'Lead', {
-        content_name: 'Lite Calculator Lead',
-        value: losses.totalMonthly,
-        currency: 'UZS'
-      });
-    }
-
     try {
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
@@ -131,15 +122,6 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
       if (response.ok) {
         setIsSubmitted(true);
-        
-        // Track Lead event with parameters
-        if (typeof window.fbq === 'function') {
-          window.fbq('track', 'Lead', {
-            content_name: 'Lite Calculator Lead',
-            value: losses.totalMonthly,
-            currency: 'UZS'
-          });
-        }
       } else {
         console.error("Telegram API error:", await response.text());
       }
