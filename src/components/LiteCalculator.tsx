@@ -63,18 +63,48 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
     setTimeout(() => setStep(2), 300);
   };
 
+  const sendCalculatorToTelegram = async (calcData: CalculatorData & { revenue?: number }) => {
+    try {
+      const losses = calculateLosses(calcData as CalculatorData);
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_CHAT_ID = "-4875526331";
+      const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
+      const parts = [
+        `🧮 Lite kalkulyator yakunlandi`,
+        `🏪 ${storeTypeLabel}`,
+        `📦 SKU: ${calcData.skuCount}`,
+        `🔒 O'g'irlik: ${calcData.theftLevel}`,
+        `💵 O'rtacha narx: ${formatNumber(calcData.avgPrice)} so'm`,
+        calcData.revenue ? `📈 Savdo (oy): ${formatNumber(calcData.revenue)} so'm` : undefined,
+        `💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`
+      ].filter(Boolean);
+      const message = parts.join("\n");
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message }),
+      });
+    } catch (error) {
+      console.error("Failed to send lite calculator notification to Telegram:", error);
+    }
+  };
+
   const handleNext = () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
+      // Fire-and-forget Telegram notification on completion
+      sendCalculatorToTelegram(data as CalculatorData & { revenue?: number });
       onComplete(data as CalculatorData & { revenue?: number });
     }
   };
 
   const handleSkip = () => {
+    // Fire-and-forget Telegram notification even if revenue skipped
+    sendCalculatorToTelegram(data as CalculatorData & { revenue?: number });
     onComplete(data as CalculatorData & { revenue?: number });
   };
-
   const canProceed = () => {
     switch (step) {
       case 2:
@@ -236,7 +266,7 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
 
         {/* Step 5: Revenue (Optional) */}
         {step === 5 && (
-          <div className="space-y-6">
+          <div className="space-y-6 pb-28">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
                 O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
@@ -269,21 +299,25 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
                 </button>
               ))}
             </div>
-            <div className="space-y-3">
-              <Button
-                onClick={handleNext}
-                disabled={!data.revenue}
-                className="w-full h-14 text-lg rounded-2xl"
-              >
-                Natijani ko'rish
-              </Button>
-              <Button
-                onClick={handleSkip}
-                variant="ghost"
-                className="w-full h-12 text-base rounded-2xl"
-              >
-                Bu qadamni o'tkazib yuborish
-              </Button>
+
+            {/* Sticky footer CTA */}
+            <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
+              <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+                <Button
+                  onClick={handleNext}
+                  disabled={!data.revenue}
+                  className="flex-1 h-12 text-base md:text-lg rounded-xl"
+                >
+                  Natijani ko'rish
+                </Button>
+                <Button
+                  onClick={handleSkip}
+                  variant="ghost"
+                  className="h-12 text-base rounded-xl"
+                >
+                  O'tkazib yuborish
+                </Button>
+              </div>
             </div>
           </div>
         )}
