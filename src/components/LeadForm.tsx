@@ -92,6 +92,7 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   // Mask phone for safe logging
   const maskPhone = (phone: string) => {
@@ -410,7 +411,7 @@ ${lossesText}
             <Label className="text-base font-medium">
               Qo'ng'iroq sanasini tanlang
             </Label>
-            <Popover>
+            <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -423,13 +424,17 @@ ${lossesText}
                   {date ? format(date, "PPP", { locale: uz }) : "Sana tanlang"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-0" align="center">
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={setDate}
+                  onSelect={(newDate) => {
+                    setDate(newDate);
+                    setIsDatePickerOpen(false);
+                  }}
                   disabled={(date) => date < new Date()}
                   initialFocus
+                  className="pointer-events-auto"
                 />
               </PopoverContent>
             </Popover>
