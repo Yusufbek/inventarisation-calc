@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HeroSection } from "@/components/HeroSection";
 import { Calculator, CalculatorData } from "@/components/Calculator";
 import { Results } from "@/components/Results";
 import { LeadForm } from "@/components/LeadForm";
-import { ThankYou } from "@/components/ThankYou";
 import { Footer } from "@/components/Footer";
 import { eventCustom } from "@/lib/fpixel";
 
-type Screen = "hero" | "calculator" | "results" | "lead-form" | "thank-you";
+type Screen = "hero" | "calculator" | "results" | "lead-form";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(
     null
@@ -32,8 +33,7 @@ const Index = () => {
   };
 
   const handleLeadSuccess = () => {
-    setCurrentScreen("thank-you");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/thank-you");
   };
 
   return (
@@ -60,8 +60,6 @@ const Index = () => {
           calculatorData={calculatorData}
         />
       )}
-
-      {currentScreen === "thank-you" && <ThankYou />}
 
       {currentScreen === "hero" && <Footer />}
     </div>

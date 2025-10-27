@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
-import { CheckCircle2, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { eventCustom } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
@@ -52,10 +53,10 @@ const lossExplanations = {
 };
 
 export const LiteResults = ({ data }: LiteResultsProps) => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState<string | null>(null);
 
   const losses = calculateLosses(data);
@@ -140,8 +141,6 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
       });
 
       if (response.ok) {
-        setIsSubmitted(true);
-
         // Track Lead event
         console.log("Lead event tracked", fullPhone, name);
         eventCustom("Lead", {
@@ -149,6 +148,9 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
           name,
           ph: sha256(fullPhone),
         });
+
+        // Navigate to thank you page
+        navigate("/thank-you");
       } else {
         console.error("Telegram API error:", await response.text());
       }
@@ -410,97 +412,78 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
           {/* CTA Block */}
           <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 space-y-6">
-            {isSubmitted ? (
-              <div className="text-center space-y-4 py-8">
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center">
-                    <CheckCircle2 className="w-10 h-10 text-success" />
-                  </div>
-                </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-foreground">
-                  Rahmat!
-                </h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  Bizning ekspertimiz tez orada siz bilan bog'lanadi va
-                  do'koningizni tahlil qilishga yordam beradi.
-                </p>
+            <div className="text-center space-y-3">
+              <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                BILLZ siz izlayotgan yechim bo'lishi mumkin.
+              </h3>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Bizning chakana ekspertimiz siz bilan do'koningizni tahlil
+                qilib chiqadi va aynan siz uchun qanday yechimlar eng
+                foydali bo'lishini ko'rsatadi.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-3">
+                <Label
+                  htmlFor="name"
+                  className="text-base font-semibold text-foreground"
+                >
+                  Ismingiz
+                </Label>
+                <Input
+                  id="name"
+                  type="text"
+                  placeholder="Ismingizni kiriting"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors"
+                />
               </div>
-            ) : (
-              <>
-                <div className="text-center space-y-3">
-                  <h3 className="text-2xl md:text-3xl font-bold text-foreground">
-                    BILLZ siz izlayotgan yechim bo'lishi mumkin.
-                  </h3>
-                  <p className="text-muted-foreground max-w-2xl mx-auto">
-                    Bizning chakana ekspertimiz siz bilan do'koningizni tahlil
-                    qilib chiqadi va aynan siz uchun qanday yechimlar eng
-                    foydali bo'lishini ko'rsatadi.
-                  </p>
+
+              <div className="space-y-3">
+                <Label
+                  htmlFor="phone"
+                  className="text-base font-semibold text-foreground"
+                >
+                  Telefon raqam
+                </Label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-muted-foreground">
+                    +998
+                  </div>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="(90) 123-45-67"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    required
+                    className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors pl-20"
+                  />
                 </div>
+                {phone && !isPhoneValid() && (
+                  <p className="text-sm text-destructive">
+                    9 ta raqam kiriting
+                  </p>
+                )}
+              </div>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor="name"
-                      className="text-base font-semibold text-foreground"
-                    >
-                      Ismingiz
-                    </Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Ismingizni kiriting"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors"
-                    />
-                  </div>
+              <Button
+                type="submit"
+                disabled={isSubmitting || !name.trim() || !isPhoneValid()}
+                className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
+              >
+                {isSubmitting
+                  ? "Yuborilmoqda..."
+                  : "BILLZ bilan bog'lanish"}
+              </Button>
+            </form>
 
-                  <div className="space-y-3">
-                    <Label
-                      htmlFor="phone"
-                      className="text-base font-semibold text-foreground"
-                    >
-                      Telefon raqam
-                    </Label>
-                    <div className="relative">
-                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-muted-foreground">
-                        +998
-                      </div>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="(90) 123-45-67"
-                        value={phone}
-                        onChange={handlePhoneChange}
-                        required
-                        className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors pl-20"
-                      />
-                    </div>
-                    {phone && !isPhoneValid() && (
-                      <p className="text-sm text-destructive">
-                        9 ta raqam kiriting
-                      </p>
-                    )}
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting || !name.trim() || !isPhoneValid()}
-                    className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
-                  >
-                    {isSubmitting
-                      ? "Yuborilmoqda..."
-                      : "BILLZ bilan bog'lanish"}
-                  </Button>
-                </form>
-
-                <p className="text-sm text-center text-muted-foreground">
-                  Qo'ng'iroq majburiy emas — faqat maslahat va tahlil uchun.
-                </p>
-              </>
-            )}
+            <p className="text-sm text-center text-muted-foreground">
+              Qo'ng'iroq majburiy emas — faqat maslahat va tahlil uchun.
+            </p>
           </div>
         </div>
       </section>
