@@ -139,31 +139,18 @@ export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
     if (calculatorData) {
       const losses = calculateLosses(calculatorData);
       lossesText = `
-💰 Hisoblash natijalari:
-🏪 Do'kon turi: ${calculatorData.storeType}
-📦 SKU soni: ${calculatorData.skuCount}
-📊 Inventarizatsiya: ${calculatorData.inventoryFrequency}
-🔒 O'g'irlik darajasi: ${calculatorData.theftLevel}
-💵 O'rtacha narx: ${formatNumber(calculatorData.avgPrice)} so'm
-
-📊 Yo'qotishlar tahlili:
-📦 Inventarizatsiya yo'qotishi: ${formatNumber(losses.inventoryLoss)} so'm/oy
-⏰ Vaqt yo'qotishi: ${formatNumber(losses.timeLoss)} so'm/oy
-👥 Mijoz yo'qotishi: ${formatNumber(losses.customerLoss)} so'm/oy
-
-💸 Jami oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm
-📅 Jami yillik yo'qotish: ${formatNumber(losses.totalYearly)} so'm
-✅ BILLZ bilan tejash mumkin: ${formatNumber(losses.recoveredProfit)} so'm/oy
+Asosiy kalkulyator yakunlandi
+Do'kon turi: ${calculatorData.storeType}
+Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm
 `;
     }
 
     const message = `
-🆕 Yangi lead!
-
-👤 Ism: ${data.firstName} ${data.lastName}
-📱 Telefon: ${data.phoneNumber}
-📅 Sana: ${data.appointmentDate}
-⏰ Vaqt: ${data.appointmentTime}
+Yangi lead
+Ism: ${data.firstName} ${data.lastName}
+Telefon: ${data.phoneNumber}
+Sana: ${data.appointmentDate}
+Vaqt: ${data.appointmentTime}
 ${lossesText}
     `.trim();
 
