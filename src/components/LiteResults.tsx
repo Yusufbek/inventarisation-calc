@@ -120,14 +120,10 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
 
       const phoneDigits = phone.replace(/\D/g, "");
       const fullPhone = `+998${phoneDigits}`;
+      
+      const storeTypeLabel = data.storeType;
 
-      const message = `Lite kalkulyator yakunlandi
-Do'kon turi: ${data.storeType}
-Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm
-
-Yangi lead
-Ism: ${name}
-Telefon: ${fullPhone}`;
+      const message = `Yangi lead - Lite Calculator\nIsm: ${name}\nTelefon: ${fullPhone}\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 

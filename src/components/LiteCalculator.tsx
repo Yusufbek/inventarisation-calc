@@ -69,16 +69,7 @@ export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
-      const parts = [
-        `🧮 Lite kalkulyator yakunlandi`,
-        `🏪 ${storeTypeLabel}`,
-        `📦 SKU: ${calcData.skuCount}`,
-        `🔒 O'g'irlik: ${calcData.theftLevel}`,
-        `💵 O'rtacha narx: ${formatNumber(calcData.avgPrice)} so'm`,
-        calcData.revenue ? `📈 Savdo (oy): ${formatNumber(calcData.revenue)} so'm` : undefined,
-        `💰 Oylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`
-      ].filter(Boolean);
-      const message = parts.join("\n");
+      const message = `Lite kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       await fetch(url, {
         method: "POST",

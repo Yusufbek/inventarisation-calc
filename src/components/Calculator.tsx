@@ -127,7 +127,7 @@ export const Calculator = ({ onComplete }: CalculatorProps) => {
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
       
-      const message = `🧮 Calculator yakunlandi\n🏪 ${storeTypeLabel}\n💰 ${formatNumber(losses.totalMonthly)} so'm/oy`;
+      const message = `Asosiy kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
       
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       
