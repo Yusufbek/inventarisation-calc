@@ -5,13 +5,14 @@ import { LiteCalculator } from "@/components/LiteCalculator";
 import { Results } from "@/components/Results";
 import { LiteResults } from "@/components/LiteResults";
 import { LeadForm } from "@/components/LeadForm";
+import { HeroSection } from "@/components/HeroSection";
 import { pageView } from "@/lib/fpixel";
 
-type Screen = "calculator" | "results" | "lead-form";
+type Screen = "hero" | "calculator" | "results" | "lead-form";
 
 const InventarisationCalc = () => {
   const { variant } = useParams<{ variant: string }>();
-  const [currentScreen, setCurrentScreen] = useState<Screen>("calculator");
+  const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
   // Track PageView on mount
@@ -23,6 +24,11 @@ const InventarisationCalc = () => {
   if (!variant || !["main", "lite"].includes(variant)) {
     return <Navigate to="/404" replace />;
   }
+
+  const handleStartCalculator = () => {
+    setCurrentScreen("calculator");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleCalculatorComplete = (data: CalculatorData) => {
     setCalculatorData(data);
@@ -41,6 +47,10 @@ const InventarisationCalc = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {currentScreen === "hero" && (
+        <HeroSection onStartCalculator={handleStartCalculator} />
+      )}
+
       {currentScreen === "calculator" && (
         <section className="w-full bg-background py-12 min-h-screen">
           {variant === "main" ? (
