@@ -15,6 +15,7 @@ export interface CalculatorData {
 
 interface CalculatorProps {
   onComplete: (data: CalculatorData) => void;
+  variant?: string;
 }
 
 const storeTypes = [
@@ -84,7 +85,7 @@ const getPriceHint = (storeTypeId: string): string => {
   return hints[storeTypeId] || "Taxminiy o'rtacha narx";
 };
 
-export const Calculator = ({ onComplete }: CalculatorProps) => {
+export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<CalculatorData>>({});
   const [isLoading, setIsLoading] = useState(false);

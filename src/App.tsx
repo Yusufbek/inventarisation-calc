@@ -4,7 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import CalcLite from "./pages/CalcLite";
+import InventarisationCalc from "./pages/InventarisationCalc";
+import ThankYouVariant from "./pages/ThankYouVariant";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 
@@ -18,7 +19,9 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/calc-lite" element={<CalcLite />} />
+          <Route path="/inventarisation-calc/:variant" element={<InventarisationCalc />} />
+          <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
+          {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

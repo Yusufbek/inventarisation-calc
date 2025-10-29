@@ -35,6 +35,7 @@ const TELEGRAM_CHAT_ID = "-4875526331";
 interface LeadFormProps {
   onSuccess?: () => void;
   calculatorData?: CalculatorData | null;
+  variant: string;
 }
 
 // Validation schema
@@ -81,7 +82,7 @@ const BILLZ_WHATSAPP = `https://wa.me/998712009900?text=${encodeURIComponent(
   "Assalomu alaykum, BILLZ haqida ma'lumot olmoqchiman"
 )}`;
 
-export const LeadForm = ({ onSuccess, calculatorData }: LeadFormProps) => {
+export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

@@ -8,6 +8,7 @@ import { CalculatorData } from "./Calculator";
 
 interface LiteCalculatorProps {
   onComplete: (data: CalculatorData & { revenue?: number }) => void;
+  variant?: string;
 }
 
 const storeTypes = [
@@ -50,7 +51,7 @@ const getPriceHint = (storeTypeId: string): string => {
   return hints[storeTypeId] || "Taxminiy o'rtacha narx";
 };
 
-export const LiteCalculator = ({ onComplete }: LiteCalculatorProps) => {
+export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorProps) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<CalculatorData & { revenue?: number }>>({});
 

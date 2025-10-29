@@ -32,6 +32,7 @@ const useCountUp = (end: number, duration: number = 2000) => {
 
 interface LiteResultsProps {
   data: CalculatorData;
+  variant?: string;
 }
 
 const lossExplanations = {
@@ -52,7 +53,7 @@ const lossExplanations = {
   },
 };
 
-export const LiteResults = ({ data }: LiteResultsProps) => {
+export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -146,7 +147,7 @@ export const LiteResults = ({ data }: LiteResultsProps) => {
         });
 
         // Navigate to thank you page
-        navigate("/thank-you");
+        navigate(`/thank-you/inventarisation-calc/${variant}`);
       } else {
         console.error("Telegram API error:", await response.text());
       }

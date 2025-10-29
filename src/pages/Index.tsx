@@ -17,8 +17,7 @@ const Index = () => {
   );
 
   const handleStartCalculator = () => {
-    setCurrentScreen("calculator");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    navigate("/inventarisation-calc/main");
   };
 
   const handleCalculatorComplete = (data: CalculatorData) => {
@@ -33,7 +32,7 @@ const Index = () => {
   };
 
   const handleLeadSuccess = () => {
-    navigate("/thank-you");
+    navigate("/thank-you/inventarisation-calc/main");
   };
 
   return (
@@ -58,6 +57,7 @@ const Index = () => {
         <LeadForm
           onSuccess={handleLeadSuccess}
           calculatorData={calculatorData}
+          variant="main"
         />
       )}
 
