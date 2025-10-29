@@ -12,18 +12,22 @@ type Screen = "hero" | "calculator" | "results" | "lead-form";
 
 const InventarisationCalc = () => {
   const { variant } = useParams<{ variant: string }>();
-  const [currentScreen, setCurrentScreen] = useState<Screen>("hero");
+  
+  // Validate variant first
+  if (!variant || !["main", "lite"].includes(variant)) {
+    return <Navigate to="/404" replace />;
+  }
+  
+  // Lite starts directly with calculator, main starts with hero
+  const [currentScreen, setCurrentScreen] = useState<Screen>(
+    variant === "lite" ? "calculator" : "hero"
+  );
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
   // Track PageView on mount
   useEffect(() => {
     pageView();
   }, []);
-
-  // Validate variant
-  if (!variant || !["main", "lite"].includes(variant)) {
-    return <Navigate to="/404" replace />;
-  }
 
   const handleStartCalculator = () => {
     setCurrentScreen("calculator");
