@@ -124,7 +124,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
       
       const storeTypeLabel = data.storeType;
 
-      const message = `Yangi lead - Lite Calculator\nIsm: ${name}\nTelefon: ${fullPhone}\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      const message = `⭐️ Yangi lead - Lite Calculator\nIsm: ${name}\nTelefon: ${fullPhone}\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
