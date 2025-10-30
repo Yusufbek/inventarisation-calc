@@ -23,77 +23,123 @@ interface Question {
   type?: "number" | "choice";
   hint?: string;
 }
-
-const storeTypes = [
-  { id: "kiyim", label: "Kiyim", avgPrice: 300000 },
-  { id: "poyabzal", label: "Poyabzal", avgPrice: 280000 },
-  { id: "dorixona", label: "Dorixona", avgPrice: 60000 },
-  { id: "oziq-ovqat", label: "Oziq-ovqat", avgPrice: 28000 },
-  { id: "kosmetika", label: "Kosmetika", avgPrice: 95000 },
-  { id: "elektronika", label: "Elektronika", avgPrice: 1000000 },
-  { id: "qurilish", label: "Qurilish mollari", avgPrice: 180000 },
-  { id: "kafe", label: "Kafe/Restoran", avgPrice: 45000 },
-  { id: "boshqa", label: "Boshqa", avgPrice: 150000 },
-];
-
-const questions: Question[] = [
-  {
-    id: "storeType",
-    question: "Sizning do'koningiz qaysi turga kiradi?",
-    answers: storeTypes.map((t) => ({ value: t.id, label: t.label })),
-  },
-  {
-    id: "skuCount",
-    question: "Do'koningizda taxminan nechta turdagi mahsulot sotiladi?",
-    answers: [
-      { value: 50, label: "100 tagacha" },
-      { value: 300, label: "101–500" },
-      { value: 750, label: "501–1 000" },
-      { value: 1500, label: "1 001–2 000" },
-      { value: 3500, label: "2 001–5 000" },
-      { value: 7000, label: "5 000+" },
-    ],
-  },
-  {
-    id: "theftLevel",
-    question:
-      "So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?",
-    answers: [
-      { value: "tez-tez", label: "Ha, tez-tez" },
-      { value: "bazan", label: "Ba'zan" },
-      { value: "kam", label: "Juda kam" },
-      { value: "yoq", label: "Yo'q" },
-    ],
-  },
-  {
-    id: "avgPrice",
-    question: "Sotayotgan mahsulotlaringizning o'rtacha narxi (so'm)?",
-    type: "number",
-    answers: [],
-  },
-  {
-    id: "revenue",
-    question: "O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?",
-    hint: "Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.",
-    answers: [
-      { value: 25000000, label: "< 50 mln so'm" },
-      { value: 75000000, label: "50–100 mln so'm" },
-      { value: 150000000, label: "100–200 mln so'm" },
-      { value: 350000000, label: "200–500 mln so'm" },
-      { value: 750000000, label: "500 mln+ so'm" },
-    ],
-  },
-];
-
+const storeTypes = [{
+  id: "kiyim",
+  label: "Kiyim",
+  avgPrice: 300000
+}, {
+  id: "poyabzal",
+  label: "Poyabzal",
+  avgPrice: 280000
+}, {
+  id: "dorixona",
+  label: "Dorixona",
+  avgPrice: 60000
+}, {
+  id: "oziq-ovqat",
+  label: "Oziq-ovqat",
+  avgPrice: 28000
+}, {
+  id: "kosmetika",
+  label: "Kosmetika",
+  avgPrice: 95000
+}, {
+  id: "elektronika",
+  label: "Elektronika",
+  avgPrice: 1000000
+}, {
+  id: "qurilish",
+  label: "Qurilish mollari",
+  avgPrice: 180000
+}, {
+  id: "kafe",
+  label: "Kafe/Restoran",
+  avgPrice: 45000
+}, {
+  id: "boshqa",
+  label: "Boshqa",
+  avgPrice: 150000
+}];
+const questions: Question[] = [{
+  id: "storeType",
+  question: "Sizning do'koningiz qaysi turga kiradi?",
+  answers: storeTypes.map(t => ({
+    value: t.id,
+    label: t.label
+  }))
+}, {
+  id: "skuCount",
+  question: "Do'koningizda taxminan nechta turdagi mahsulot sotiladi?",
+  answers: [{
+    value: 50,
+    label: "100 tagacha"
+  }, {
+    value: 300,
+    label: "101–500"
+  }, {
+    value: 750,
+    label: "501–1 000"
+  }, {
+    value: 1500,
+    label: "1 001–2 000"
+  }, {
+    value: 3500,
+    label: "2 001–5 000"
+  }, {
+    value: 7000,
+    label: "5 000+"
+  }]
+}, {
+  id: "theftLevel",
+  question: "So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?",
+  answers: [{
+    value: "tez-tez",
+    label: "Ha, tez-tez"
+  }, {
+    value: "bazan",
+    label: "Ba'zan"
+  }, {
+    value: "kam",
+    label: "Juda kam"
+  }, {
+    value: "yoq",
+    label: "Yo'q"
+  }]
+}, {
+  id: "avgPrice",
+  question: "Sotayotgan mahsulotlaringizning o'rtacha narxi (so'm)?",
+  type: "number",
+  answers: []
+}, {
+  id: "revenue",
+  question: "O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?",
+  hint: "Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.",
+  answers: [{
+    value: 25000000,
+    label: "< 50 mln so'm"
+  }, {
+    value: 75000000,
+    label: "50–100 mln so'm"
+  }, {
+    value: 150000000,
+    label: "100–200 mln so'm"
+  }, {
+    value: 350000000,
+    label: "200–500 mln so'm"
+  }, {
+    value: 750000000,
+    label: "500 mln+ so'm"
+  }]
+}];
 export const FormWallCalculator = ({
   onComplete,
-  variant,
+  variant
 }: FormWallCalculatorProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showForm, setShowForm] = useState(false);
-  const [answers, setAnswers] = useState<
-    Partial<CalculatorData & { revenue?: number }>
-  >({});
+  const [answers, setAnswers] = useState<Partial<CalculatorData & {
+    revenue?: number;
+  }>>({});
   const [numberInput, setNumberInput] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
@@ -205,8 +251,7 @@ export const FormWallCalculator = ({
                   Natijalarni olish uchun
                 </h2>
                 <p className="text-muted-foreground">
-                  Quyidagi ma'lumotlarni kiriting — sizga tasdiqlash kodi
-                  yuboriladi
+                  Quyidagi ma'lumotlarni kiriting
                 </p>
               </div>
 
@@ -263,32 +308,18 @@ export const FormWallCalculator = ({
                   <span>{currentQuestion.hint}</span>
                 </p>}
 
-              {isNumberQuestion ? (
-                <div className="space-y-4">
-                  <Input
-                    type="text"
-                    value={numberInput}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\s/g, "");
-                      const numValue = parseInt(value) || "";
-                      setNumberInput(numValue.toString());
-                    }}
-                    placeholder="Raqamni kiriting"
-                    className="text-lg h-14"
-                    autoFocus
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleNumberSubmit();
-                      }
-                    }}
-                  />
-                  <Button
-                    onClick={handleNumberSubmit}
-                    size="lg"
-                    className="w-full"
-                    disabled={!numberInput || parseInt(numberInput) <= 0}
-                  >
+              {isNumberQuestion ? <div className="space-y-4">
+                  <Input type="text" value={numberInput} onChange={e => {
+                const value = e.target.value.replace(/\s/g, '');
+                const numValue = parseInt(value) || "";
+                setNumberInput(numValue.toString());
+              }} placeholder="Raqamni kiriting" className="text-lg h-14" autoFocus onKeyDown={e => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleNumberSubmit();
+                }
+              }} />
+                  <Button onClick={handleNumberSubmit} size="lg" className="w-full" disabled={!numberInput || parseInt(numberInput) <= 0}>
                     Davom etish
                   </Button>
                 </div> : currentQuestion.id === "revenue" ? <div className="space-y-4 pb-28">
@@ -302,7 +333,7 @@ export const FormWallCalculator = ({
                       {answer.label}
                     </Button>)}
                   </div>
-
+                  
                   {/* Sticky footer with skip option */}
                   <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-50">
                     <div className="max-w-2xl mx-auto px-4 py-3">
@@ -311,17 +342,13 @@ export const FormWallCalculator = ({
                       </Button>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div className="grid gap-3">
-                  {currentQuestion.answers.map((answer) => (
-                    <Button
-                      key={answer.value}
-                      onClick={() => handleAnswer(answer.value)}
-                      variant="outline"
-                      size="lg"
-                      className="h-auto py-4 text-lg md:hover:bg-primary md:hover:text-primary-foreground transition-colors"
-                    >
+                </div> : <div className="grid gap-3">
+                  {currentQuestion.answers.map(answer => <Button key={answer.value} onClick={e => {
+                e.currentTarget.blur();
+                handleAnswer(answer.value);
+              }} onTouchEnd={e => {
+                e.currentTarget.blur();
+              }} variant="outline" size="lg" className="h-auto py-4 text-lg transition-colors focus:outline-none active:scale-[0.98]">
                       {answer.label}
                     </Button>)}
                 </div>}

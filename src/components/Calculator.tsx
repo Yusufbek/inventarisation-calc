@@ -85,10 +85,7 @@ const getPriceHint = (storeTypeId: string): string => {
   return hints[storeTypeId] || "Taxminiy o'rtacha narx";
 };
 
-export const Calculator = ({
-  onComplete,
-  variant = "main",
-}: CalculatorProps) => {
+export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<CalculatorData>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -121,12 +118,12 @@ export const Calculator = ({
 
       // Track with Yandex Metrika
       if ((window as any).ym) {
-        (window as any).ym(50093230, "reachGoal", "calculator_complete");
+        (window as any).ym(50093230, 'reachGoal', 'calculator_complete');
       }
-
+      
       // Send calculator data to Telegram
       sendCalculatorToTelegram(data as CalculatorData).catch(console.error);
-
+      
       setTimeout(() => {
         onComplete(data as CalculatorData);
       }, 2500);
@@ -136,33 +133,24 @@ export const Calculator = ({
   const sendCalculatorToTelegram = async (calcData: CalculatorData) => {
     try {
       const losses = calculateLosses(calcData);
-
-      const TELEGRAM_BOT_TOKEN =
-        "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
-
-      const storeTypeLabel =
-        storeTypes.find((t) => t.id === calcData.storeType)?.label ||
-        calcData.storeType;
-
+      
+      const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
+      
       let message = "";
-
+      
       if (variant === "gamified") {
         const { calculateStoreHealth } = await import("@/lib/calculations");
         const healthResult = calculateStoreHealth(calcData);
-        message = `Gamified kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(
-          losses.totalMonthly
-        )} so'm\nStore Health Score: ${healthResult.score}/100 (${
-          healthResult.status
-        })`;
+        message = `Gamified kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\nStore Health Score: ${healthResult.score}/100 (${healthResult.status})`;
       } else {
-        message = `Asosiy kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(
-          losses.totalMonthly
-        )} so'm`;
+        message = `Asosiy kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
       }
-
+      
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
+      
       await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -172,10 +160,7 @@ export const Calculator = ({
         }),
       });
     } catch (error) {
-      console.error(
-        "Failed to send calculator notification to Telegram:",
-        error
-      );
+      console.error("Failed to send calculator notification to Telegram:", error);
     }
   };
 
@@ -200,22 +185,11 @@ export const Calculator = ({
     return (
       <div className="w-full min-h-[500px] flex flex-col items-center justify-center gap-6 py-12 animate-fade-in">
         <div className="text-center space-y-4">
-          <p className="text-3xl md:text-4xl font-bold text-foreground">
-            Tahlil qilinmoqda
-          </p>
+          <p className="text-3xl md:text-4xl font-bold text-foreground">Tahlil qilinmoqda</p>
           <div className="flex items-center justify-center gap-1.5">
-            <span
-              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
-              style={{ animationDelay: "0ms" }}
-            ></span>
-            <span
-              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
-              style={{ animationDelay: "150ms" }}
-            ></span>
-            <span
-              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
-              style={{ animationDelay: "300ms" }}
-            ></span>
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
           </div>
         </div>
       </div>
@@ -241,25 +215,6 @@ export const Calculator = ({
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {storeTypes.map((type) => (
-                // <button
-                //   key={type.id}
-                //   onClick={(e) => {
-                //     e.currentTarget.blur();
-                //     handleStoreTypeSelect(type.id);
-                //   }}
-                //   onTouchEnd={(e) => {
-                //     e.currentTarget.blur();
-                //   }}
-                //   className={cn(
-                //     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
-                //     "font-medium focus:outline-none",
-                //     data.storeType === type.id && step === 1
-                //       ? "border-primary bg-secondary"
-                //       : "hover:border-primary hover:bg-secondary"
-                //   )}
-                // >
-                //   {type.label}
-                // </button>
                 <button
                   key={type.id}
                   onClick={(e) => {
@@ -270,14 +225,9 @@ export const Calculator = ({
                     e.currentTarget.blur();
                   }}
                   className={cn(
-                    "relative overflow-hidden p-4 rounded-2xl border-2 text-left transition-all",
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium focus:outline-none",
-                    "before:absolute before:inset-0 before:bg-primary/20 before:scale-0",
-                    "before:rounded-2xl before:transition-transform before:duration-300",
-                    "active:before:scale-100 active:scale-[0.98]",
-                    data.storeType === type.id
-                      ? "border-primary bg-secondary"
-                      : "md:hover:border-primary md:hover:bg-secondary"
+                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {type.label}
@@ -310,9 +260,7 @@ export const Calculator = ({
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.skuCount === range.value
-                      ? "border-primary bg-secondary"
-                      : "md:hover:border-primary md:hover:bg-secondary"
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {range.label}
@@ -342,9 +290,7 @@ export const Calculator = ({
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.inventoryFrequency === freq.id
-                      ? "border-primary bg-secondary"
-                      : "md:hover:border-primary md:hover:bg-secondary"
+                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {freq.label}
@@ -375,9 +321,7 @@ export const Calculator = ({
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.theftLevel === level.id
-                      ? "border-primary bg-secondary"
-                      : "md:hover:border-primary md:hover:bg-secondary"
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {level.label}
@@ -398,13 +342,9 @@ export const Calculator = ({
             <Input
               type="text"
               placeholder="Masalan: 250 000"
-              value={
-                data.avgPrice && data.avgPrice > 0
-                  ? data.avgPrice.toLocaleString("uz-UZ").replace(/,/g, " ")
-                  : ""
-              }
+              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, "");
+                const value = e.target.value.replace(/\s/g, '');
                 const numValue = parseInt(value) || 0;
                 setData({ ...data, avgPrice: numValue });
               }}
