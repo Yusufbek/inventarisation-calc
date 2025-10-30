@@ -5,7 +5,7 @@ import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { Info, ChevronDown, ChevronUp } from "lucide-react";
-import { eventCustom } from "@/lib/fpixel";
+import { eventCustom, event } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
 
 const useCountUp = (end: number, duration: number = 2000) => {
@@ -95,7 +95,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         });
 
         // Track Lead event
-        eventCustom("Lead", {
+        event("Lead", {
           content_name: "Inventory loss calculator formwall",
           name: data.name,
           ph: sha256(data.phone),
