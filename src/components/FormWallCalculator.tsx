@@ -35,7 +35,7 @@ const questions: Question[] = [
   {
     id: "storeType",
     question: "Sizning do'koningiz qaysi turga kiradi?",
-    answers: storeTypes.map(t => ({ value: t.id, label: t.label })),
+    answers: storeTypes.map((t) => ({ value: t.id, label: t.label })),
   },
   {
     id: "skuCount",
@@ -51,7 +51,8 @@ const questions: Question[] = [
   },
   {
     id: "theftLevel",
-    question: "So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?",
+    question:
+      "So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?",
     answers: [
       { value: "tez-tez", label: "Ha, tez-tez" },
       { value: "bazan", label: "Ba'zan" },
@@ -79,10 +80,15 @@ const questions: Question[] = [
   },
 ];
 
-export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorProps) => {
+export const FormWallCalculator = ({
+  onComplete,
+  variant,
+}: FormWallCalculatorProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showForm, setShowForm] = useState(false);
-  const [answers, setAnswers] = useState<Partial<CalculatorData & { revenue?: number }>>({});
+  const [answers, setAnswers] = useState<
+    Partial<CalculatorData & { revenue?: number }>
+  >({});
   const [numberInput, setNumberInput] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
@@ -120,18 +126,18 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
-    
+
     // Always keep +998 prefix
     if (!value.startsWith("+998")) {
       value = "+998";
     }
-    
+
     // Remove all non-digits except the plus
     const cleaned = value.substring(4).replace(/\D/g, "");
-    
+
     // Limit to 9 digits
     const limited = cleaned.substring(0, 9);
-    
+
     setPhone("+998" + limited);
   };
 
@@ -142,7 +148,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim() || !isPhoneValid()) {
       return;
     }
@@ -172,7 +178,8 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                   Natijalarni olish uchun
                 </h2>
                 <p className="text-muted-foreground">
-                  Quyidagi ma'lumotlarni kiriting — sizga tasdiqlash kodi yuboriladi
+                  Quyidagi ma'lumotlarni kiriting — sizga tasdiqlash kodi
+                  yuboriladi
                 </p>
               </div>
 
@@ -267,7 +274,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                     type="text"
                     value={numberInput}
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\s/g, '');
+                      const value = e.target.value.replace(/\s/g, "");
                       const numValue = parseInt(value) || "";
                       setNumberInput(numValue.toString());
                     }}
@@ -305,7 +312,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                       </Button>
                     ))}
                   </div>
-                  
+
                   {/* Sticky footer with skip option */}
                   <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-50">
                     <div className="max-w-2xl mx-auto px-4 py-3">
@@ -327,7 +334,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                       onClick={() => handleAnswer(answer.value)}
                       variant="outline"
                       size="lg"
-                      className="h-auto py-4 text-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="h-auto py-4 text-lg md:hover:bg-primary md:hover:text-primary-foreground transition-colors"
                     >
                       {answer.label}
                     </Button>

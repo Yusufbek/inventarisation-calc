@@ -51,9 +51,14 @@ const getPriceHint = (storeTypeId: string): string => {
   return hints[storeTypeId] || "Taxminiy o'rtacha narx";
 };
 
-export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorProps) => {
+export const LiteCalculator = ({
+  onComplete,
+  variant = "lite",
+}: LiteCalculatorProps) => {
   const [step, setStep] = useState(1);
-  const [data, setData] = useState<Partial<CalculatorData & { revenue?: number }>>({});
+  const [data, setData] = useState<
+    Partial<CalculatorData & { revenue?: number }>
+  >({});
 
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
@@ -75,13 +80,20 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
     setTimeout(() => setStep(2), 300);
   };
 
-  const sendCalculatorToTelegram = async (calcData: CalculatorData & { revenue?: number }) => {
+  const sendCalculatorToTelegram = async (
+    calcData: CalculatorData & { revenue?: number }
+  ) => {
     try {
       const losses = calculateLosses(calcData as CalculatorData);
-      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_BOT_TOKEN =
+        "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
       const TELEGRAM_CHAT_ID = "-4875526331";
-      const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
-      const message = `Lite kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      const storeTypeLabel =
+        storeTypes.find((t) => t.id === calcData.storeType)?.label ||
+        calcData.storeType;
+      const message = `Lite kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(
+        losses.totalMonthly
+      )} so'm`;
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       await fetch(url, {
         method: "POST",
@@ -89,7 +101,10 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
         body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message }),
       });
     } catch (error) {
-      console.error("Failed to send lite calculator notification to Telegram:", error);
+      console.error(
+        "Failed to send lite calculator notification to Telegram:",
+        error
+      );
     }
   };
 
@@ -131,9 +146,12 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
           BILLZ – Inventarizatsiya yo'qotish kalkulyatori
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          5 ta tez savolga javob bering va do'koningiz har oy qancha pul yo'qotayotganini aniqlang.
+          5 ta tez savolga javob bering va do'koningiz har oy qancha pul
+          yo'qotayotganini aniqlang.
         </p>
-        <p className="text-sm text-muted-foreground">(O'rtacha davomiylik: 1 daqiqa)</p>
+        <p className="text-sm text-muted-foreground">
+          (O'rtacha davomiylik: 1 daqiqa)
+        </p>
       </div>
 
       {/* Progress Bar */}
@@ -142,7 +160,9 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
           <p className="text-sm text-muted-foreground">
             Savol {step} / {totalSteps}
           </p>
-          <p className="text-sm font-medium text-primary">{Math.round(progress)}%</p>
+          <p className="text-sm font-medium text-primary">
+            {Math.round(progress)}%
+          </p>
         </div>
         <Progress value={progress} className="h-2" />
       </div>
@@ -156,7 +176,8 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                 Sizning do'koningiz qaysi turga kiradi?
               </h2>
               <p className="text-sm text-muted-foreground">
-                Bu bizga sizning yo'qotish modelingizni to'g'ri hisoblashga yordam beradi.
+                Bu bizga sizning yo'qotish modelingizni to'g'ri hisoblashga
+                yordam beradi.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -173,7 +194,9 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium focus:outline-none",
-                    data.storeType === type.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.storeType === type.id
+                      ? "border-primary bg-secondary"
+                      : "md:hover:border-primary md:hover:bg-secondary"
                   )}
                 >
                   {type.label}
@@ -209,7 +232,9 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.skuCount === range.value ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.skuCount === range.value
+                      ? "border-primary bg-secondary"
+                      : "md:hover:border-primary md:hover:bg-secondary"
                   )}
                 >
                   {range.label}
@@ -223,7 +248,8 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
         {step === 3 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
-              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?
+              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi
+              holatlari bo'lganmi?
             </h2>
             <div className="grid gap-3">
               {theftLevels.map((level) => (
@@ -240,7 +266,9 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.theftLevel === level.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.theftLevel === level.id
+                      ? "border-primary bg-secondary"
+                      : "md:hover:border-primary md:hover:bg-secondary"
                   )}
                 >
                   {level.label}
@@ -264,9 +292,13 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
             <Input
               type="text"
               placeholder="Masalan: 95 000"
-              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
+              value={
+                data.avgPrice && data.avgPrice > 0
+                  ? data.avgPrice.toLocaleString("uz-UZ").replace(/,/g, " ")
+                  : ""
+              }
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, '');
+                const value = e.target.value.replace(/\s/g, "");
                 const numValue = parseInt(value) || 0;
                 setData({ ...data, avgPrice: numValue });
               }}
@@ -292,7 +324,10 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
               </h2>
               <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
                 <span className="text-lg">💡</span>
-                <span>Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.</span>
+                <span>
+                  Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun
+                  tavsiya qilamiz.
+                </span>
               </p>
             </div>
             <div className="grid gap-3">
@@ -315,7 +350,9 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.revenue === range.value ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.revenue === range.value
+                      ? "border-primary bg-secondary"
+                      : "md:hover:border-primary md:hover:bg-secondary"
                   )}
                 >
                   {range.label}
