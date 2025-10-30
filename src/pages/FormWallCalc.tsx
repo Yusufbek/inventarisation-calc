@@ -19,7 +19,7 @@ const FormWallCalc = () => {
   const handleCalculatorComplete = (data: CalculatorData & { name: string; phone: string }) => {
     setCalculatorData(data);
     setCurrentScreen("results");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   return (
