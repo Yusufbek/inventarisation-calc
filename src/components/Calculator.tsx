@@ -132,7 +132,15 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
       
-      const message = `Asosiy kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      let message = "";
+      
+      if (variant === "gamified") {
+        const { calculateStoreHealth } = await import("@/lib/calculations");
+        const healthResult = calculateStoreHealth(calcData);
+        message = `Gamified kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm\nStore Health Score: ${healthResult.score}/100 (${healthResult.status})`;
+      } else {
+        message = `Asosiy kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      }
       
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       

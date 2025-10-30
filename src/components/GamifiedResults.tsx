@@ -188,9 +188,14 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
           </h2>
 
           <Card className="bg-primary/5 border-2 border-primary/20 p-6 md:p-8 rounded-3xl relative overflow-hidden">
-            <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="flex flex-col items-center gap-6 text-center">
+              {/* Rocket Emoji - Top on mobile */}
+              <div className="text-7xl md:text-8xl">
+                🚀
+              </div>
+              
               {/* Text Content */}
-              <div className="flex-1 space-y-4 text-center md:text-left">
+              <div className="space-y-4 max-w-2xl">
                 <h3 className="text-2xl md:text-3xl font-bold text-foreground">
                   BILLZ - do'konlar uchun tizimlashtirish
                 </h3>
@@ -205,11 +210,6 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                 >
                   SINAB KO'RISH
                 </Button>
-              </div>
-
-              {/* Rocket Emoji */}
-              <div className="flex-shrink-0 text-8xl md:text-9xl">
-                🚀
               </div>
             </div>
           </Card>
