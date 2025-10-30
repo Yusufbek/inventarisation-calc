@@ -60,11 +60,11 @@ export const CalculatorHub = () => {
               className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group flex flex-row items-center"
               onClick={() => navigate(`/inventarisation-calc/${calc.variant}`)}
             >
-              <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4 rounded-l-lg">
+              <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4 rounded-lg">
                 <img 
                   src={calc.image} 
                   alt={calc.imageAlt}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
                 />
               </div>
               <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-4">
