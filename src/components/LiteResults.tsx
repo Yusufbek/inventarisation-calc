@@ -151,7 +151,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
     try {
       const TELEGRAM_BOT_TOKEN =
         "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
-      const TELEGRAM_CHAT_ID = "-4875526331";
+      const TELEGRAM_CHAT_ID = "-1003046303969";
 
       const phoneDigits = phone.replace(/\D/g, "");
       const fullPhone = `+998${phoneDigits}`;

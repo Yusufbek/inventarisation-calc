@@ -79,7 +79,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     const sendToTelegram = async () => {
       try {
         const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
-        const TELEGRAM_CHAT_ID = "-4875526331";
+        const TELEGRAM_CHAT_ID = "-1003046303969";
 
         const message = `⭐️ Yangi lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
@@ -122,7 +122,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
   const handleWarmLead = async () => {
     try {
       const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
-      const TELEGRAM_CHAT_ID = "-4875526331";
+      const TELEGRAM_CHAT_ID = "-1003046303969";
 
       const message = `⭐️⭐️ Warm Lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nMijoz mutaxassis bilan bog'lanishni so'radi\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 

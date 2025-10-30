@@ -30,7 +30,7 @@ import { sha256 } from "js-sha256";
 // Anyone can view this token in browser DevTools and abuse your bot.
 // Replace with your actual token from @BotFather
 const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
-const TELEGRAM_CHAT_ID = "-4875526331";
+const TELEGRAM_CHAT_ID = "-1003046303969";
 
 interface LeadFormProps {
   onSuccess?: () => void;
