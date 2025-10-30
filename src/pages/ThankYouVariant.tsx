@@ -11,7 +11,7 @@ const ThankYouVariant = () => {
   }, []);
 
   // Validate variant
-  if (!variant || !["main", "lite", "formwall"].includes(variant)) {
+  if (!variant || !["main", "lite", "formwall", "gamified"].includes(variant)) {
     return <Navigate to="/404" replace />;
   }
 

@@ -61,3 +61,83 @@ export const calculateLosses = (data: CalculatorData): CalculationResults => {
 export const formatNumber = (num: number): string => {
   return num.toLocaleString("uz-UZ");
 };
+
+export interface StoreHealthData {
+  score: number;
+  status: "KRITIK" | "YOMON" | "YAXSHILASH MUMKIN";
+  monthlyLoss: number;
+  metrics: {
+    name: string;
+    passed: boolean;
+  }[];
+  passedCount: number;
+}
+
+/**
+ * Calculate store health score based on calculator data
+ * Score is deliberately kept low/moderate (0-70) to encourage improvement
+ */
+export const calculateStoreHealth = (data: CalculatorData): StoreHealthData => {
+  const losses = calculateLosses(data);
+  
+  // Calculate individual metric scores (deliberately harsh to keep overall score low)
+  const inventoryScore = data.inventoryFrequency === "hafta" ? 15 : 
+                        data.inventoryFrequency === "oy" ? 10 : 
+                        data.inventoryFrequency === "3oy" ? 5 : 0;
+  
+  const dataReliabilityScore = data.theftLevel === "yoq" ? 20 : 
+                               data.theftLevel === "kam" ? 10 : 
+                               data.theftLevel === "bazan" ? 5 : 0;
+  
+  const growthScore = data.skuCount < 300 ? 15 : 
+                     data.skuCount < 1000 ? 10 : 
+                     data.skuCount < 3000 ? 5 : 0;
+  
+  const productControlScore = data.avgPrice > 200000 ? 10 : 
+                             data.avgPrice > 100000 ? 8 : 
+                             data.avgPrice > 50000 ? 5 : 3;
+  
+  // Total score (max 60, ensuring never goes above 70)
+  const rawScore = inventoryScore + dataReliabilityScore + growthScore + productControlScore;
+  const score = Math.min(rawScore, 70);
+  
+  // Determine status based on score
+  let status: "KRITIK" | "YOMON" | "YAXSHILASH MUMKIN";
+  if (score < 50) {
+    status = "KRITIK";
+  } else if (score < 65) {
+    status = "YOMON";
+  } else {
+    status = "YAXSHILASH MUMKIN";
+  }
+  
+  // Metrics evaluation (deliberately harsh criteria)
+  const metrics = [
+    {
+      name: "Inventarizatsiya",
+      passed: data.inventoryFrequency === "hafta" || data.inventoryFrequency === "oy"
+    },
+    {
+      name: "Ishonchli ma'lumotlar",
+      passed: data.theftLevel === "yoq"
+    },
+    {
+      name: "Sog'lom o'sish",
+      passed: data.skuCount < 500 // Most stores fail this
+    },
+    {
+      name: "Mahsulot nazorati",
+      passed: data.avgPrice > 200000 // Most stores fail this
+    }
+  ];
+  
+  const passedCount = metrics.filter(m => m.passed).length;
+  
+  return {
+    score,
+    status,
+    monthlyLoss: losses.totalMonthly,
+    metrics,
+    passedCount
+  };
+};
