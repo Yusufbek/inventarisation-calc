@@ -41,11 +41,11 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             DO'KON HOLATI
           </h2>
 
-          <div className="flex items-start justify-between gap-6 mb-6">
-            {/* Score */}
+          <div className="flex items-center justify-between gap-8 mb-6">
+            {/* Score and Status */}
             <div className="flex-1">
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-6xl md:text-8xl font-black text-foreground">
+              <div className="flex items-baseline gap-3 mb-4">
+                <span className="text-7xl md:text-8xl font-black text-foreground">
                   {healthResult.score}
                 </span>
                 <span className="text-3xl md:text-4xl font-bold text-muted-foreground">
@@ -54,33 +54,39 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
               </div>
 
               {/* Status Badge */}
-              <div className="inline-block mb-4">
+              <div className="inline-block">
                 <div
-                  className={`${getStatusColor()} text-white px-6 py-2 rounded-full font-bold text-sm md:text-base`}
+                  className={`${getStatusColor()} text-white px-6 py-2.5 rounded-full font-bold text-base md:text-lg`}
                 >
                   {healthResult.status}
                 </div>
               </div>
             </div>
 
-            {/* Warning Icon */}
+            {/* Status Icon */}
             <div className="flex-shrink-0">
-              <div className={`${getStatusColor()} w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-2xl`}>
+              <div className={`${getStatusColor()} w-24 h-24 md:w-28 md:h-28 flex items-center justify-center rounded-2xl`}>
                 <StatusIcon />
               </div>
             </div>
           </div>
 
-          {/* Dynamic Message based on Status */}
-          {healthResult.status === "YAXSHILASH MUMKIN" ? (
-            <p className="text-primary text-base md:text-lg font-semibold">
-              Do'koningiz yaxshi holatda! Yangi savdo nuqtalari ochish va tizimni yanada takomillashtirish orqali daromadingizni oshirishingiz mumkin.
-            </p>
-          ) : (
-            <p className="text-red-600 dark:text-red-500 text-base md:text-lg font-semibold">
-              Inventarizatsiya qilinmagani sababli siz oyiga {formatNumber(losses.totalMonthly)} so'm yo'qotmoqdasiz.
-            </p>
-          )}
+          {/* Short Dynamic Message */}
+          <div className="p-4 bg-muted/30 rounded-2xl">
+            {healthResult.status === "YAXSHILASH MUMKIN" ? (
+              <p className="text-primary text-base md:text-lg font-semibold">
+                ✨ Yaxshi natija! Yangi imkoniyatlar uchun tayyor.
+              </p>
+            ) : healthResult.status === "YOMON" ? (
+              <p className="text-orange-600 dark:text-orange-500 text-base md:text-lg font-semibold">
+                ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
+              </p>
+            ) : (
+              <p className="text-red-600 dark:text-red-500 text-base md:text-lg font-semibold">
+                🚨 Jiddiy muammo! Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
+              </p>
+            )}
+          </div>
         </Card>
 
         {/* Healthy Store Metrics Section */}
