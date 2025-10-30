@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import mainCalcImage from "@/assets/main-calc-icon.png";
 import liteCalcImage from "@/assets/lite-calc-icon.png";
 import formwallIcon from "@/assets/formwall-icon.png";
+import gamifiedIcon from "@/assets/gamified-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const CalculatorHub = () => {
     {
       variant: "gamified",
       title: "Gamified Calculator",
-      image: mainCalcImage,
+      image: gamifiedIcon,
       imageAlt: "Gamified Calculator icon"
     },
     {

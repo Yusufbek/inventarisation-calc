@@ -148,7 +148,8 @@ export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) 
       lossesText = `\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
     }
 
-    const message = `⭐️ Yangi lead - Main Calculator\nIsm: ${data.firstName} ${data.lastName}\nTelefon: ${data.phoneNumber}\nSana: ${data.appointmentDate}\nVaqt: ${data.appointmentTime}${lossesText}`;
+    const variantName = variant === "gamified" ? "Gamified" : variant === "lite" ? "Lite" : "Asosiy";
+    const message = `⭐️ Yangi lead - ${variantName} Calculator\nIsm: ${data.firstName} ${data.lastName}\nTelefon: ${data.phoneNumber}\nSana: ${data.appointmentDate}\nVaqt: ${data.appointmentTime}${lossesText}`;
 
     try {
       const response = await fetch(
