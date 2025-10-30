@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
@@ -32,6 +33,7 @@ interface FormWallResultsProps {
 }
 
 export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
+  const navigate = useNavigate();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const losses = calculateLosses(data);
@@ -86,6 +88,38 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     if (solutionSection) {
       solutionSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  };
+
+  const handleWarmLead = async () => {
+    try {
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_CHAT_ID = "-4875526331";
+
+      const message = `⭐️⭐️ Warm Lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nMijoz mutaxassis bilan bog'lanishni so'radi\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+        }),
+      });
+
+      // Track warm lead event
+      eventCustom("WarmLead", {
+        content_name: "FormWall Calculator - Expert Request",
+        name: data.name,
+        ph: sha256(data.phone),
+      });
+    } catch (error) {
+      console.error("Failed to send warm lead to Telegram:", error);
+    }
+
+    // Navigate to thank you page
+    navigate("/thank-you");
   };
 
   const lossDetails = [
@@ -218,18 +252,28 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         </div>
       </section>
 
-      {/* Sticky Bottom Panel */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+      {/* Expert Consultation Section */}
+      <section className="bg-background px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg"
-            onClick={scrollToSolution}
-          >
-            Muammongizga yechim aniqlash
-          </Button>
+          <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-6 md:p-10 space-y-6 border-2 border-primary/20">
+            <div className="space-y-3 text-center">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Natijalaringizni muhokama qilaylik
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Bizning mutaxassis siz bilan bog'lanib, inventarizatsiyani qanday yaxshilash mumkinligini tushuntiradi.
+              </p>
+            </div>
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={handleWarmLead}
+            >
+              Mutaxassis bilan bog'lanish
+            </Button>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

@@ -12,34 +12,70 @@ interface FormWallCalculatorProps {
 }
 
 interface Question {
-  id: keyof CalculatorData;
+  id: keyof CalculatorData | "revenue";
   question: string;
   answers: { value: any; label: string }[];
   type?: "number" | "choice";
+  hint?: string;
 }
+
+const storeTypes = [
+  { id: "kiyim", label: "Kiyim", avgPrice: 300000 },
+  { id: "poyabzal", label: "Poyabzal", avgPrice: 280000 },
+  { id: "dorixona", label: "Dorixona", avgPrice: 60000 },
+  { id: "oziq-ovqat", label: "Oziq-ovqat", avgPrice: 28000 },
+  { id: "kosmetika", label: "Kosmetika", avgPrice: 95000 },
+  { id: "elektronika", label: "Elektronika", avgPrice: 1000000 },
+  { id: "qurilish", label: "Qurilish mollari", avgPrice: 180000 },
+  { id: "kafe", label: "Kafe/Restoran", avgPrice: 45000 },
+  { id: "boshqa", label: "Boshqa", avgPrice: 150000 },
+];
 
 const questions: Question[] = [
   {
     id: "storeType",
-    question: "Do'koningiz qanday?",
-    answers: [
-      { value: "kiyim", label: "Kiyim" },
-      { value: "oziq-ovqat", label: "Oziq-ovqat" },
-      { value: "elektronika", label: "Elektronika" },
-      { value: "boshqa", label: "Boshqa" },
-    ],
+    question: "Sizning do'koningiz qaysi turga kiradi?",
+    answers: storeTypes.map(t => ({ value: t.id, label: t.label })),
   },
   {
     id: "skuCount",
-    question: "Qancha xil mahsulot (SKU) bor?",
+    question: "Do'koningizda taxminan nechta turdagi mahsulot sotiladi?",
+    answers: [
+      { value: 50, label: "100 tagacha" },
+      { value: 300, label: "101–500" },
+      { value: 750, label: "501–1 000" },
+      { value: 1500, label: "1 001–2 000" },
+      { value: 3500, label: "2 001–5 000" },
+      { value: 7000, label: "5 000+" },
+    ],
+  },
+  {
+    id: "theftLevel",
+    question: "So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi holatlari bo'lganmi?",
+    answers: [
+      { value: "tez-tez", label: "Ha, tez-tez" },
+      { value: "bazan", label: "Ba'zan" },
+      { value: "kam", label: "Juda kam" },
+      { value: "yoq", label: "Yo'q" },
+    ],
+  },
+  {
+    id: "avgPrice",
+    question: "Sotayotgan mahsulotlaringizning o'rtacha narxi (so'm)?",
     type: "number",
     answers: [],
   },
   {
-    id: "avgPrice",
-    question: "O'rtacha mahsulot narxi qancha? (so'm)",
-    type: "number",
-    answers: [],
+    id: "revenue",
+    question: "O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?",
+    hint: "Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.",
+    answers: [
+      { value: 25000000, label: "< 50 mln so'm" },
+      { value: 75000000, label: "50–100 mln so'm" },
+      { value: 150000000, label: "100–200 mln so'm" },
+      { value: 350000000, label: "200–500 mln so'm" },
+      { value: 750000000, label: "500 mln+ so'm" },
+    ],
   },
 ];
 
@@ -59,6 +95,14 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
     const newAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(newAnswers);
 
+    // Auto-set avgPrice based on store type
+    if (currentQuestion.id === "storeType") {
+      const storeType = storeTypes.find(t => t.id === value);
+      if (storeType) {
+        newAnswers.avgPrice = storeType.avgPrice;
+      }
+    }
+
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
       setNumberInput("");
@@ -66,7 +110,6 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
       // Set defaults for missing fields
       const completeData: CalculatorData = {
         ...newAnswers,
-        theftLevel: "bazan",
         inventoryFrequency: "oy",
       } as CalculatorData;
       
@@ -112,7 +155,6 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
 
     const completeData: CalculatorData & { name: string; phone: string } = {
       ...answers,
-      theftLevel: "bazan",
       inventoryFrequency: "oy",
       name: `${name} ${surname}`,
       phone,
@@ -229,12 +271,23 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                 {currentQuestion.question}
               </h2>
 
+              {currentQuestion.hint && (
+                <p className="text-sm text-muted-foreground bg-secondary/50 p-4 rounded-xl flex items-start gap-2">
+                  <span className="text-lg">💡</span>
+                  <span>{currentQuestion.hint}</span>
+                </p>
+              )}
+
               {isNumberQuestion ? (
                 <div className="space-y-4">
                   <Input
-                    type="number"
+                    type="text"
                     value={numberInput}
-                    onChange={(e) => setNumberInput(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\s/g, '');
+                      const numValue = parseInt(value) || "";
+                      setNumberInput(numValue.toString());
+                    }}
                     placeholder="Raqamni kiriting"
                     className="text-lg h-14"
                     autoFocus

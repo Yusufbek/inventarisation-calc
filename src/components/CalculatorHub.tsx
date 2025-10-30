@@ -4,6 +4,7 @@ import { BillzLogo } from "@/components/BillzLogo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import mainCalcImage from "@/assets/main-calc-icon.png";
 import liteCalcImage from "@/assets/lite-calc-icon.png";
+import telegramBotImage from "@/assets/telegram-bot.webp";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -20,6 +21,12 @@ export const CalculatorHub = () => {
       title: "Lite Calculator",
       image: liteCalcImage,
       imageAlt: "Lite Calculator icon"
+    },
+    {
+      variant: "formwall",
+      title: "FormWall Calculator",
+      image: telegramBotImage,
+      imageAlt: "FormWall Calculator icon"
     }
   ];
 
@@ -39,7 +46,7 @@ export const CalculatorHub = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {calculators.map((calc) => (
             <Card 
               key={calc.variant}
