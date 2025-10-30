@@ -380,34 +380,6 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                   </div>
                 </div>
               </div>
-                    )}
-                  </div>
-                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
-                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
-                      {formatNumber(animatedCustomer)}
-                    </div>
-                    <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
-                      so'm
-                    </div>
-                  </div>
-                </div>
-              </div>
-                          Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va
-                          obro' zarari.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                  <div className="bg-white px-4 md:px-6 py-5 text-right">
-                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
-                      {formatNumber(animatedCustomer)}
-                    </div>
-                    <div className="text-sm text-destructive font-medium">
-                      so'm
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               <div className="bg-secondary/80 px-4 md:px-6 py-6 border-t-4 border-destructive">
                 <div className="flex justify-between items-center">
