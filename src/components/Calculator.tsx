@@ -217,10 +217,17 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
               {storeTypes.map((type) => (
                 <button
                   key={type.id}
-                  onClick={() => handleStoreTypeSelect(type.id)}
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    handleStoreTypeSelect(type.id);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
                   className={cn(
-                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium focus:outline-none",
+                    data.storeType === type.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
                   )}
                 >
                   {type.label}
@@ -242,14 +249,18 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
               {skuRanges.map((range) => (
                 <button
                   key={range.id}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, skuCount: range.value });
                     setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
                   className={cn(
-                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    data.skuCount === range.value && "border-primary bg-secondary"
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
                   )}
                 >
                   {range.label}
@@ -268,15 +279,18 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
               {frequencies.map((freq) => (
                 <button
                   key={freq.id}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, inventoryFrequency: freq.id });
                     setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
                   className={cn(
-                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    data.inventoryFrequency === freq.id &&
-                      "border-primary bg-secondary"
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
                   )}
                 >
                   {freq.label}
@@ -296,14 +310,18 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
               {theftLevels.map((level) => (
                 <button
                   key={level.id}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, theftLevel: level.id });
                     setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
                   className={cn(
-                    "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                    data.theftLevel === level.id && "border-primary bg-secondary"
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
                   )}
                 >
                   {level.label}
