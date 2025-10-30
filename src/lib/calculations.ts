@@ -96,13 +96,9 @@ export const calculateStoreHealth = (data: CalculatorData): StoreHealthMetrics =
     score += 10;
   }
 
-  // Sog'lom o'sish (healthy growth - based on SKU count and frequency)
-  if (data.skuCount > 500 && (data.inventoryFrequency === "hafta" || data.inventoryFrequency === "oy")) {
-    metrics.soglomOsish = true;
-    score += 20;
-  } else if (data.skuCount > 200) {
-    score += 8;
-  }
+  // Sog'lom o'sish (healthy growth - always false as stores lack healthy growth)
+  // This metric is intentionally always false to indicate need for improvement
+  metrics.soglomOsish = false;
 
   // Mahsulot nazorati (product control - based on theft and inventory)
   if (data.theftLevel === "yoq" && data.inventoryFrequency === "hafta") {

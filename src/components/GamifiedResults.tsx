@@ -195,7 +195,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
 
         {/* Solution Section */}
         <div className="space-y-4">
-          <h2 className="text-xl md:text-2xl font-bold text-foreground">
+          <h2 className="text-xl md:text-2xl font-bold text-foreground text-center">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
               <>YECHIM - <span className="text-primary">biznesingizni yanada o'sish</span></>
             ) : (
