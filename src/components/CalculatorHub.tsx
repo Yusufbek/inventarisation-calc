@@ -53,26 +53,26 @@ export const CalculatorHub = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-4 gap-3 md:gap-4 w-full">
           {calculators.map((calc) => (
             <Card 
               key={calc.variant}
               className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group"
               onClick={() => navigate(`/inventarisation-calc/${calc.variant}`)}
             >
-              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4 md:p-6">
+              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-3 md:p-4">
                 <img 
                   src={calc.image} 
                   alt={calc.imageAlt}
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
-              <CardHeader className="text-center py-3 md:py-4">
-                <CardTitle className="text-base md:text-xl lg:text-2xl">{calc.title}</CardTitle>
+              <CardHeader className="text-center py-2 md:py-3">
+                <CardTitle className="text-xs md:text-sm lg:text-base">{calc.title}</CardTitle>
               </CardHeader>
-              <CardContent className="pb-3 md:pb-4 px-3 md:px-6">
+              <CardContent className="pb-2 md:pb-3 px-2 md:px-4">
                 <Button 
-                  className="w-full h-9 md:h-10 text-sm md:text-base"
+                  className="w-full h-8 md:h-9 text-xs md:text-sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/inventarisation-calc/${calc.variant}`);
