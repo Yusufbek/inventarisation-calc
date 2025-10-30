@@ -218,12 +218,10 @@ export const FormWallCalculator = ({
     return <section className="relative w-full bg-background py-8 px-4 min-h-screen flex items-center justify-center overflow-hidden">
         <div className="relative z-10 max-w-2xl w-full mx-auto animate-scale-in space-y-6">
           {/* Blurred Losses Container */}
-          <div className="rounded-2xl border bg-card/80 backdrop-blur p-6 md:p-8 text-center shadow-sm">
-            <p className="text-sm md:text-base font-medium text-muted-foreground">Sizning Yo'qotishlar:</p>
-            <div className="mt-2">
-              <div className="text-5xl md:text-6xl font-bold text-foreground/80 blur-md select-none">
-                {formatNumber(losses.totalMonthly)} so'm
-              </div>
+          <div className="rounded-2xl border-2 border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 backdrop-blur p-6 md:p-8 text-center shadow-lg">
+            <h2 className="text-2xl md:text-3xl font-bold text-destructive mb-4">Sizning Yo'qotishlar:</h2>
+            <div className="text-5xl md:text-6xl font-bold text-foreground select-none" style={{ filter: 'blur(4px)' }}>
+              {formatNumber(losses.totalMonthly)} so'm
             </div>
           </div>
 
@@ -307,14 +305,14 @@ export const FormWallCalculator = ({
                   </Button>
                 </div> : currentQuestion.id === "revenue" ? <div className="space-y-4 pb-28">
                   <div className="grid gap-3">
-                    {currentQuestion.answers.map(answer => <Button key={answer.value} onClick={e => {
+                    {currentQuestion.answers.map(answer => <button key={answer.value} onClick={e => {
                   e.currentTarget.blur();
                   handleAnswer(answer.value);
                 }} onTouchEnd={e => {
                   e.currentTarget.blur();
-                }} variant="outline" size="lg" className="h-auto py-4 text-lg transition-colors focus:outline-none active:scale-[0.98]">
+                }} className="p-4 rounded-2xl border-2 border-border text-left transition-all active:scale-[0.98] font-medium text-lg focus:outline-none">
                       {answer.label}
-                    </Button>)}
+                    </button>)}
                   </div>
                   
                   {/* Sticky footer with skip option */}
@@ -326,14 +324,14 @@ export const FormWallCalculator = ({
                     </div>
                   </div>
                 </div> : <div className="grid gap-3">
-                  {currentQuestion.answers.map(answer => <Button key={answer.value} onClick={e => {
+                  {currentQuestion.answers.map(answer => <button key={answer.value} onClick={e => {
                 e.currentTarget.blur();
                 handleAnswer(answer.value);
               }} onTouchEnd={e => {
                 e.currentTarget.blur();
-              }} variant="outline" size="lg" className="h-auto py-4 text-lg transition-colors focus:outline-none active:scale-[0.98]">
+              }} className="p-4 rounded-2xl border-2 border-border text-left transition-all active:scale-[0.98] font-medium text-lg focus:outline-none">
                       {answer.label}
-                    </Button>)}
+                    </button>)}
                 </div>}
             </CardContent>
           </Card>
