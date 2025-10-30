@@ -216,29 +216,12 @@ export const FormWallCalculator = ({
   if (showForm) {
     const losses = calculateLosses(answers as CalculatorData);
     return <section className="relative w-full bg-background py-8 px-4 min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Banking-style blurred background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-full max-w-2xl px-4">
-            {/* Subtle background card */}
-            <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 border border-border/20"></div>
-          </div>
-        </div>
-
-        {/* Form Card - Centered and on top */}
         <div className="relative z-10 max-w-2xl w-full mx-auto animate-scale-in space-y-6">
-          <div className="flex justify-center">
-            <BillzLogo className="h-10 md:h-12 text-foreground" />
-          </div>
-
-          {/* Blurred Losses Display - Banking Style */}
-          <div className="text-center space-y-3 px-4">
-            <h3 className="text-lg md:text-xl font-semibold text-muted-foreground">Sizning Yo'qotishlar:</h3>
-            <div className="relative inline-block">
-              <div className="text-5xl md:text-6xl font-bold text-destructive" style={{
-              filter: 'blur(8px)',
-              userSelect: 'none',
-              WebkitUserSelect: 'none'
-            }}>
+          {/* Blurred Losses Container */}
+          <div className="rounded-2xl border bg-card/80 backdrop-blur p-6 md:p-8 text-center shadow-sm">
+            <p className="text-sm md:text-base font-medium text-muted-foreground">Sizning Yo'qotishlar:</p>
+            <div className="mt-2">
+              <div className="text-5xl md:text-6xl font-bold text-foreground/80 blur-md select-none">
                 {formatNumber(losses.totalMonthly)} so'm
               </div>
             </div>

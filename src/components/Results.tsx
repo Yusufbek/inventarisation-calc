@@ -234,7 +234,7 @@ export const Results = ({
       </section>
 
       {/* Eye-Catching Transition Section */}
-      <section className="relative py-4 md:py-6 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
+      <section className="relative pt-4 md:pt-6 pb-0 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
         {/* Animated background circles - more subtle and integrated */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-success/5 rounded-full blur-[100px] animate-pulse" style={{
@@ -274,7 +274,7 @@ export const Results = ({
       </section>
 
       {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-muted/30 to-background px-4 pt-4 md:pt-6 pb-8 min-h-screen flex items-center py-0">
+      <section id="billz-solution" className="bg-gradient-to-b from-muted/30 to-background px-4 pt-0 md:pt-0 pb-8">
         <div className="max-w-4xl mx-auto w-full">
           <div className="relative rounded-3xl p-6 md:p-8 text-white text-center overflow-hidden animate-scale-in" style={{
           animationDelay: "0.7s",
