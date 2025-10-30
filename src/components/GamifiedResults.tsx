@@ -70,7 +70,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
         {/* Store Health Section */}
         <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl">
           <h2 className="text-sm md:text-base font-bold text-white/70 tracking-wider mb-6">
-            DO'KON HOLATI
+            DO'KON HOLATI BALLI
           </h2>
 
           <div className="flex items-center justify-between gap-8 mb-6">
@@ -231,7 +231,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
               <>YECHIM - <span className="text-primary">biznesingizni yanada o'sish</span></>
             ) : (
-              <>YECHIM - <span className="text-primary">scoreni balandroq qilish</span></>
+              <>YECHIM - <span className="text-primary">balni balandrow qilish</span></>
             )}
           </h2>
 
@@ -245,7 +245,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
               {/* Text Content */}
               <div className="space-y-3 max-w-2xl">
                 <h3 className="text-xl md:text-2xl font-bold text-white">
-                  BILLZ - do'konlar uchun tizimlashtirish
+                  BILLZ - Do'kon egalari uchun super kuch
                 </h3>
                 <p className="text-white/80 text-sm md:text-base">
                   {healthResult.status === "YAXSHILASH MUMKIN" ? (
