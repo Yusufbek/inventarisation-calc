@@ -23,6 +23,12 @@ export const CalculatorHub = () => {
       imageAlt: "Lite Calculator icon"
     },
     {
+      variant: "gamified",
+      title: "Gamified Calculator",
+      image: mainCalcImage,
+      imageAlt: "Gamified Calculator icon"
+    },
+    {
       variant: "formwall",
       title: "FormWall Calculator",
       image: formwallIcon,
@@ -46,7 +52,7 @@ export const CalculatorHub = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {calculators.map((calc) => (
             <Card 
               key={calc.variant}

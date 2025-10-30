@@ -56,6 +56,91 @@ export const calculateLosses = (data: CalculatorData): CalculationResults => {
 };
 
 /**
+ * Calculate store health score for gamified results
+ */
+export interface StoreHealthMetrics {
+  score: number;
+  status: "KRITIK" | "YOMON" | "YAXSHILASH MUMKIN";
+  lossAmount: number;
+  metrics: {
+    inventarizatsiya: boolean;
+    ishonchliMalumotlar: boolean;
+    soglomOsish: boolean;
+    mahsulotNazorati: boolean;
+  };
+  passedMetrics: number;
+}
+
+export const calculateStoreHealth = (data: CalculatorData): StoreHealthMetrics => {
+  let score = 0;
+  const metrics = {
+    inventarizatsiya: false,
+    ishonchliMalumotlar: false,
+    soglomOsish: false,
+    mahsulotNazorati: false,
+  };
+
+  // Inventarizatsiya check (good if weekly or monthly)
+  if (data.inventoryFrequency === "hafta" || data.inventoryFrequency === "oy") {
+    metrics.inventarizatsiya = true;
+    score += 25;
+  } else if (data.inventoryFrequency === "3oy") {
+    score += 10;
+  }
+
+  // Ishonchli ma'lumotlar (reliable data - based on theft level)
+  if (data.theftLevel === "yoq") {
+    metrics.ishonchliMalumotlar = true;
+    score += 20;
+  } else if (data.theftLevel === "kam") {
+    score += 10;
+  }
+
+  // Sog'lom o'sish (healthy growth - based on SKU count and frequency)
+  if (data.skuCount > 500 && (data.inventoryFrequency === "hafta" || data.inventoryFrequency === "oy")) {
+    metrics.soglomOsish = true;
+    score += 20;
+  } else if (data.skuCount > 200) {
+    score += 8;
+  }
+
+  // Mahsulot nazorati (product control - based on theft and inventory)
+  if (data.theftLevel === "yoq" && data.inventoryFrequency === "hafta") {
+    metrics.mahsulotNazorati = true;
+    score += 20;
+  } else if (data.theftLevel === "kam" && data.inventoryFrequency === "oy") {
+    score += 8;
+  }
+
+  // Ensure score is always low to moderate (0-70)
+  score = Math.min(score, 70);
+
+  // Calculate loss amount (simplified)
+  const baseLoss = data.skuCount * data.avgPrice * 0.02;
+  const lossAmount = Math.round(baseLoss / 1000000); // Convert to millions
+
+  // Determine status
+  let status: "KRITIK" | "YOMON" | "YAXSHILASH MUMKIN";
+  if (score < 50) {
+    status = "KRITIK";
+  } else if (score < 65) {
+    status = "YOMON";
+  } else {
+    status = "YAXSHILASH MUMKIN";
+  }
+
+  const passedMetrics = Object.values(metrics).filter(Boolean).length;
+
+  return {
+    score,
+    status,
+    lossAmount,
+    metrics,
+    passedMetrics,
+  };
+};
+
+/**
  * Format number with Uzbek locale (spaces as thousands separator)
  */
 export const formatNumber = (num: number): string => {
