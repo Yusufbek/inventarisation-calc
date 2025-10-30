@@ -162,52 +162,38 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
     const losses = calculateLosses(answers as CalculatorData);
     
     return (
-      <section className="relative w-full bg-background py-12 px-4 min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Blurred Results Background - Banking Style */}
+      <section className="relative w-full bg-background py-8 px-4 min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Banking-style blurred background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-full max-w-3xl px-4">
-            <div className="bg-white rounded-2xl shadow-lg p-8 space-y-8 relative">
-              <div className="flex justify-center">
-                <BillzLogo className="h-12 text-foreground" />
-              </div>
-              
-              <div className="text-center space-y-6">
-                <h2 className="text-3xl font-bold text-destructive">
-                  Siz har oy o'rtacha
-                </h2>
-                <div className="text-7xl font-bold text-destructive">
-                  {formatNumber(losses.totalMonthly)} so'm
-                </div>
-                <p className="text-2xl font-bold text-destructive">
-                  yo'qotyapsiz.
-                </p>
-              </div>
-              
-              <div className="bg-secondary rounded-xl p-6 space-y-4">
-                <div className="flex justify-between text-lg">
-                  <span className="font-semibold">Yo'qolgan mahsulotlar</span>
-                  <span className="font-bold">{formatNumber(losses.inventoryLoss)} so'm</span>
-                </div>
-                <div className="flex justify-between text-lg">
-                  <span className="font-semibold">Xodimlar vaqti</span>
-                  <span className="font-bold">{formatNumber(losses.timeLoss)} so'm</span>
-                </div>
-                <div className="flex justify-between text-lg">
-                  <span className="font-semibold">Out-of-stock</span>
-                  <span className="font-bold">{formatNumber(losses.customerLoss)} so'm</span>
-                </div>
-              </div>
-              
-              {/* Blur overlay */}
-              <div className="absolute inset-0 backdrop-blur-lg bg-white/30 rounded-2xl"></div>
-            </div>
+          <div className="w-full max-w-2xl px-4">
+            {/* Subtle background card */}
+            <div className="bg-white/40 backdrop-blur-sm rounded-3xl p-8 border border-border/20"></div>
           </div>
         </div>
 
         {/* Form Card - Centered and on top */}
-        <div className="relative z-10 max-w-2xl w-full mx-auto animate-scale-in">
-          <div className="flex justify-center mb-6">
+        <div className="relative z-10 max-w-2xl w-full mx-auto animate-scale-in space-y-6">
+          <div className="flex justify-center">
             <BillzLogo className="h-10 md:h-12 text-foreground" />
+          </div>
+
+          {/* Blurred Losses Display - Banking Style */}
+          <div className="text-center space-y-3 px-4">
+            <h3 className="text-lg md:text-xl font-semibold text-muted-foreground">
+              Your Losses:
+            </h3>
+            <div className="relative inline-block">
+              <div 
+                className="text-5xl md:text-6xl font-bold text-destructive"
+                style={{ 
+                  filter: 'blur(8px)',
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none'
+                }}
+              >
+                {formatNumber(losses.totalMonthly)} so'm
+              </div>
+            </div>
           </div>
 
           <Card className="border-2 border-primary/20 shadow-2xl">
@@ -217,7 +203,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                   Natijalarni olish uchun
                 </h2>
                 <p className="text-muted-foreground">
-                  Quyidagi ma'lumotlarni kiriting — sizga tasdiqlash kodi yuboriladi
+                  Quyidagi ma'lumotlarni kiriting
                 </p>
               </div>
 

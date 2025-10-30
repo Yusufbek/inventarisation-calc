@@ -92,10 +92,10 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
   };
 
   return (
-    <div className="w-full bg-background pb-20">
+    <div className="w-full bg-background">
       {/* Loss Section */}
-      <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative">
-        <div className="max-w-4xl mx-auto space-y-10">
+      <section className="bg-background px-4 py-8 md:py-12 pb-4 md:pb-6 animate-fade-in relative">
+        <div className="max-w-4xl mx-auto space-y-8">
           <div className="flex justify-center">
             <BillzLogo className="h-10 md:h-12 text-foreground" />
           </div>
@@ -276,7 +276,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Eye-Catching Transition Section */}
-      <section className="relative py-8 md:py-12 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
+      <section className="relative py-4 md:py-6 px-4 bg-gradient-to-b from-background via-muted/20 to-muted/30 overflow-hidden">
         {/* Animated background circles - more subtle and integrated */}
         <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] animate-pulse"></div>
         <div
@@ -288,7 +288,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
           style={{ animationDelay: "0.5s" }}
         ></div>
 
-        <div className="relative max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
+        <div className="relative max-w-3xl mx-auto text-center space-y-4 md:space-y-6 animate-fade-in">
           <h3 className="text-4xl md:text-6xl font-bold text-foreground leading-tight animate-slide-up">
             Muammongizga <span className="text-primary">ideal yechim</span> bor
           </h3>
@@ -328,7 +328,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center">
+      <section id="billz-solution" className="bg-gradient-to-b from-muted/30 to-background px-4 pt-4 md:pt-6 pb-8 min-h-screen flex items-center">
         <div className="max-w-4xl mx-auto w-full">
           <div
             className="relative rounded-3xl p-6 md:p-8 text-white text-center overflow-hidden animate-scale-in"
