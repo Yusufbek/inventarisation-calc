@@ -35,6 +35,7 @@ interface FormWallResultsProps {
 export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
   const navigate = useNavigate();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [showStickyButton, setShowStickyButton] = useState(true);
 
   const losses = calculateLosses(data);
 
@@ -47,7 +48,30 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
   // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 0);
+  }, []);
+
+  // Hide sticky button when main CTA is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyButton(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const ctaButton = document.getElementById("main-cta-button");
+    if (ctaButton) {
+      observer.observe(ctaButton);
+    }
+
+    return () => {
+      if (ctaButton) {
+        observer.unobserve(ctaButton);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -149,8 +173,8 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
   ];
 
   return (
-    <div className="w-full bg-background pb-20">
-      <section className="bg-background px-4 py-8 md:py-16 animate-fade-in">
+    <div className="w-full bg-background">
+      <section className="bg-background px-4 py-8 md:py-12 pb-4 md:pb-6 animate-fade-in">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="flex justify-center">
             <BillzLogo className="h-10 md:h-12 text-foreground" />
@@ -240,19 +264,19 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         </div>
       </section>
 
-      {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center">
+      {/* Solution Section */}
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 pt-4 md:pt-6 pb-8">
         <div className="max-w-3xl mx-auto w-full">
-          <div className="relative rounded-3xl p-5 md:p-6 text-white overflow-hidden">
+          <div className="relative rounded-3xl p-5 md:p-6 text-white overflow-hidden text-center">
             <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
 
             <div className="relative z-10 space-y-3">
-              <p className="text-lg md:text-xl font-bold text-center">
+              <p className="text-lg md:text-xl font-bold">
                 BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
               </p>
 
-              <div className="text-center space-y-1 py-2">
+              <div className="space-y-1 py-2">
                 <p className="text-base md:text-lg font-semibold">Taxminiy tejash:</p>
                 <div className="text-4xl md:text-5xl font-black">
                   +{formatNumber(animatedRecovered)} so'm / oy
@@ -272,6 +296,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
               </p>
             </div>
             <Button
+              id="main-cta-button"
               size="lg"
               className="w-full h-12 md:h-14 text-base md:text-lg"
               onClick={handleWarmLead}
@@ -281,6 +306,21 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
           </div>
         </div>
       </section>
+
+      {/* Sticky Bottom Panel */}
+      {showStickyButton && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+          <div className="max-w-3xl mx-auto">
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={scrollToSolution}
+            >
+              Muammongizga yechim aniqlash
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,9 +16,9 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
   const healthResult = calculateStoreHealth(data);
   const losses = calculateLosses(data);
   
-  // Scroll to top on mount
+  // Scroll to slightly below top on mount
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 100, behavior: "instant" });
   }, []);
   
   // Determine status color and icon
