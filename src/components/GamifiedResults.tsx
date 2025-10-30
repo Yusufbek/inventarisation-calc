@@ -229,9 +229,9 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
         <div className="space-y-3">
           <h2 className="text-lg md:text-xl font-bold text-foreground text-center">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
-              <>YECHIM - <span className="text-primary">biznesingizni yanada o'sish</span></>
+              <>Balingizni oshirish uchun yechim - <span className="text-primary">biznesingizni yanada o'sish</span></>
             ) : (
-              <>YECHIM - <span className="text-primary">balni balandrow qilish</span></>
+              <>Balingizni oshirish uchun yechim - <span className="text-primary">balni balandrow qilish</span></>
             )}
           </h2>
 
