@@ -98,6 +98,13 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
+  // Remove focus from any active element when step changes
+  useEffect(() => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }, [step]);
+
   const handleStoreTypeSelect = (type: string) => {
     setData({ ...data, storeType: type });
     setStep(2);
@@ -213,7 +220,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
                   onClick={() => handleStoreTypeSelect(type.id)}
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium"
+                    "font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   )}
                 >
                   {type.label}
@@ -241,7 +248,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
                   }}
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg",
+                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     data.skuCount === range.value && "border-primary bg-secondary"
                   )}
                 >
@@ -267,7 +274,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
                   }}
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg",
+                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     data.inventoryFrequency === freq.id &&
                       "border-primary bg-secondary"
                   )}
@@ -295,7 +302,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
                   }}
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all hover:border-primary hover:bg-secondary",
-                    "font-medium text-lg",
+                    "font-medium text-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                     data.theftLevel === level.id && "border-primary bg-secondary"
                   )}
                 >
