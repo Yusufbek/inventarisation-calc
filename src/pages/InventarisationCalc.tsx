@@ -4,7 +4,6 @@ import { Calculator, CalculatorData } from "@/components/Calculator";
 import { LiteCalculator } from "@/components/LiteCalculator";
 import { Results } from "@/components/Results";
 import { LiteResults } from "@/components/LiteResults";
-import { GamifiedResults } from "@/components/GamifiedResults";
 import { LeadForm } from "@/components/LeadForm";
 import { HeroSection } from "@/components/HeroSection";
 import { pageView } from "@/lib/fpixel";
@@ -15,13 +14,13 @@ const InventarisationCalc = () => {
   const { variant } = useParams<{ variant: string }>();
   
   // Validate variant first
-  if (!variant || !["main", "lite", "gamified"].includes(variant)) {
+  if (!variant || !["main", "lite"].includes(variant)) {
     return <Navigate to="/404" replace />;
   }
   
-  // Lite and gamified start directly with calculator, main starts with hero
+  // Lite starts directly with calculator, main starts with hero
   const [currentScreen, setCurrentScreen] = useState<Screen>(
-    variant === "lite" || variant === "gamified" ? "calculator" : "hero"
+    variant === "lite" ? "calculator" : "hero"
   );
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
@@ -58,7 +57,7 @@ const InventarisationCalc = () => {
 
       {currentScreen === "calculator" && (
         <section className="w-full bg-background py-12 min-h-screen">
-          {variant === "main" || variant === "gamified" ? (
+          {variant === "main" ? (
             <Calculator onComplete={handleCalculatorComplete} variant={variant} />
           ) : (
             <LiteCalculator onComplete={handleCalculatorComplete} variant={variant} />
@@ -70,15 +69,13 @@ const InventarisationCalc = () => {
         <div className="min-h-screen">
           {variant === "main" ? (
             <Results data={calculatorData} onContactClick={handleContactClick} />
-          ) : variant === "gamified" ? (
-            <GamifiedResults data={calculatorData} onContactClick={handleContactClick} />
           ) : (
             <LiteResults data={calculatorData} variant={variant} />
           )}
         </div>
       )}
 
-      {currentScreen === "lead-form" && (variant === "main" || variant === "gamified") && (
+      {currentScreen === "lead-form" && variant === "main" && (
         <LeadForm
           calculatorData={calculatorData}
           variant={variant}

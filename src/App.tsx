@@ -22,7 +22,6 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/inventarisation-calc/:variant" element={<InventarisationCalc />} />
           <Route path="/inventarisation-calc/formwall" element={<FormWallCalc />} />
-          <Route path="/inventarisation-calc/gamified" element={<InventarisationCalc />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
           {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />
