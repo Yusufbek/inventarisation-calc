@@ -38,12 +38,12 @@ const InventarisationCalc = () => {
   const handleCalculatorComplete = (data: CalculatorData) => {
     setCalculatorData(data);
     setCurrentScreen("results");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const handleContactClick = () => {
     setCurrentScreen("lead-form");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const handleLeadSuccess = () => {

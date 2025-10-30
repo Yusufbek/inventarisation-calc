@@ -173,7 +173,7 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium focus:outline-none",
-                    data.storeType === type.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {type.label}
@@ -209,7 +209,7 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.skuCount === range.value ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {range.label}
@@ -240,7 +240,7 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.theftLevel === level.id ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {level.label}
@@ -315,7 +315,7 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.revenue === range.value ? "border-primary bg-secondary" : "hover:border-primary hover:bg-secondary"
+                    data.revenue === range.value ? "border-primary bg-secondary" : "border-border"
                   )}
                 >
                   {range.label}

@@ -77,6 +77,11 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   // Track CalculatorFinished when results are shown
   useEffect(() => {
     eventCustom("CalculatorFinished", {
@@ -406,28 +411,28 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
-        <div className="max-w-3xl mx-auto space-y-8">
+      {/* Solution Section - Single Viewport */}
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12 min-h-screen flex items-center">
+        <div className="max-w-3xl mx-auto w-full space-y-6">
           {/* Green Solution Block */}
-          <div className="relative rounded-3xl p-6 md:p-10 text-white overflow-hidden">
+          <div className="relative rounded-3xl p-6 md:p-8 text-white overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
             <div className="absolute inset-0 border-2 border-white/20 rounded-3xl"></div>
 
-            <div className="relative z-10 space-y-6">
+            <div className="relative z-10 space-y-4">
               <p className="text-xl md:text-2xl font-bold text-center">
                 BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish
                 mumkin.
               </p>
 
-              <p className="text-center text-white/90">
+              <p className="text-center text-white/90 text-sm md:text-base">
                 Avtomatik inventarizatsiya, real-vaqt stok nazorati va xatolarni
                 kamaytirish orqali.
               </p>
 
-              <div className="text-center space-y-2 py-4">
-                <p className="text-lg font-semibold">Taxminiy tejash:</p>
+              <div className="text-center space-y-2 py-3">
+                <p className="text-base md:text-lg font-semibold">Taxminiy tejash:</p>
                 <div className="text-4xl md:text-5xl font-black transition-all duration-500">
                   +{formatNumber(animatedRecovered)} so'm / oy
                 </div>
@@ -436,23 +441,23 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
           </div>
 
           {/* CTA Block */}
-          <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 space-y-6">
-            <div className="text-center space-y-3">
-              <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+          <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 space-y-4">
+            <div className="text-center space-y-2">
+              <h3 className="text-xl md:text-2xl font-bold text-foreground">
                 BILLZ siz izlayotgan yechim bo'lishi mumkin.
               </h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
                 Bizning chakana ekspertimiz siz bilan do'koningizni tahlil
                 qilib chiqadi va aynan siz uchun qanday yechimlar eng
                 foydali bo'lishini ko'rsatadi.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
                 <Label
                   htmlFor="name"
-                  className="text-base font-semibold text-foreground"
+                  className="text-sm md:text-base font-semibold text-foreground"
                 >
                   Ismingiz
                 </Label>
@@ -463,19 +468,19 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors"
+                  className="h-12 md:h-14 text-base md:text-lg rounded-2xl border-2 focus:border-primary transition-colors"
                 />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Label
                   htmlFor="phone"
-                  className="text-base font-semibold text-foreground"
+                  className="text-sm md:text-base font-semibold text-foreground"
                 >
                   Telefon raqam
                 </Label>
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-medium text-muted-foreground">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-base md:text-lg font-medium text-muted-foreground">
                     +998
                   </div>
                   <Input
@@ -485,7 +490,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                     value={phone}
                     onChange={handlePhoneChange}
                     required
-                    className="h-14 text-lg rounded-2xl border-2 focus:border-primary transition-colors pl-20"
+                    className="h-12 md:h-14 text-base md:text-lg rounded-2xl border-2 focus:border-primary transition-colors pl-20"
                   />
                 </div>
                 {phone && !isPhoneValid() && (
@@ -499,7 +504,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 id="lite-cta-button"
                 type="submit"
                 disabled={isSubmitting || !name.trim() || !isPhoneValid()}
-                className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
+                className="w-full h-12 md:h-14 text-lg md:text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
               >
                 {isSubmitting
                   ? "Yuborilmoqda..."
@@ -507,7 +512,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
               </Button>
             </form>
 
-            <p className="text-sm text-center text-muted-foreground">
+            <p className="text-xs md:text-sm text-center text-muted-foreground">
               Qo'ng'iroq majburiy emas — faqat maslahat va tahlil uchun.
             </p>
           </div>

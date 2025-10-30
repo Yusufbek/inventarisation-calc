@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { BillzLogo } from "@/components/BillzLogo";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalculatorData } from "./Calculator";
+import { calculateLosses, formatNumber } from "@/lib/calculations";
 
 interface FormWallCalculatorProps {
   onComplete: (data: CalculatorData & { name: string; phone: string }) => void;
@@ -159,13 +160,50 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
 
   if (showForm) {
     return (
-      <section className="w-full bg-background py-12 px-4 min-h-screen">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <div className="flex justify-center">
+      <section className="relative w-full bg-background py-12 px-4 min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Blurred Results Background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-full max-w-3xl px-4 blur-md opacity-30 scale-95">
+            <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
+              <div className="flex justify-center">
+                <BillzLogo className="h-10 md:h-12 text-foreground" />
+              </div>
+              <div className="text-center space-y-4">
+                <h2 className="text-2xl md:text-3xl font-bold text-destructive">
+                  Siz har oy o'rtacha
+                </h2>
+                <div className="text-5xl md:text-6xl font-bold text-destructive">
+                  {formatNumber(calculateLosses(answers as CalculatorData).totalMonthly)} so'm
+                </div>
+                <p className="text-xl md:text-2xl font-bold text-destructive">
+                  yo'qotyapsiz.
+                </p>
+              </div>
+              <div className="bg-secondary rounded-xl p-6 space-y-4">
+                <div className="flex justify-between">
+                  <span>Yo'qolgan mahsulotlar</span>
+                  <span className="font-bold">{formatNumber(calculateLosses(answers as CalculatorData).inventoryLoss)} so'm</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Xodimlar vaqti</span>
+                  <span className="font-bold">{formatNumber(calculateLosses(answers as CalculatorData).timeLoss)} so'm</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Out-of-stock</span>
+                  <span className="font-bold">{formatNumber(calculateLosses(answers as CalculatorData).customerLoss)} so'm</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Form Card - Centered and on top */}
+        <div className="relative z-10 max-w-2xl w-full mx-auto animate-scale-in">
+          <div className="flex justify-center mb-6">
             <BillzLogo className="h-10 md:h-12 text-foreground" />
           </div>
 
-          <Card className="border-2 border-primary/20">
+          <Card className="border-2 border-primary/20 shadow-2xl">
             <CardContent className="p-6 md:p-8 space-y-6">
               <div className="text-center space-y-2">
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground">
@@ -294,15 +332,15 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                 <div className="space-y-4 pb-28">
                   <div className="grid gap-3">
                     {currentQuestion.answers.map((answer) => (
-                      <Button
-                        key={answer.value}
-                        onClick={() => handleAnswer(answer.value)}
-                        variant="outline"
-                        size="lg"
-                        className="h-auto py-4 text-lg hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        {answer.label}
-                      </Button>
+                    <Button
+                      key={answer.value}
+                      onClick={() => handleAnswer(answer.value)}
+                      variant="outline"
+                      size="lg"
+                      className="h-auto py-4 text-lg transition-colors"
+                    >
+                      {answer.label}
+                    </Button>
                     ))}
                   </div>
                   
@@ -327,7 +365,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                       onClick={() => handleAnswer(answer.value)}
                       variant="outline"
                       size="lg"
-                      className="h-auto py-4 text-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+                      className="h-auto py-4 text-lg transition-colors"
                     >
                       {answer.label}
                     </Button>

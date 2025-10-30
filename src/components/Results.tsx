@@ -51,6 +51,11 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
   const animatedYearly = useCountUp(losses.totalYearly);
   const animatedRecovered = useCountUp(losses.recoveredProfit);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   // Track CalculatorFinished when results are shown
   useEffect(() => {
     eventCustom("CalculatorFinished", {
@@ -322,13 +327,11 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto space-y-10">
-          <div className="text-center space-y-6"></div>
-
+      {/* Solution Section - Single Viewport */}
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12 min-h-screen flex items-center">
+        <div className="max-w-4xl mx-auto w-full space-y-6">
           <div
-            className="relative rounded-3xl p-8 md:p-12 text-white text-center overflow-hidden animate-scale-in"
+            className="relative rounded-3xl p-6 md:p-10 text-white text-center overflow-hidden animate-scale-in"
             style={{ animationDelay: "0.7s", animationFillMode: "backwards" }}
           >
             {/* Glassmorphism Background */}
@@ -336,9 +339,9 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
             <div className="absolute inset-0 border-2 border-white/20 rounded-3xl"></div>
 
-            <div className="relative z-10 space-y-6">
+            <div className="relative z-10 space-y-4">
               <p
-                className="text-2xl md:text-3xl font-bold animate-slide-up drop-shadow-lg"
+                className="text-xl md:text-2xl font-bold animate-slide-up drop-shadow-lg"
                 style={{
                   animationDelay: "0.8s",
                   animationFillMode: "backwards",
@@ -349,17 +352,17 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
               </p>
 
               <div
-                className="space-y-3 animate-slide-up"
+                className="space-y-2 animate-slide-up"
                 style={{
                   animationDelay: "0.9s",
                   animationFillMode: "backwards",
                 }}
               >
-                <p className="text-xl md:text-2xl font-semibold drop-shadow-md">
+                <p className="text-lg md:text-xl font-semibold drop-shadow-md">
                   Taxminiy tejash:
                 </p>
                 <div
-                  className="text-6xl md:text-8xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent"
+                  className="text-5xl md:text-7xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent"
                   style={{
                     fontWeight: 900,
                     textShadow:
@@ -368,108 +371,22 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                 >
                   +{formatNumber(animatedRecovered)}
                 </div>
-                <p className="text-2xl md:text-3xl font-bold drop-shadow-md">
+                <p className="text-xl md:text-2xl font-bold drop-shadow-md">
                   so'm / oy
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto pt-6">
-                <div
-                  className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up"
-                  style={{
-                    animationDelay: "1s",
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-white/10"></div>
-                  <div className="relative flex items-start gap-3">
-                    <div className="text-2xl flex-shrink-0">✅</div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">
-                        Avtomatik inventarizatsiya
-                      </h3>
-                      <p className="text-white/90 text-sm">
-                        Real vaqtda stok nazorati
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up"
-                  style={{
-                    animationDelay: "1.1s",
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-white/10"></div>
-                  <div className="relative flex items-start gap-3">
-                    <div className="text-2xl flex-shrink-0">✅</div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">
-                        Stok aniqligi 90%+
-                      </h3>
-                      <p className="text-white/90 text-sm">
-                        Xatolarni minimallashtirish
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up"
-                  style={{
-                    animationDelay: "1.2s",
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-white/10"></div>
-                  <div className="relative flex items-start gap-3">
-                    <div className="text-2xl flex-shrink-0">✅</div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">
-                        Qayta sanash vaqti −40%
-                      </h3>
-                      <p className="text-white/90 text-sm">
-                        Xodimlar vaqtini tejang
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="relative rounded-2xl p-5 overflow-hidden border-2 border-white/30 backdrop-blur-md hover:border-white/50 transition-all duration-300 hover:scale-105 animate-slide-up"
-                  style={{
-                    animationDelay: "1.3s",
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <div className="absolute inset-0 bg-white/10"></div>
-                  <div className="relative flex items-start gap-3">
-                    <div className="text-2xl flex-shrink-0">✅</div>
-                    <div className="text-left">
-                      <h3 className="font-bold text-lg mb-1 drop-shadow-md">
-                        Out-of-stock −30%
-                      </h3>
-                      <p className="text-white/90 text-sm">
-                        Mijozlarni yo'qotmang
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               <div
-                className="pt-6 animate-slide-up"
+                className="pt-4 animate-slide-up"
                 style={{
-                  animationDelay: "1.4s",
+                  animationDelay: "1s",
                   animationFillMode: "backwards",
                 }}
               >
                 <Button
                   id="main-cta-button"
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 md:h-16 px-12 md:px-16 text-lg md:text-xl rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
                   onClick={onContactClick}
                 >
                   BILLZ bilan bog'lanish
