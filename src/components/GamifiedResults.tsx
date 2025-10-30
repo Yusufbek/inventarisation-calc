@@ -71,10 +71,16 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             </div>
           </div>
 
-          {/* Loss Text */}
-          <p className="text-red-600 dark:text-red-500 text-base md:text-lg font-semibold">
-            Inventarizatsiya qilinmagani sababli siz oyiga {formatNumber(losses.totalMonthly)} so'm yo'qotmoqdasiz.
-          </p>
+          {/* Dynamic Message based on Status */}
+          {healthResult.status === "YAXSHILASH MUMKIN" ? (
+            <p className="text-primary text-base md:text-lg font-semibold">
+              Do'koningiz yaxshi holatda! Yangi savdo nuqtalari ochish va tizimni yanada takomillashtirish orqali daromadingizni oshirishingiz mumkin.
+            </p>
+          ) : (
+            <p className="text-red-600 dark:text-red-500 text-base md:text-lg font-semibold">
+              Inventarizatsiya qilinmagani sababli siz oyiga {formatNumber(losses.totalMonthly)} so'm yo'qotmoqdasiz.
+            </p>
+          )}
         </Card>
 
         {/* Healthy Store Metrics Section */}
@@ -184,7 +190,11 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
         {/* Solution Section */}
         <div className="space-y-4">
           <h2 className="text-xl md:text-2xl font-bold text-foreground">
-            YECHIM - <span className="text-primary">scoreni balandroq qilish</span>
+            {healthResult.status === "YAXSHILASH MUMKIN" ? (
+              <>YECHIM - <span className="text-primary">biznesingizni yanada o'sish</span></>
+            ) : (
+              <>YECHIM - <span className="text-primary">scoreni balandroq qilish</span></>
+            )}
           </h2>
 
           <Card className="bg-primary/5 border-2 border-primary/20 p-6 md:p-8 rounded-3xl relative overflow-hidden">
@@ -200,8 +210,17 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                   BILLZ - do'konlar uchun tizimlashtirish
                 </h3>
                 <p className="text-muted-foreground text-sm md:text-base">
-                  Do'konlaringizni tartibga solish, boshqarish va samaradorligini oshirish uchun
-                  to'liq tizim.
+                  {healthResult.status === "YAXSHILASH MUMKIN" ? (
+                    <>
+                      BILLZ bilan biznesingizni tezroq o'stirish, yangi filiallar ochish va 
+                      samaradorlikni maksimal darajaga ko'tarish mumkin.
+                    </>
+                  ) : (
+                    <>
+                      Do'konlaringizni tartibga solish, boshqarish va samaradorligini oshirish uchun
+                      to'liq tizim.
+                    </>
+                  )}
                 </p>
                 <Button
                   onClick={onContactClick}
