@@ -36,8 +36,8 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
     <div className="min-h-screen bg-background px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Store Health Section */}
-        <Card className="bg-card border-2 border-border p-6 md:p-8 rounded-3xl">
-          <h2 className="text-sm md:text-base font-bold text-muted-foreground tracking-wider mb-6">
+        <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl">
+          <h2 className="text-sm md:text-base font-bold text-white/70 tracking-wider mb-6">
             DO'KON HOLATI
           </h2>
 
@@ -45,10 +45,10 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             {/* Score and Status */}
             <div className="flex-1">
               <div className="flex items-baseline gap-3 mb-4">
-                <span className="text-7xl md:text-8xl font-black text-foreground">
+                <span className="text-7xl md:text-8xl font-black text-white">
                   {healthResult.score}
                 </span>
-                <span className="text-3xl md:text-4xl font-bold text-muted-foreground">
+                <span className="text-3xl md:text-4xl font-bold text-white/60">
                   /100
                 </span>
               </div>
@@ -72,17 +72,17 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
           </div>
 
           {/* Short Dynamic Message */}
-          <div className="p-4 bg-muted/30 rounded-2xl">
+          <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
-              <p className="text-primary text-base md:text-lg font-semibold">
+              <p className="text-white text-base md:text-lg font-semibold">
                 ✨ Yaxshi natija! Yangi imkoniyatlar uchun tayyor.
               </p>
             ) : healthResult.status === "YOMON" ? (
-              <p className="text-orange-600 dark:text-orange-500 text-base md:text-lg font-semibold">
+              <p className="text-orange-200 text-base md:text-lg font-semibold">
                 ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
               </p>
             ) : (
-              <p className="text-red-600 dark:text-red-500 text-base md:text-lg font-semibold">
+              <p className="text-red-200 text-base md:text-lg font-semibold">
                 🚨 Jiddiy muammo! Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
               </p>
             )}
@@ -203,7 +203,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             )}
           </h2>
 
-          <Card className="bg-primary/5 border-2 border-primary/20 p-6 md:p-8 rounded-3xl relative overflow-hidden">
+          <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl relative overflow-hidden">
             <div className="flex flex-col items-center gap-6 text-center">
               {/* Rocket Emoji - Top on mobile */}
               <div className="text-7xl md:text-8xl">
@@ -212,10 +212,10 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
               
               {/* Text Content */}
               <div className="space-y-4 max-w-2xl">
-                <h3 className="text-2xl md:text-3xl font-bold text-foreground">
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
                   BILLZ - do'konlar uchun tizimlashtirish
                 </h3>
-                <p className="text-muted-foreground text-sm md:text-base">
+                <p className="text-white/80 text-sm md:text-base">
                   {healthResult.status === "YAXSHILASH MUMKIN" ? (
                     <>
                       BILLZ bilan biznesingizni tezroq o'stirish, yangi filiallar ochish va 
@@ -231,7 +231,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                 <Button
                   onClick={onContactClick}
                   size="lg"
-                  className="w-full md:w-auto h-14 px-8 text-lg rounded-2xl font-bold"
+                  className="w-full md:w-auto h-14 px-8 text-lg rounded-2xl font-bold bg-white text-primary hover:bg-white/90"
                 >
                   SINAB KO'RISH
                 </Button>
