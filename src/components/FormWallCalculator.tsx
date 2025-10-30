@@ -220,7 +220,7 @@ export const FormWallCalculator = ({
           {/* Blurred Losses Container */}
           <div className="rounded-2xl border-2 border-destructive/30 bg-gradient-to-br from-destructive/10 to-destructive/5 backdrop-blur p-6 md:p-8 text-center shadow-lg">
             <h2 className="text-2xl md:text-3xl font-bold text-destructive mb-4">Sizning Yo'qotishlar:</h2>
-            <div className="text-5xl md:text-6xl font-bold text-foreground select-none" style={{ filter: 'blur(5.5px)' }}>
+            <div className="text-5xl md:text-6xl font-bold text-foreground select-none line-through" style={{ filter: 'blur(6px)' }}>
               {formatNumber(losses.totalMonthly)} so'm
             </div>
           </div>
