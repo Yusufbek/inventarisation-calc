@@ -412,16 +412,16 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
       </section>
 
       {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12 min-h-screen flex items-center">
-        <div className="max-w-3xl mx-auto w-full space-y-6">
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center">
+        <div className="max-w-3xl mx-auto w-full">
           {/* Green Solution Block */}
-          <div className="relative rounded-3xl p-6 md:p-8 text-white overflow-hidden">
+          <div className="relative rounded-3xl p-5 md:p-6 text-white overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90"></div>
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-primary/10"></div>
             <div className="absolute inset-0 border-2 border-white/20 rounded-3xl"></div>
 
-            <div className="relative z-10 space-y-4">
-              <p className="text-xl md:text-2xl font-bold text-center">
+            <div className="relative z-10 space-y-2">
+              <p className="text-lg md:text-xl font-bold text-center">
                 BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish
                 mumkin.
               </p>
@@ -431,7 +431,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 kamaytirish orqali.
               </p>
 
-              <div className="text-center space-y-2 py-3">
+              <div className="text-center space-y-1 py-2">
                 <p className="text-base md:text-lg font-semibold">Taxminiy tejash:</p>
                 <div className="text-4xl md:text-5xl font-black transition-all duration-500">
                   +{formatNumber(animatedRecovered)} so'm / oy
@@ -441,7 +441,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
           </div>
 
           {/* CTA Block */}
-          <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 space-y-4">
+          <div className="bg-white rounded-3xl shadow-xl p-5 md:p-6 space-y-3 mt-4">
             <div className="text-center space-y-2">
               <h3 className="text-xl md:text-2xl font-bold text-foreground">
                 BILLZ siz izlayotgan yechim bo'lishi mumkin.

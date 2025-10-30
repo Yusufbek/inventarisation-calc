@@ -328,10 +328,10 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12 min-h-screen flex items-center">
-        <div className="max-w-4xl mx-auto w-full space-y-6">
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center">
+        <div className="max-w-4xl mx-auto w-full">
           <div
-            className="relative rounded-3xl p-6 md:p-10 text-white text-center overflow-hidden animate-scale-in"
+            className="relative rounded-3xl p-6 md:p-8 text-white text-center overflow-hidden animate-scale-in"
             style={{ animationDelay: "0.7s", animationFillMode: "backwards" }}
           >
             {/* Glassmorphism Background */}
@@ -341,7 +341,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
 
             <div className="relative z-10 space-y-4">
               <p
-                className="text-xl md:text-2xl font-bold animate-slide-up drop-shadow-lg"
+                className="text-lg md:text-xl font-bold animate-slide-up drop-shadow-lg"
                 style={{
                   animationDelay: "0.8s",
                   animationFillMode: "backwards",
@@ -352,17 +352,17 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
               </p>
 
               <div
-                className="space-y-2 animate-slide-up"
+                className="space-y-2 py-2 animate-slide-up"
                 style={{
                   animationDelay: "0.9s",
                   animationFillMode: "backwards",
                 }}
               >
-                <p className="text-lg md:text-xl font-semibold drop-shadow-md">
+                <p className="text-base md:text-lg font-semibold drop-shadow-md">
                   Taxminiy tejash:
                 </p>
                 <div
-                  className="text-5xl md:text-7xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent"
+                  className="text-4xl md:text-6xl font-black transition-all duration-500 bg-gradient-to-r from-cyan-200 via-white to-blue-200 bg-clip-text text-transparent"
                   style={{
                     fontWeight: 900,
                     textShadow:
@@ -371,13 +371,13 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                 >
                   +{formatNumber(animatedRecovered)}
                 </div>
-                <p className="text-xl md:text-2xl font-bold drop-shadow-md">
+                <p className="text-lg md:text-xl font-bold drop-shadow-md">
                   so'm / oy
                 </p>
               </div>
 
               <div
-                className="pt-4 animate-slide-up"
+                className="pt-2 animate-slide-up"
                 style={{
                   animationDelay: "1s",
                   animationFillMode: "backwards",
@@ -386,7 +386,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                 <Button
                   id="main-cta-button"
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 md:h-16 px-12 md:px-16 text-lg md:text-xl rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 md:h-14 px-8 md:px-12 text-base md:text-lg rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
                   onClick={onContactClick}
                 >
                   BILLZ bilan bog'lanish

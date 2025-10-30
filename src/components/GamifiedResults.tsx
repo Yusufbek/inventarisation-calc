@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CalculatorData } from "./Calculator";
@@ -14,6 +15,11 @@ interface GamifiedResultsProps {
 export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) => {
   const healthResult = calculateStoreHealth(data);
   const losses = calculateLosses(data);
+  
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
   
   // Determine status color and icon
   const getStatusColor = () => {
@@ -33,8 +39,8 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-8 md:py-12">
-      <div className="max-w-4xl mx-auto space-y-6">
+    <div className="min-h-screen bg-background px-4 py-6 md:py-8">
+      <div className="max-w-4xl mx-auto space-y-4">
         {/* Store Health Section */}
         <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl">
           <h2 className="text-sm md:text-base font-bold text-white/70 tracking-wider mb-6">
@@ -194,8 +200,8 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
         </Card>
 
         {/* Solution Section */}
-        <div className="space-y-4">
-          <h2 className="text-xl md:text-2xl font-bold text-foreground text-center">
+        <div className="space-y-3">
+          <h2 className="text-lg md:text-xl font-bold text-foreground text-center">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
               <>YECHIM - <span className="text-primary">biznesingizni yanada o'sish</span></>
             ) : (
@@ -203,16 +209,16 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             )}
           </h2>
 
-          <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl relative overflow-hidden">
-            <div className="flex flex-col items-center gap-6 text-center">
+          <Card className="bg-primary border-2 border-primary p-5 md:p-6 rounded-3xl relative overflow-hidden">
+            <div className="flex flex-col items-center gap-4 text-center">
               {/* Rocket Emoji - Top on mobile */}
-              <div className="text-7xl md:text-8xl">
+              <div className="text-6xl md:text-7xl">
                 🚀
               </div>
               
               {/* Text Content */}
-              <div className="space-y-4 max-w-2xl">
-                <h3 className="text-2xl md:text-3xl font-bold text-white">
+              <div className="space-y-3 max-w-2xl">
+                <h3 className="text-xl md:text-2xl font-bold text-white">
                   BILLZ - do'konlar uchun tizimlashtirish
                 </h3>
                 <p className="text-white/80 text-sm md:text-base">
@@ -231,7 +237,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                 <Button
                   onClick={onContactClick}
                   size="lg"
-                  className="w-full md:w-auto h-14 px-8 text-lg rounded-2xl font-bold bg-white text-primary hover:bg-white/90"
+                  className="w-full md:w-auto h-12 px-6 text-base rounded-2xl font-bold bg-white text-primary hover:bg-white/90"
                 >
                   SINAB KO'RISH
                 </Button>
