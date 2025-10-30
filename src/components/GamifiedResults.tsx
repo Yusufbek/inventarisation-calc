@@ -61,10 +61,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
   };
 
   const scrollToSolution = () => {
-    const solutionSection = document.getElementById("billz-solution");
-    if (solutionSection) {
-      solutionSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
   return (
