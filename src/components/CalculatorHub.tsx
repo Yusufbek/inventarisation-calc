@@ -53,26 +53,24 @@ export const CalculatorHub = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-3 md:gap-4 w-full">
+        <div className="space-y-3 md:space-y-4 w-full">
           {calculators.map((calc) => (
             <Card 
               key={calc.variant}
-              className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group"
+              className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group flex flex-row items-center"
               onClick={() => navigate(`/inventarisation-calc/${calc.variant}`)}
             >
-              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-3 md:p-4">
+              <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4">
                 <img 
                   src={calc.image} 
                   alt={calc.imageAlt}
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
-              <CardHeader className="text-center py-2 md:py-3">
-                <CardTitle className="text-xs md:text-sm lg:text-base">{calc.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="pb-2 md:pb-3 px-2 md:px-4">
+              <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-4">
+                <CardTitle className="text-lg md:text-2xl lg:text-3xl">{calc.title}</CardTitle>
                 <Button 
-                  className="w-full h-8 md:h-9 text-xs md:text-sm"
+                  className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base"
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/inventarisation-calc/${calc.variant}`);
@@ -80,7 +78,7 @@ export const CalculatorHub = () => {
                 >
                   Boshlash
                 </Button>
-              </CardContent>
+              </div>
             </Card>
           ))}
         </div>
