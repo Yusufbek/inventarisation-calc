@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CalculatorData } from "./Calculator";
@@ -13,12 +13,34 @@ interface GamifiedResultsProps {
 
 
 export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) => {
+  const [showStickyButton, setShowStickyButton] = useState(true);
   const healthResult = calculateStoreHealth(data);
   const losses = calculateLosses(data);
   
-  // Scroll to slightly below top on mount
+  // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo({ top: 100, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  // Hide sticky button when main CTA is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyButton(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const ctaButton = document.getElementById("main-cta-button");
+    if (ctaButton) {
+      observer.observe(ctaButton);
+    }
+
+    return () => {
+      if (ctaButton) {
+        observer.unobserve(ctaButton);
+      }
+    };
   }, []);
   
   // Determine status color and icon
@@ -36,6 +58,13 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
       return <AlertCircle className="w-12 h-12 md:w-14 md:h-14 text-white" strokeWidth={3} />;
     }
     return <AlertTriangle className="w-12 h-12 md:w-14 md:h-14 text-white" strokeWidth={3} />;
+  };
+
+  const scrollToSolution = () => {
+    const solutionSection = document.getElementById("billz-solution");
+    if (solutionSection) {
+      solutionSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (
@@ -235,6 +264,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                   )}
                 </p>
                 <Button
+                  id="main-cta-button"
                   onClick={onContactClick}
                   size="lg"
                   className="w-full md:w-auto h-12 px-6 text-base rounded-2xl font-bold bg-white text-primary hover:bg-white/90"
@@ -246,6 +276,21 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
           </Card>
         </div>
       </div>
+
+      {/* Sticky Bottom Panel */}
+      {showStickyButton && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+          <div className="max-w-3xl mx-auto">
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={scrollToSolution}
+            >
+              Muammongizga yechim aniqlash
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

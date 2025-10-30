@@ -198,6 +198,19 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
+      {/* Top Header - Only show for gamified variant */}
+      {variant === "gamified" && (
+        <div className="mb-8 text-center space-y-3">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            BILLZ – Do'kon salomatligi testi
+          </h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            5 ta savolga javob bering va do'koningizning sog'lig'ini baholang. Siz o'z biznesingiz holatini bilib olasiz va uni yaxshilash bo'yicha tavsiyalar olasiz.
+          </p>
+          <p className="text-sm text-muted-foreground">(O'rtacha davomiylik: 1 daqiqa)</p>
+        </div>
+      )}
+
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <p className="text-sm text-muted-foreground">
