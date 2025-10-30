@@ -62,6 +62,13 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
 
   const losses = calculateLosses(data);
 
+  const scrollToSolution = () => {
+    const solutionSection = document.getElementById("billz-solution");
+    if (solutionSection) {
+      solutionSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   const animatedTotal = useCountUp(losses.totalMonthly);
   const animatedInventory = useCountUp(losses.inventoryLoss);
   const animatedTime = useCountUp(losses.timeLoss);
@@ -379,7 +386,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
       </section>
 
       {/* Solution Section */}
-      <section className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
         <div className="max-w-3xl mx-auto space-y-8">
           {/* Green Solution Block */}
           <div className="relative rounded-3xl p-6 md:p-10 text-white overflow-hidden">
@@ -484,6 +491,18 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
           </div>
         </div>
       </section>
+      {/* Sticky Bottom Panel */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+        <div className="max-w-3xl mx-auto">
+          <Button
+            size="lg"
+            className="w-full h-14 text-lg"
+            onClick={scrollToSolution}
+          >
+            Muammongizga yechim aniqlash
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

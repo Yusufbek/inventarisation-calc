@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import InventarisationCalc from "./pages/InventarisationCalc";
+import FormWallCalc from "./pages/FormWallCalc";
 import ThankYouVariant from "./pages/ThankYouVariant";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
@@ -20,6 +21,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/inventarisation-calc/:variant" element={<InventarisationCalc />} />
+          <Route path="/inventarisation-calc/formwall" element={<FormWallCalc />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
           {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />

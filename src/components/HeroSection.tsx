@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
   return (
-    <section className="w-full bg-secondary py-12 px-4 md:py-20">
+    <section className="w-full bg-secondary py-12 px-4 md:py-20 pb-24 md:pb-32">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-center mb-8">
           <BillzLogo className="h-10 md:h-12 text-foreground" />
@@ -28,15 +28,20 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
             <p className="text-lg md:text-xl text-muted-foreground">
               5 ta savolga javob bering — yo'qotishlaringizni soniyada ko'ring va ularni qanday to'xtatishni bilib oling.
             </p>
-            
-            <Button 
-              size="lg"
-              onClick={onStartCalculator}
-              className="w-full md:w-auto h-14 px-12 text-lg rounded-2xl"
-            >
-              Hisoblashni boshlash
-            </Button>
           </div>
+        </div>
+      </div>
+      
+      {/* Sticky CTA Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50 animate-fade-in">
+        <div className="max-w-3xl mx-auto">
+          <Button 
+            size="lg"
+            onClick={onStartCalculator}
+            className="w-full h-14 text-lg rounded-2xl"
+          >
+            Hisoblashni boshlash
+          </Button>
         </div>
       </div>
     </section>

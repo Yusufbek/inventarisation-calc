@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import mainCalcImage from "@/assets/hero-inventory.webp";
-import liteCalcImage from "@/assets/hero-confusion.webp";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import mainCalcImage from "@/assets/main-calc-icon.png";
+import liteCalcImage from "@/assets/lite-calc-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -11,17 +11,15 @@ export const CalculatorHub = () => {
   const calculators = [
     {
       variant: "main",
-      title: "To'liq Inventarizatsiya Kalkulyatori",
-      description: "5 ta savol orqali inventarizatsiya yo'qotishlarini hisoblang va qanday to'xtatishni bilib oling",
+      title: "Main Calculator",
       image: mainCalcImage,
-      imageAlt: "Warehouse worker organizing colorful inventory boxes on shelves"
+      imageAlt: "Main Calculator icon"
     },
     {
       variant: "lite",
-      title: "Yengil Inventarizatsiya Kalkulyatori",
-      description: "3 ta savol bilan tezkor yo'qotishlarni aniqlang",
+      title: "Lite Calculator",
       image: liteCalcImage,
-      imageAlt: "Business person confused about inventory management"
+      imageAlt: "Lite Calculator icon"
     }
   ];
 
@@ -41,25 +39,24 @@ export const CalculatorHub = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {calculators.map((calc) => (
             <Card 
               key={calc.variant}
-              className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+              className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary"
               onClick={() => navigate(`/inventarisation-calc/${calc.variant}`)}
             >
-              <div className="aspect-video w-full overflow-hidden">
+              <div className="aspect-square w-full overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-8">
                 <img 
                   src={calc.image} 
                   alt={calc.imageAlt}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
                 />
               </div>
-              <CardHeader>
-                <CardTitle className="text-2xl">{calc.title}</CardTitle>
-                <CardDescription className="text-base">{calc.description}</CardDescription>
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl md:text-3xl">{calc.title}</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pb-6">
                 <Button 
                   className="w-full"
                   size="lg"

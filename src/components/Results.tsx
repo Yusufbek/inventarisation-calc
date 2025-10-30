@@ -10,6 +10,9 @@ import {
   Users,
   Package,
   LineChart,
+  ChevronDown,
+  ChevronUp,
+  Info,
 } from "lucide-react";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
@@ -37,6 +40,7 @@ const useCountUp = (end: number, duration: number = 2000) => {
 };
 // formatNumber is now imported from lib/calculations
 export const Results = ({ data, onContactClick }: ResultsProps) => {
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const losses = calculateLosses(data);
   const animatedTotal = useCountUp(losses.totalMonthly);
   const animatedInventory = useCountUp(losses.inventoryLoss);
@@ -51,8 +55,16 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       content_name: "Inventory loss calculator",
     });
   }, []);
+
+  const scrollToSolution = () => {
+    const solutionSection = document.getElementById("billz-solution");
+    if (solutionSection) {
+      solutionSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <div className="w-full bg-background">
+    <div className="w-full bg-background pb-20">
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-20 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-10">
@@ -75,93 +87,135 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
             className="bg-white rounded-3xl shadow-xl overflow-hidden animate-scale-in"
             style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
           >
-            <div className="overflow-x-auto">
-              <div className="min-w-full">
-                <div className="grid grid-cols-2 gap-px bg-border p-px">
-                  <div className="bg-secondary px-6 py-4 font-bold text-foreground">
-                    Yo'qotish turi
-                  </div>
-                  <div className="bg-secondary px-6 py-4 font-bold text-right text-foreground">
-                    Miqdor
-                  </div>
-                </div>
+            <div className="bg-secondary px-6 py-4">
+              <h3 className="text-lg font-semibold text-foreground">
+                Yo'qotishlar tafsiloti
+              </h3>
+            </div>
 
-                <div className="divide-y divide-border">
-                  <div
-                    className="grid grid-cols-2 gap-px bg-border p-px animate-slide-up"
-                    style={{
-                      animationDelay: "0.3s",
-                      animationFillMode: "backwards",
-                    }}
-                  >
-                    <div className="bg-white px-6 py-5">
-                      <div className="font-semibold text-foreground">
-                        Yo'qolgan mahsulotlar
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        Hisobda bor, amalda yo'q
-                      </div>
-                    </div>
-                    <div className="bg-white px-6 py-5 text-right">
+            <div className="divide-y divide-border">
+              {/* Inventory Loss */}
+              <div>
+                <button
+                  onClick={() =>
+                    setExpandedSection(expandedSection === "inventory" ? null : "inventory")
+                  }
+                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-foreground">
+                      Yo'qolgan mahsulotlar
+                    </span>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
                       <div className="text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedInventory)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">
-                        so'm
-                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                    {expandedSection === "inventory" ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+
+                {expandedSection === "inventory" && (
+                  <div className="px-6 pb-4 animate-fade-in">
+                    <div className="p-4 bg-muted rounded-lg">
+                      <p className="text-sm text-foreground leading-relaxed">
+                        Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar.
+                        Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.
+                      </p>
                     </div>
                   </div>
+                )}
+              </div>
 
-                  <div
-                    className="grid grid-cols-2 gap-px bg-border p-px animate-slide-up"
-                    style={{
-                      animationDelay: "0.4s",
-                      animationFillMode: "backwards",
-                    }}
-                  >
-                    <div className="bg-white px-6 py-5">
-                      <div className="font-semibold text-foreground">
-                        Qayta hisob (vaqt yo'qotishi)
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        Xodimlar vaqti
-                      </div>
-                    </div>
-                    <div className="bg-white px-6 py-5 text-right">
+              {/* Time Loss */}
+              <div>
+                <button
+                  onClick={() =>
+                    setExpandedSection(expandedSection === "time" ? null : "time")
+                  }
+                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-foreground">
+                      Xodimlar vaqti
+                    </span>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
                       <div className="text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedTime)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">
-                        so'm
-                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                    {expandedSection === "time" ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+
+                {expandedSection === "time" && (
+                  <div className="px-6 pb-4 animate-fade-in">
+                    <div className="p-4 bg-muted rounded-lg">
+                      <p className="text-sm text-foreground leading-relaxed">
+                        Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun
+                        sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan
+                        shug'ullana olmaydilar.
+                      </p>
                     </div>
                   </div>
+                )}
+              </div>
 
-                  <div
-                    className="grid grid-cols-2 gap-px bg-border p-px animate-slide-up"
-                    style={{
-                      animationDelay: "0.5s",
-                      animationFillMode: "backwards",
-                    }}
-                  >
-                    <div className="bg-white px-6 py-5">
-                      <div className="font-semibold text-foreground">
-                        Mijoz yo'qotilishi
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        Out-of-stock holatlari
-                      </div>
-                    </div>
-                    <div className="bg-white px-6 py-5 text-right">
+              {/* Customer Loss */}
+              <div>
+                <button
+                  onClick={() =>
+                    setExpandedSection(expandedSection === "customer" ? null : "customer")
+                  }
+                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="font-semibold text-foreground">
+                      Out-of-stock (mijoz yo'qotilishi)
+                    </span>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
                       <div className="text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedCustomer)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">
-                        so'm
-                      </div>
+                      <div className="text-sm text-destructive font-medium">so'm</div>
+                    </div>
+                    {expandedSection === "customer" ? (
+                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+
+                {expandedSection === "customer" && (
+                  <div className="px-6 pb-4 animate-fade-in">
+                    <div className="p-4 bg-muted rounded-lg">
+                      <p className="text-sm text-foreground leading-relaxed">
+                        Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni
+                        topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.
+                      </p>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -240,7 +294,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Solution Section */}
-      <section className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
+      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-8 md:py-12">
         <div className="max-w-4xl mx-auto space-y-10">
           <div className="text-center space-y-6"></div>
 
@@ -395,6 +449,19 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
           </div>
         </div>
       </section>
+
+      {/* Sticky Bottom Panel */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+        <div className="max-w-3xl mx-auto">
+          <Button
+            size="lg"
+            className="w-full h-14 text-lg"
+            onClick={scrollToSolution}
+          >
+            Muammongizga yechim aniqlash
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
