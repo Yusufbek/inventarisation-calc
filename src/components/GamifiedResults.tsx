@@ -231,7 +231,7 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
               <>Balingizni oshirish uchun yechim - <span className="text-primary">biznesingizni yanada o'sish</span></>
             ) : (
-              <>Balingizni oshirish uchun yechim - <span className="text-primary">balni balandrow qilish</span></>
+              <>Balingizni oshirish uchun yechim</>
             )}
           </h2>
 
