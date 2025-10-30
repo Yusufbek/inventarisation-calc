@@ -178,24 +178,30 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                     onClick={() =>
                       setExpandedSection(expandedSection === loss.id ? null : loss.id)
                     }
-                    className="w-full px-4 md:px-6 py-4 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                    className="w-full px-3 md:px-6 py-4 hover:bg-secondary/50 transition-colors"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="font-semibold text-foreground">{loss.title}</span>
-                      <Info className="w-4 h-4 text-muted-foreground" />
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <div className="text-xl md:text-2xl font-bold text-destructive">
-                          {formatNumber(loss.amount)}
-                        </div>
-                        <div className="text-sm text-destructive">so'm</div>
+                    <div className="flex items-start md:items-center gap-2 md:gap-4">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <span className="font-semibold text-foreground text-sm md:text-base text-left">
+                          {loss.title}
+                        </span>
+                        <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                       </div>
-                      {expandedSection === loss.id ? (
-                        <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                      ) : (
-                        <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                      )}
+                      <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                        <div className="text-right">
+                          <div className="text-base md:text-2xl font-bold text-destructive whitespace-nowrap">
+                            {formatNumber(loss.amount)}
+                          </div>
+                          <div className="text-xs md:text-sm text-destructive whitespace-nowrap">
+                            so'm
+                          </div>
+                        </div>
+                        {expandedSection === loss.id ? (
+                          <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                        )}
+                      </div>
                     </div>
                   </button>
 
@@ -211,16 +217,16 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                 </div>
               ))}
 
-              <div className="bg-secondary/80 px-4 md:px-6 py-6 border-t-4 border-destructive">
-                <div className="flex justify-between items-center">
-                  <p className="text-lg md:text-xl font-bold text-foreground">
+              <div className="bg-secondary/80 px-3 md:px-6 py-5 md:py-6 border-t-4 border-destructive">
+                <div className="flex justify-between items-center gap-4">
+                  <p className="text-base md:text-xl font-bold text-foreground">
                     Yiliga jami:
                   </p>
-                  <div className="text-right">
-                    <div className="text-3xl md:text-4xl font-bold text-destructive">
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-2xl md:text-4xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedYearly)}
                     </div>
-                    <div className="text-sm text-destructive">so'm</div>
+                    <div className="text-xs md:text-sm text-destructive">so'm</div>
                   </div>
                 </div>
               </div>

@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { BillzLogo } from "@/components/BillzLogo";
 import telegramBotImage from "@/assets/telegram-bot.webp";
 
 export const ThankYou = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="w-full min-h-screen bg-background flex items-center justify-center px-4 py-12">
       <div className="max-w-2xl mx-auto w-full space-y-8 animate-fade-in">

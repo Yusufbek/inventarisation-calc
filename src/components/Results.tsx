@@ -58,20 +58,25 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
     });
   }, []);
 
-  // Hide sticky button when solution section is visible
+  // Hide sticky button when main CTA is visible
   useEffect(() => {
-    const handleScroll = () => {
-      const solutionSection = document.getElementById("billz-solution");
-      if (solutionSection) {
-        const rect = solutionSection.getBoundingClientRect();
-        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
-        setShowStickyButton(!isVisible);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyButton(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const ctaButton = document.getElementById("main-cta-button");
+    if (ctaButton) {
+      observer.observe(ctaButton);
+    }
+
+    return () => {
+      if (ctaButton) {
+        observer.unobserve(ctaButton);
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial state
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToSolution = () => {
@@ -118,26 +123,28 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "inventory" ? null : "inventory")
                   }
-                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-3 md:px-6 py-4 hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
-                      Yo'qolgan mahsulotlar
-                    </span>
-                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  </div>
-                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                    <div className="text-right">
-                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
-                        {formatNumber(animatedInventory)}
-                      </div>
-                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
+                  <div className="flex items-start md:items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <span className="font-semibold text-foreground text-sm md:text-base text-left">
+                        Yo'qolgan mahsulotlar
+                      </span>
+                      <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     </div>
-                    {expandedSection === "inventory" ? (
-                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                    )}
+                    <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                      <div className="text-right">
+                        <div className="text-base md:text-2xl font-bold text-destructive whitespace-nowrap">
+                          {formatNumber(animatedInventory)}
+                        </div>
+                        <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">so'm</div>
+                      </div>
+                      {expandedSection === "inventory" ? (
+                        <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      )}
+                    </div>
                   </div>
                 </button>
 
@@ -159,26 +166,28 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "time" ? null : "time")
                   }
-                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-3 md:px-6 py-4 hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
-                      Xodimlar vaqti
-                    </span>
-                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  </div>
-                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                    <div className="text-right">
-                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
-                        {formatNumber(animatedTime)}
-                      </div>
-                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
+                  <div className="flex items-start md:items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <span className="font-semibold text-foreground text-sm md:text-base text-left">
+                        Xodimlar vaqti
+                      </span>
+                      <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     </div>
-                    {expandedSection === "time" ? (
-                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                    )}
+                    <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                      <div className="text-right">
+                        <div className="text-base md:text-2xl font-bold text-destructive whitespace-nowrap">
+                          {formatNumber(animatedTime)}
+                        </div>
+                        <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">so'm</div>
+                      </div>
+                      {expandedSection === "time" ? (
+                        <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      )}
+                    </div>
                   </div>
                 </button>
 
@@ -201,26 +210,28 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "customer" ? null : "customer")
                   }
-                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-3 md:px-6 py-4 hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
-                      Out-of-stock
-                    </span>
-                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  </div>
-                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
-                    <div className="text-right">
-                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
-                        {formatNumber(animatedCustomer)}
-                      </div>
-                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
+                  <div className="flex items-start md:items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <span className="font-semibold text-foreground text-sm md:text-base text-left">
+                        Out-of-stock
+                      </span>
+                      <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                     </div>
-                    {expandedSection === "customer" ? (
-                      <ChevronUp className="w-5 h-5 text-muted-foreground" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                    )}
+                    <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+                      <div className="text-right">
+                        <div className="text-base md:text-2xl font-bold text-destructive whitespace-nowrap">
+                          {formatNumber(animatedCustomer)}
+                        </div>
+                        <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">so'm</div>
+                      </div>
+                      {expandedSection === "customer" ? (
+                        <ChevronUp className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground flex-shrink-0" />
+                      )}
+                    </div>
                   </div>
                 </button>
 
@@ -238,18 +249,18 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
             </div>
 
             <div
-              className="bg-secondary px-6 py-6 border-t-4 border-destructive animate-slide-up"
+              className="bg-secondary/80 px-3 md:px-6 py-5 md:py-6 border-t-4 border-destructive animate-slide-up"
               style={{ animationDelay: "0.6s", animationFillMode: "backwards" }}
             >
-              <div className="flex justify-between items-center">
-                <p className="text-lg md:text-xl font-bold text-foreground">
+              <div className="flex justify-between items-center gap-4">
+                <p className="text-base md:text-xl font-bold text-foreground">
                   Bu 12 oyda
                 </p>
-                <div className="text-right">
-                  <div className="text-3xl md:text-4xl font-bold text-destructive transition-all duration-500">
+                <div className="text-right flex-shrink-0">
+                  <div className="text-2xl md:text-4xl font-bold text-destructive whitespace-nowrap">
                     {formatNumber(animatedYearly)}
                   </div>
-                  <div className="text-sm text-destructive font-medium">
+                  <div className="text-xs md:text-sm text-destructive font-medium">
                     so'm
                   </div>
                 </div>
@@ -456,6 +467,7 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                 }}
               >
                 <Button
+                  id="main-cta-button"
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/90 h-16 px-16 text-xl rounded-2xl font-bold shadow-2xl hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
                   onClick={onContactClick}

@@ -84,20 +84,25 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
     });
   }, []);
 
-  // Hide sticky button when solution section is visible
+  // Hide sticky button when CTA button is visible
   useEffect(() => {
-    const handleScroll = () => {
-      const solutionSection = document.getElementById("billz-solution");
-      if (solutionSection) {
-        const rect = solutionSection.getBoundingClientRect();
-        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
-        setShowStickyButton(!isVisible);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyButton(!entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const ctaButton = document.getElementById("lite-cta-button");
+    if (ctaButton) {
+      observer.observe(ctaButton);
+    }
+
+    return () => {
+      if (ctaButton) {
+        observer.unobserve(ctaButton);
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial state
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Format phone number as user types
@@ -223,7 +228,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 <div className="grid grid-cols-[1fr_auto] gap-2 md:gap-px bg-border p-px">
                   <div className="bg-white px-3 md:px-6 py-4 md:py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground text-sm md:text-base break-words">
+                      <span className="font-semibold text-foreground text-sm md:text-base text-left">
                         Yo'qolgan mahsulotlar
                       </span>
                       <button
@@ -262,8 +267,8 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
-                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right flex flex-col justify-start">
+                    <div className="text-base md:text-3xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedInventory)}
                     </div>
                     <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
@@ -316,8 +321,8 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
-                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right flex flex-col justify-start">
+                    <div className="text-base md:text-3xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedTime)}
                     </div>
                     <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
@@ -331,7 +336,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 <div className="grid grid-cols-[1fr_auto] gap-2 md:gap-px bg-border p-px">
                   <div className="bg-white px-3 md:px-6 py-4 md:py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground text-sm md:text-base break-words">
+                      <span className="font-semibold text-foreground text-sm md:text-base text-left">
                         Out-of-stock
                       </span>
                       <button
@@ -370,8 +375,8 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
-                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right flex flex-col justify-start">
+                    <div className="text-base md:text-3xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedCustomer)}
                     </div>
                     <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
@@ -381,16 +386,16 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 </div>
               </div>
 
-              <div className="bg-secondary/80 px-4 md:px-6 py-6 border-t-4 border-destructive">
-                <div className="flex justify-between items-center">
-                  <p className="text-lg md:text-xl font-bold text-foreground">
+              <div className="bg-secondary/80 px-3 md:px-6 py-5 md:py-6 border-t-4 border-destructive">
+                <div className="flex justify-between items-center gap-4">
+                  <p className="text-base md:text-xl font-bold text-foreground">
                     Yiliga jami:
                   </p>
-                  <div className="text-right">
-                    <div className="text-3xl md:text-4xl font-bold text-destructive transition-all duration-500">
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-2xl md:text-4xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedYearly)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">
+                    <div className="text-xs md:text-sm text-destructive font-medium">
                       so'm
                     </div>
                   </div>
@@ -491,6 +496,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
               </div>
 
               <Button
+                id="lite-cta-button"
                 type="submit"
                 disabled={isSubmitting || !name.trim() || !isPhoneValid()}
                 className="w-full h-16 text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
