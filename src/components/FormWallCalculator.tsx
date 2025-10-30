@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -82,11 +82,15 @@ const questions: Question[] = [
 export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showForm, setShowForm] = useState(false);
-  const [answers, setAnswers] = useState<Partial<CalculatorData>>({});
+  const [answers, setAnswers] = useState<Partial<CalculatorData & { revenue?: number }>>({});
   const [numberInput, setNumberInput] = useState("");
   const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
   const [phone, setPhone] = useState("+998");
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
 
   const currentQuestion = questions[currentStep];
   const isNumberQuestion = currentQuestion?.type === "number";
@@ -95,26 +99,16 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
     const newAnswers = { ...answers, [currentQuestion.id]: value };
     setAnswers(newAnswers);
 
-    // Auto-set avgPrice based on store type
-    if (currentQuestion.id === "storeType") {
-      const storeType = storeTypes.find(t => t.id === value);
-      if (storeType) {
-        newAnswers.avgPrice = storeType.avgPrice;
-      }
-    }
-
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
       setNumberInput("");
     } else {
-      // Set defaults for missing fields
-      const completeData: CalculatorData = {
-        ...newAnswers,
-        inventoryFrequency: "oy",
-      } as CalculatorData;
-      
       setShowForm(true);
     }
+  };
+
+  const handleSkipRevenue = () => {
+    setShowForm(true);
   };
 
   const handleNumberSubmit = () => {
@@ -149,14 +143,14 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !surname.trim() || !isPhoneValid()) {
+    if (!name.trim() || !isPhoneValid()) {
       return;
     }
 
     const completeData: CalculatorData & { name: string; phone: string } = {
       ...answers,
       inventoryFrequency: "oy",
-      name: `${name} ${surname}`,
+      name: name.trim(),
       phone,
     } as CalculatorData & { name: string; phone: string };
 
@@ -184,23 +178,12 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
 
               <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Ism</Label>
+                  <Label htmlFor="name">Ism va Familiya</Label>
                   <Input
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Ismingizni kiriting"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="surname">Familiya</Label>
-                  <Input
-                    id="surname"
-                    value={surname}
-                    onChange={(e) => setSurname(e.target.value)}
-                    placeholder="Familiyangizni kiriting"
+                    placeholder="To'liq ismingizni kiriting"
                     required
                   />
                 </div>
@@ -229,7 +212,7 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                   type="submit"
                   size="lg"
                   className="w-full"
-                  disabled={!name.trim() || !surname.trim() || !isPhoneValid()}
+                  disabled={!name.trim() || !isPhoneValid()}
                 >
                   Natijalarni ko'rish
                 </Button>
@@ -306,6 +289,35 @@ export const FormWallCalculator = ({ onComplete, variant }: FormWallCalculatorPr
                   >
                     Davom etish
                   </Button>
+                </div>
+              ) : currentQuestion.id === "revenue" ? (
+                <div className="space-y-4 pb-28">
+                  <div className="grid gap-3">
+                    {currentQuestion.answers.map((answer) => (
+                      <Button
+                        key={answer.value}
+                        onClick={() => handleAnswer(answer.value)}
+                        variant="outline"
+                        size="lg"
+                        className="h-auto py-4 text-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+                      >
+                        {answer.label}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  {/* Sticky footer with skip option */}
+                  <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border z-50">
+                    <div className="max-w-2xl mx-auto px-4 py-3">
+                      <Button
+                        onClick={handleSkipRevenue}
+                        variant="ghost"
+                        className="w-full h-12 text-base rounded-xl"
+                      >
+                        O'tkazib yuborish
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="grid gap-3">

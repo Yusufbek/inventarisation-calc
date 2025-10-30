@@ -4,7 +4,7 @@ import { BillzLogo } from "@/components/BillzLogo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import mainCalcImage from "@/assets/main-calc-icon.png";
 import liteCalcImage from "@/assets/lite-calc-icon.png";
-import telegramBotImage from "@/assets/telegram-bot.webp";
+import formwallIcon from "@/assets/formwall-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ export const CalculatorHub = () => {
     {
       variant: "formwall",
       title: "FormWall Calculator",
-      image: telegramBotImage,
+      image: formwallIcon,
       imageAlt: "FormWall Calculator icon"
     }
   ];

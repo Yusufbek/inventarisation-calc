@@ -59,6 +59,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [expandedInfo, setExpandedInfo] = useState<string | null>(null);
+  const [showStickyButton, setShowStickyButton] = useState(true);
 
   const losses = calculateLosses(data);
 
@@ -81,6 +82,22 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
     eventCustom("CalculatorFinished", {
       content_name: "Inventory loss calculator lite",
     });
+  }, []);
+
+  // Hide sticky button when solution section is visible
+  useEffect(() => {
+    const handleScroll = () => {
+      const solutionSection = document.getElementById("billz-solution");
+      if (solutionSection) {
+        const rect = solutionSection.getBoundingClientRect();
+        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+        setShowStickyButton(!isVisible);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial state
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Format phone number as user types
@@ -203,10 +220,10 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
 
             <div className="divide-y divide-border">
               <div className="group">
-                <div className="grid grid-cols-2 gap-px bg-border p-px">
-                  <div className="bg-white px-4 md:px-6 py-5">
+                <div className="grid grid-cols-[1fr_auto] gap-2 md:gap-px bg-border p-px">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">
+                      <span className="font-semibold text-foreground text-sm md:text-base break-words">
                         Yo'qolgan mahsulotlar
                       </span>
                       <button
@@ -215,28 +232,28 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                             expandedInfo === "inventory" ? null : "inventory"
                           )
                         }
-                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full flex-shrink-0"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
                     {expandedInfo === "inventory" && (
-                      <div className="p-4 bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border border-destructive/20 animate-fade-in">
-                        <p className="text-sm text-foreground leading-relaxed">
+                      <div className="p-3 md:p-4 bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border border-destructive/20 animate-fade-in">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-destructive">
                             Nima?
                           </span>{" "}
                           Inventarizatsiya qilishda amalda yo'q, lekin hisobda
                           ko'rsatilgan mahsulotlar.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-destructive">
                             Sabab:
                           </span>{" "}
                           O'g'irlik, xato hisoblash, mahsulot buzilishi yoki
                           yo'qolishi.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-destructive">
                             Ta'sir:
                           </span>{" "}
@@ -245,11 +262,11 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-white px-4 md:px-6 py-5 text-right">
-                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
+                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedInventory)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">
+                    <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
                       so'm
                     </div>
                   </div>
@@ -257,10 +274,10 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
               </div>
 
               <div className="group">
-                <div className="grid grid-cols-2 gap-px bg-border p-px">
-                  <div className="bg-white px-4 md:px-6 py-5">
+                <div className="grid grid-cols-[1fr_auto] gap-2 md:gap-px bg-border p-px">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">
+                      <span className="font-semibold text-foreground text-sm md:text-base break-words">
                         Xodimlar vaqti
                       </span>
                       <button
@@ -269,27 +286,27 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                             expandedInfo === "time" ? null : "time"
                           )
                         }
-                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full flex-shrink-0"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
                     {expandedInfo === "time" && (
-                      <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 animate-fade-in">
-                        <p className="text-sm text-foreground leading-relaxed">
+                      <div className="p-3 md:p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 animate-fade-in">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-orange-600">
                             Nima?
                           </span>{" "}
                           Xodimlarning inventarizatsiya, qayta sanash va
                           farqlarni tuzatish uchun sarflaydigan vaqti.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-orange-600">
                             Sabab:
                           </span>{" "}
                           Tizim yo'q, manual hisob, xatolarni qidirish.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-orange-600">
                             Ta'sir:
                           </span>{" "}
@@ -299,11 +316,11 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </div>
                     )}
                   </div>
-                  <div className="bg-white px-4 md:px-6 py-5 text-right">
-                    <div className="text-2xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
+                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
                       {formatNumber(animatedTime)}
                     </div>
-                    <div className="text-sm text-destructive font-medium">
+                    <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
                       so'm
                     </div>
                   </div>
@@ -311,11 +328,11 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
               </div>
 
               <div className="group">
-                <div className="grid grid-cols-2 gap-px bg-border p-px">
-                  <div className="bg-white px-4 md:px-6 py-5">
+                <div className="grid grid-cols-[1fr_auto] gap-2 md:gap-px bg-border p-px">
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="font-semibold text-foreground">
-                        Out-of-stock (mijoz yo'qotilishi)
+                      <span className="font-semibold text-foreground text-sm md:text-base break-words">
+                        Out-of-stock
                       </span>
                       <button
                         onClick={() =>
@@ -323,31 +340,58 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                             expandedInfo === "customer" ? null : "customer"
                           )
                         }
-                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full"
+                        className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-secondary rounded-full flex-shrink-0"
                       >
                         <Info className="w-4 h-4" />
                       </button>
                     </div>
                     {expandedInfo === "customer" && (
-                      <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 animate-fade-in">
-                        <p className="text-sm text-foreground leading-relaxed">
+                      <div className="p-3 md:p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 animate-fade-in">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-blue-600">
                             Nima?
                           </span>{" "}
                           Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda
                           mijozlar kerakli mahsulotni topa olmaydi.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-blue-600">
                             Sabab:
                           </span>{" "}
                           Stok noto'g'ri, real vaqt nazorat yo'q, buyurtma
                           berish kechikadi.
                         </p>
-                        <p className="text-sm text-foreground leading-relaxed mt-2">
+                        <p className="text-xs md:text-sm text-foreground leading-relaxed mt-2">
                           <span className="font-semibold text-blue-600">
                             Ta'sir:
                           </span>{" "}
+                          Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va obro'.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
+                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedCustomer)}
+                    </div>
+                    <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
+                      so'm
+                    </div>
+                  </div>
+                </div>
+              </div>
+                    )}
+                  </div>
+                  <div className="bg-white px-3 md:px-6 py-4 md:py-5 text-right">
+                    <div className="text-xl md:text-3xl font-bold text-destructive transition-all duration-500">
+                      {formatNumber(animatedCustomer)}
+                    </div>
+                    <div className="text-xs md:text-sm text-destructive font-medium whitespace-nowrap">
+                      so'm
+                    </div>
+                  </div>
+                </div>
+              </div>
                           Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va
                           obro' zarari.
                         </p>
@@ -492,17 +536,19 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
         </div>
       </section>
       {/* Sticky Bottom Panel */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
-        <div className="max-w-3xl mx-auto">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg"
-            onClick={scrollToSolution}
-          >
-            Muammongizga yechim aniqlash
-          </Button>
+      {showStickyButton && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+          <div className="max-w-3xl mx-auto">
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={scrollToSolution}
+            >
+              Muammongizga yechim aniqlash
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -41,6 +41,8 @@ const useCountUp = (end: number, duration: number = 2000) => {
 // formatNumber is now imported from lib/calculations
 export const Results = ({ data, onContactClick }: ResultsProps) => {
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [showStickyButton, setShowStickyButton] = useState(true);
+  
   const losses = calculateLosses(data);
   const animatedTotal = useCountUp(losses.totalMonthly);
   const animatedInventory = useCountUp(losses.inventoryLoss);
@@ -54,6 +56,22 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
     eventCustom("CalculatorFinished", {
       content_name: "Inventory loss calculator",
     });
+  }, []);
+
+  // Hide sticky button when solution section is visible
+  useEffect(() => {
+    const handleScroll = () => {
+      const solutionSection = document.getElementById("billz-solution");
+      if (solutionSection) {
+        const rect = solutionSection.getBoundingClientRect();
+        const isVisible = rect.top <= window.innerHeight && rect.bottom >= 0;
+        setShowStickyButton(!isVisible);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial state
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToSolution = () => {
@@ -100,20 +118,20 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "inventory" ? null : "inventory")
                   }
-                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold text-foreground">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
                       Yo'qolgan mahsulotlar
                     </span>
-                    <Info className="w-4 h-4 text-muted-foreground" />
+                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-destructive transition-all duration-500">
+                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedInventory)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">so'm</div>
+                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
                     </div>
                     {expandedSection === "inventory" ? (
                       <ChevronUp className="w-5 h-5 text-muted-foreground" />
@@ -141,20 +159,20 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "time" ? null : "time")
                   }
-                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold text-foreground">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
                       Xodimlar vaqti
                     </span>
-                    <Info className="w-4 h-4 text-muted-foreground" />
+                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-destructive transition-all duration-500">
+                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedTime)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">so'm</div>
+                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
                     </div>
                     {expandedSection === "time" ? (
                       <ChevronUp className="w-5 h-5 text-muted-foreground" />
@@ -183,20 +201,20 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
                   onClick={() =>
                     setExpandedSection(expandedSection === "customer" ? null : "customer")
                   }
-                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
+                  className="w-full px-4 md:px-6 py-5 flex items-center justify-between hover:bg-secondary/50 transition-colors"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="font-semibold text-foreground">
-                      Out-of-stock (mijoz yo'qotilishi)
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span className="font-semibold text-foreground text-sm md:text-base break-words">
+                      Out-of-stock
                     </span>
-                    <Info className="w-4 h-4 text-muted-foreground" />
+                    <Info className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-destructive transition-all duration-500">
+                      <div className="text-xl md:text-2xl font-bold text-destructive transition-all duration-500">
                         {formatNumber(animatedCustomer)}
                       </div>
-                      <div className="text-sm text-destructive font-medium">so'm</div>
+                      <div className="text-xs md:text-sm text-destructive font-medium">so'm</div>
                     </div>
                     {expandedSection === "customer" ? (
                       <ChevronUp className="w-5 h-5 text-muted-foreground" />
@@ -451,17 +469,19 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
       </section>
 
       {/* Sticky Bottom Panel */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
-        <div className="max-w-3xl mx-auto">
-          <Button
-            size="lg"
-            className="w-full h-14 text-lg"
-            onClick={scrollToSolution}
-          >
-            Muammongizga yechim aniqlash
-          </Button>
+      {showStickyButton && (
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+          <div className="max-w-3xl mx-auto">
+            <Button
+              size="lg"
+              className="w-full h-14 text-lg"
+              onClick={scrollToSolution}
+            >
+              Muammongizga yechim aniqlash
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

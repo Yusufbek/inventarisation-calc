@@ -58,9 +58,13 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   const handleStoreTypeSelect = (type: string) => {
-    const selected = storeTypes.find((t) => t.id === type);
-    setData({ ...data, storeType: type, avgPrice: selected?.avgPrice || 150000 });
+    setData({ ...data, storeType: type });
     setTimeout(() => setStep(2), 300);
   };
 
@@ -238,13 +242,14 @@ export const LiteCalculator = ({ onComplete, variant = "lite" }: LiteCalculatorP
             <Input
               type="text"
               placeholder="Masalan: 95 000"
-              value={data.avgPrice ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
+              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
               onChange={(e) => {
                 const value = e.target.value.replace(/\s/g, '');
                 const numValue = parseInt(value) || 0;
                 setData({ ...data, avgPrice: numValue });
               }}
               className="h-14 text-lg rounded-2xl"
+              autoFocus
             />
             <Button
               onClick={handleNext}
