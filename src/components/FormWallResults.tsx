@@ -119,7 +119,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     }
 
     // Navigate to thank you page
-    navigate("/thank-you");
+    navigate("/thank-you/inventarisation-calc/formwall");
   };
 
   const lossDetails = [
