@@ -59,36 +59,28 @@ export const GamifiedResults = ({
     };
   }, []);
 
-  // Determine status color and icon
+  // Determine status color and icon using semantic tokens
   const getStatusColor = () => {
-    if (healthResult.status === "KRITIK") return "bg-red-500";
-    if (healthResult.status === "YOMON") return "bg-orange-500";
-    return "bg-yellow-500";
+    if (healthResult.status === "KRITIK") return "bg-destructive";
+    if (healthResult.status === "YOMON") return "bg-orange-500"; // warning state
+    return "bg-amber-500"; // caution state
+  };
+  
+  const getStatusTextColor = () => {
+    if (healthResult.status === "KRITIK") return "text-destructive-foreground";
+    if (healthResult.status === "YOMON") return "text-white";
+    return "text-white";
   };
 
   const StatusIcon = () => {
+    const iconClass = "w-16 h-16 md:w-20 md:h-20 text-white";
     if (healthResult.status === "KRITIK") {
-      return (
-        <AlertOctagon
-          className="w-12 h-12 md:w-14 md:h-14 text-white"
-          strokeWidth={3}
-        />
-      );
+      return <AlertOctagon className={iconClass} strokeWidth={2.5} />;
     }
     if (healthResult.status === "YOMON") {
-      return (
-        <AlertCircle
-          className="w-12 h-12 md:w-14 md:h-14 text-white"
-          strokeWidth={3}
-        />
-      );
+      return <AlertCircle className={iconClass} strokeWidth={2.5} />;
     }
-    return (
-      <AlertTriangle
-        className="w-12 h-12 md:w-14 md:h-14 text-white"
-        strokeWidth={3}
-      />
-    );
+    return <AlertTriangle className={iconClass} strokeWidth={2.5} />;
   };
 
   const scrollToSolution = () => {
@@ -102,40 +94,38 @@ export const GamifiedResults = ({
   }, []);
 
   return (
-    <div className="min-h-screen bg-background px-4 py-6 md:py-8">
-      <div className="max-w-4xl mx-auto space-y-4">
+    <div className="min-h-screen bg-background px-4 py-8 md:py-12">
+      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
         {/* Store Health Section */}
-        <Card className="bg-primary border-2 border-primary p-6 md:p-8 rounded-3xl">
-          <h2 className="text-sm md:text-base font-bold text-white/70 tracking-wider mb-6">
+        <Card className="bg-primary border-0 p-8 md:p-10 rounded-3xl shadow-xl">
+          <h2 className="text-xs md:text-sm font-bold text-primary-foreground/60 tracking-widest mb-8 uppercase">
             DO'KON HOLATI BALLI
           </h2>
 
-          <div className="flex items-center justify-between gap-8 mb-6">
+          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-8">
             {/* Score and Status */}
-            <div className="flex-1">
-              <div className="flex items-baseline gap-3 mb-4">
-                <span className="text-7xl md:text-8xl font-black text-white">
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex items-baseline gap-4 mb-6 justify-center md:justify-start">
+                <span className="text-8xl md:text-9xl font-black text-primary-foreground leading-none">
                   {healthResult.score}
                 </span>
-                <span className="text-3xl md:text-4xl font-bold text-white/60">
+                <span className="text-4xl md:text-5xl font-bold text-primary-foreground/50">
                   /100
                 </span>
               </div>
 
               {/* Status Badge */}
-              <div className="inline-block">
-                <div
-                  className={`${getStatusColor()} text-white px-6 py-2.5 rounded-full font-bold text-base md:text-lg`}
-                >
-                  {healthResult.status}
-                </div>
+              <div
+                className={`inline-flex items-center justify-center ${getStatusColor()} ${getStatusTextColor()} px-8 py-3 rounded-full font-bold text-lg md:text-xl shadow-lg`}
+              >
+                {healthResult.status}
               </div>
             </div>
 
             {/* Status Icon */}
             <div className="flex-shrink-0">
               <div
-                className={`${getStatusColor()} w-24 h-24 md:w-28 md:h-28 flex items-center justify-center rounded-2xl`}
+                className={`${getStatusColor()} w-32 h-32 md:w-36 md:h-36 flex items-center justify-center rounded-3xl shadow-2xl`}
               >
                 <StatusIcon />
               </div>
@@ -143,206 +133,194 @@ export const GamifiedResults = ({
           </div>
 
           {/* Short Dynamic Message */}
-          <div className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+          <div className="p-5 md:p-6 bg-white/10 backdrop-blur-sm rounded-2xl border-2 border-white/20">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
-              <p className="text-white text-base md:text-lg font-semibold">
+              <p className="text-primary-foreground text-base md:text-lg font-semibold leading-relaxed">
                 ✨ Yaxshi natija! Yangi imkoniyatlar uchun tayyor.
               </p>
             ) : healthResult.status === "YOMON" ? (
-              <p className="text-orange-200 text-base md:text-lg font-semibold">
+              <p className="text-white/90 text-base md:text-lg font-semibold leading-relaxed">
                 ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish:{" "}
-                {formatNumber(losses.totalMonthly)} so'm
+                <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span>
               </p>
             ) : (
-              <p className="text-red-200 text-base md:text-lg font-semibold">
+              <p className="text-white text-base md:text-lg font-semibold leading-relaxed">
                 🚨 Jiddiy muammo! Oylik yo'qotish:{" "}
-                {formatNumber(losses.totalMonthly)} so'm
+                <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span>
               </p>
             )}
           </div>
         </Card>
 
         {/* Healthy Store Metrics Section */}
-        <Card className="bg-card border-2 border-border p-6 md:p-8 rounded-3xl">
-          <h2 className="text-sm md:text-base font-bold text-muted-foreground tracking-wider mb-6">
+        <Card className="bg-card border-0 p-8 md:p-10 rounded-3xl shadow-xl">
+          <h2 className="text-xs md:text-sm font-bold text-muted-foreground tracking-widest mb-8 uppercase">
             SOG'LOM DO'KON KO'RSATKICHLARI
           </h2>
 
           {/* Metrics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
             {/* Inventarizatsiya */}
-            <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
+            <div className="flex items-center gap-5 p-5 bg-muted/50 rounded-2xl border border-border hover:shadow-md transition-all">
               <div
-                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                className={`flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl ${
                   healthResult.metrics.inventarizatsiya
-                    ? "bg-green-500/10"
-                    : "bg-red-500/10"
+                    ? "bg-success/10"
+                    : "bg-destructive/10"
                 }`}
               >
                 <ClipboardCheck
-                  className={`w-8 h-8 ${
+                  className={`w-9 h-9 ${
                     healthResult.metrics.inventarizatsiya
-                      ? "text-green-500"
+                      ? "text-success"
                       : "text-muted-foreground"
                   }`}
                 />
               </div>
-              <div className="flex-1">
-                <p className="text-sm md:text-base font-semibold text-foreground mb-1">
+              <div className="flex-1 min-w-0">
+                <p className="text-base md:text-lg font-bold text-foreground mb-1.5 truncate">
                   Inventarizatsiya
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {healthResult.metrics.inventarizatsiya
                     ? "Muntazam bajarilmoqda"
                     : "Yaxshilash kerak"}
                 </p>
               </div>
               {healthResult.metrics.inventarizatsiya ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                <CheckCircle2 className="w-7 h-7 text-success flex-shrink-0" />
               ) : (
-                <X
-                  className="w-6 h-6 text-red-500 flex-shrink-0"
-                  strokeWidth={3}
-                />
+                <X className="w-7 h-7 text-destructive flex-shrink-0" strokeWidth={2.5} />
               )}
             </div>
 
             {/* Ishonchli ma'lumotlar */}
-            <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
+            <div className="flex items-center gap-5 p-5 bg-muted/50 rounded-2xl border border-border hover:shadow-md transition-all">
               <div
-                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                className={`flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl ${
                   healthResult.metrics.ishonchliMalumotlar
-                    ? "bg-green-500/10"
-                    : "bg-red-500/10"
+                    ? "bg-success/10"
+                    : "bg-destructive/10"
                 }`}
               >
                 <BarChart3
-                  className={`w-8 h-8 ${
+                  className={`w-9 h-9 ${
                     healthResult.metrics.ishonchliMalumotlar
-                      ? "text-green-500"
+                      ? "text-success"
                       : "text-muted-foreground"
                   }`}
                 />
               </div>
-              <div className="flex-1">
-                <p className="text-sm md:text-base font-semibold text-foreground mb-1">
+              <div className="flex-1 min-w-0">
+                <p className="text-base md:text-lg font-bold text-foreground mb-1.5 truncate">
                   Ishonchli ma'lumotlar
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {healthResult.metrics.ishonchliMalumotlar
                     ? "Ma'lumotlar aniq"
                     : "Nazorat qiling"}
                 </p>
               </div>
               {healthResult.metrics.ishonchliMalumotlar ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                <CheckCircle2 className="w-7 h-7 text-success flex-shrink-0" />
               ) : (
-                <X
-                  className="w-6 h-6 text-red-500 flex-shrink-0"
-                  strokeWidth={3}
-                />
+                <X className="w-7 h-7 text-destructive flex-shrink-0" strokeWidth={2.5} />
               )}
             </div>
 
             {/* Sog'lom o'sish */}
-            <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
+            <div className="flex items-center gap-5 p-5 bg-muted/50 rounded-2xl border border-border hover:shadow-md transition-all">
               <div
-                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                className={`flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl ${
                   healthResult.metrics.soglomOsish
-                    ? "bg-green-500/10"
-                    : "bg-red-500/10"
+                    ? "bg-success/10"
+                    : "bg-destructive/10"
                 }`}
               >
                 <TrendingUp
-                  className={`w-8 h-8 ${
+                  className={`w-9 h-9 ${
                     healthResult.metrics.soglomOsish
-                      ? "text-green-500"
+                      ? "text-success"
                       : "text-muted-foreground"
                   }`}
                 />
               </div>
-              <div className="flex-1">
-                <p className="text-sm md:text-base font-semibold text-foreground mb-1">
+              <div className="flex-1 min-w-0">
+                <p className="text-base md:text-lg font-bold text-foreground mb-1.5 truncate">
                   Sog'lom o'sish
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {healthResult.metrics.soglomOsish
                     ? "Barqaror rivojlanish"
                     : "O'sishni oshiring"}
                 </p>
               </div>
               {healthResult.metrics.soglomOsish ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                <CheckCircle2 className="w-7 h-7 text-success flex-shrink-0" />
               ) : (
-                <X
-                  className="w-6 h-6 text-red-500 flex-shrink-0"
-                  strokeWidth={3}
-                />
+                <X className="w-7 h-7 text-destructive flex-shrink-0" strokeWidth={2.5} />
               )}
             </div>
 
             {/* Mahsulot nazorati */}
-            <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
+            <div className="flex items-center gap-5 p-5 bg-muted/50 rounded-2xl border border-border hover:shadow-md transition-all">
               <div
-                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                className={`flex-shrink-0 w-16 h-16 flex items-center justify-center rounded-xl ${
                   healthResult.metrics.mahsulotNazorati
-                    ? "bg-green-500/10"
-                    : "bg-red-500/10"
+                    ? "bg-success/10"
+                    : "bg-destructive/10"
                 }`}
               >
                 <Package
-                  className={`w-8 h-8 ${
+                  className={`w-9 h-9 ${
                     healthResult.metrics.mahsulotNazorati
-                      ? "text-green-500"
+                      ? "text-success"
                       : "text-muted-foreground"
                   }`}
                 />
               </div>
-              <div className="flex-1">
-                <p className="text-sm md:text-base font-semibold text-foreground mb-1">
+              <div className="flex-1 min-w-0">
+                <p className="text-base md:text-lg font-bold text-foreground mb-1.5 truncate">
                   Mahsulot nazorati
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   {healthResult.metrics.mahsulotNazorati
                     ? "Yaxshi nazorat"
                     : "Nazoratni kuchaytiring"}
                 </p>
               </div>
               {healthResult.metrics.mahsulotNazorati ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
+                <CheckCircle2 className="w-7 h-7 text-success flex-shrink-0" />
               ) : (
-                <X
-                  className="w-6 h-6 text-red-500 flex-shrink-0"
-                  strokeWidth={3}
-                />
+                <X className="w-7 h-7 text-destructive flex-shrink-0" strokeWidth={2.5} />
               )}
             </div>
           </div>
 
           {/* Summary */}
-          <div className="flex items-center justify-center gap-3 p-4 bg-muted/50 rounded-2xl border-2 border-border">
+          <div className="flex items-center justify-center gap-4 p-6 bg-muted/70 rounded-2xl border-2 border-border">
             <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              className={`w-12 h-12 rounded-full flex items-center justify-center ${
                 healthResult.passedMetrics > 2
-                  ? "bg-green-500/20"
-                  : "bg-red-500/20"
+                  ? "bg-success/20"
+                  : "bg-destructive/20"
               }`}
             >
               {healthResult.passedMetrics > 2 ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500" />
+                <CheckCircle2 className="w-7 h-7 text-success" />
               ) : (
-                <X className="w-6 h-6 text-red-500" strokeWidth={3} />
+                <X className="w-7 h-7 text-destructive" strokeWidth={2.5} />
               )}
             </div>
-            <p className="text-base md:text-lg font-bold text-foreground">
+            <p className="text-lg md:text-xl font-bold text-foreground">
               {healthResult.passedMetrics}/4 ko'rsatkich me'yorda
             </p>
           </div>
         </Card>
 
         {/* Solution Section */}
-        <div className="space-y-3">
-          <h2 className="text-lg md:text-xl font-bold text-foreground text-center">
+        <div className="space-y-6">
+          <h2 className="text-xl md:text-2xl font-bold text-foreground text-center px-4">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
               <>
                 Balingizni oshirish uchun yechim -{" "}
@@ -355,17 +333,20 @@ export const GamifiedResults = ({
             )}
           </h2>
 
-          <Card className="bg-primary border-2 border-primary p-5 md:p-6 rounded-3xl relative overflow-hidden">
-            <div className="flex flex-col items-center gap-4 text-center">
-              {/* Rocket Emoji - Top on mobile */}
-              <div className="text-6xl md:text-7xl">🚀</div>
+          <Card className="bg-primary border-0 p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
+            {/* Decorative gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            
+            <div className="relative flex flex-col items-center gap-6 text-center">
+              {/* Rocket Emoji */}
+              <div className="text-7xl md:text-8xl animate-scale-in">🚀</div>
 
               {/* Text Content */}
-              <div className="space-y-3 max-w-2xl">
-                <h3 className="text-xl md:text-2xl font-bold text-white">
+              <div className="space-y-5 max-w-2xl">
+                <h3 className="text-2xl md:text-3xl font-black text-primary-foreground leading-tight">
                   BILLZ - Do'kon egalari uchun super kuch
                 </h3>
-                <p className="text-white/80 text-sm md:text-base">
+                <p className="text-primary-foreground/90 text-base md:text-lg leading-relaxed">
                   {healthResult.status === "YAXSHILASH MUMKIN" ? (
                     <>
                       BILLZ bilan biznesingizni tezroq o'stirish, yangi
@@ -383,7 +364,7 @@ export const GamifiedResults = ({
                   id="main-cta-button"
                   onClick={onContactClick}
                   size="lg"
-                  className="w-full md:w-auto h-12 px-6 text-base rounded-2xl font-bold bg-white text-primary hover:bg-white/90"
+                  className="w-full md:w-auto h-14 px-8 text-lg rounded-2xl font-bold bg-white text-primary hover:bg-white/90 hover:scale-105 transition-all shadow-lg"
                 >
                   SINAB KO'RISH
                 </Button>
@@ -395,11 +376,11 @@ export const GamifiedResults = ({
 
       {/* Sticky Bottom Panel */}
       {showStickyButton && (
-        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-background/98 backdrop-blur-md border-t-2 border-border shadow-2xl p-4 z-50 animate-slide-up">
           <div className="max-w-3xl mx-auto">
             <Button
               size="lg"
-              className="w-full h-14 text-lg"
+              className="w-full h-14 md:h-16 text-lg md:text-xl font-bold rounded-2xl shadow-lg hover:shadow-xl transition-all"
               onClick={scrollToSolution}
             >
               Muammongizga yechim aniqlash
