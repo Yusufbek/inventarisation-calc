@@ -194,11 +194,12 @@ export const FormWallCalculator = ({
     const digits = phone.substring(4);
     return digits.length === 9;
   };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !isPhoneValid()) {
       return;
     }
+    
     const completeData: CalculatorData & {
       name: string;
       phone: string;
@@ -211,6 +212,40 @@ export const FormWallCalculator = ({
       name: string;
       phone: string;
     };
+
+    // Send calculator completion to Telegram
+    try {
+      const losses = calculateLosses(completeData as CalculatorData);
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_CHAT_ID = "-1003046303969";
+      const storeTypeLabel = storeTypes.find(t => t.id === completeData.storeType)?.label || completeData.storeType;
+      
+      const message = `FormWall kalkulyator yakunlandi\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      
+      console.log("Sending FormWall calculator completion to Telegram...");
+      
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error("Telegram API error:", result);
+      } else {
+        console.log("FormWall calculator completion sent successfully to Telegram:", result);
+      }
+    } catch (error) {
+      console.error("Failed to send calculator completion to Telegram:", error);
+    }
+
     onComplete(completeData);
   };
   if (showForm) {
