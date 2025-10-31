@@ -2,21 +2,37 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CalculatorData } from "./Calculator";
-import { AlertTriangle, AlertCircle, AlertOctagon, ClipboardCheck, BarChart3, TrendingUp, Package, X, CheckCircle2 } from "lucide-react";
-import { calculateStoreHealth, calculateLosses, formatNumber } from "@/lib/calculations";
-
+import {
+  AlertTriangle,
+  AlertCircle,
+  AlertOctagon,
+  ClipboardCheck,
+  BarChart3,
+  TrendingUp,
+  Package,
+  X,
+  CheckCircle2,
+} from "lucide-react";
+import {
+  calculateStoreHealth,
+  calculateLosses,
+  formatNumber,
+} from "@/lib/calculations";
+import { eventCustom } from "@/lib/fpixel";
 
 interface GamifiedResultsProps {
   data: CalculatorData;
   onContactClick: () => void;
 }
 
-
-export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) => {
+export const GamifiedResults = ({
+  data,
+  onContactClick,
+}: GamifiedResultsProps) => {
   const [showStickyButton, setShowStickyButton] = useState(true);
   const healthResult = calculateStoreHealth(data);
   const losses = calculateLosses(data);
-  
+
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -42,27 +58,48 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
       }
     };
   }, []);
-  
+
   // Determine status color and icon
   const getStatusColor = () => {
     if (healthResult.status === "KRITIK") return "bg-red-500";
     if (healthResult.status === "YOMON") return "bg-orange-500";
     return "bg-yellow-500";
   };
-  
+
   const StatusIcon = () => {
     if (healthResult.status === "KRITIK") {
-      return <AlertOctagon className="w-12 h-12 md:w-14 md:h-14 text-white" strokeWidth={3} />;
+      return (
+        <AlertOctagon
+          className="w-12 h-12 md:w-14 md:h-14 text-white"
+          strokeWidth={3}
+        />
+      );
     }
     if (healthResult.status === "YOMON") {
-      return <AlertCircle className="w-12 h-12 md:w-14 md:h-14 text-white" strokeWidth={3} />;
+      return (
+        <AlertCircle
+          className="w-12 h-12 md:w-14 md:h-14 text-white"
+          strokeWidth={3}
+        />
+      );
     }
-    return <AlertTriangle className="w-12 h-12 md:w-14 md:h-14 text-white" strokeWidth={3} />;
+    return (
+      <AlertTriangle
+        className="w-12 h-12 md:w-14 md:h-14 text-white"
+        strokeWidth={3}
+      />
+    );
   };
 
   const scrollToSolution = () => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    eventCustom("CalculatorFinished", {
+      content_name: "Inventory loss calculator gamified",
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background px-4 py-6 md:py-8">
@@ -97,7 +134,9 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
 
             {/* Status Icon */}
             <div className="flex-shrink-0">
-              <div className={`${getStatusColor()} w-24 h-24 md:w-28 md:h-28 flex items-center justify-center rounded-2xl`}>
+              <div
+                className={`${getStatusColor()} w-24 h-24 md:w-28 md:h-28 flex items-center justify-center rounded-2xl`}
+              >
                 <StatusIcon />
               </div>
             </div>
@@ -111,11 +150,13 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
               </p>
             ) : healthResult.status === "YOMON" ? (
               <p className="text-orange-200 text-base md:text-lg font-semibold">
-                ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
+                ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish:{" "}
+                {formatNumber(losses.totalMonthly)} so'm
               </p>
             ) : (
               <p className="text-red-200 text-base md:text-lg font-semibold">
-                🚨 Jiddiy muammo! Oylik yo'qotish: {formatNumber(losses.totalMonthly)} so'm
+                🚨 Jiddiy muammo! Oylik yo'qotish:{" "}
+                {formatNumber(losses.totalMonthly)} so'm
               </p>
             )}
           </div>
@@ -131,88 +172,162 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Inventarizatsiya */}
             <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
-              <div className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${healthResult.metrics.inventarizatsiya ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                <ClipboardCheck className={`w-8 h-8 ${healthResult.metrics.inventarizatsiya ? 'text-green-500' : 'text-muted-foreground'}`} />
+              <div
+                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                  healthResult.metrics.inventarizatsiya
+                    ? "bg-green-500/10"
+                    : "bg-red-500/10"
+                }`}
+              >
+                <ClipboardCheck
+                  className={`w-8 h-8 ${
+                    healthResult.metrics.inventarizatsiya
+                      ? "text-green-500"
+                      : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div className="flex-1">
                 <p className="text-sm md:text-base font-semibold text-foreground mb-1">
                   Inventarizatsiya
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {healthResult.metrics.inventarizatsiya ? 'Muntazam bajarilmoqda' : 'Yaxshilash kerak'}
+                  {healthResult.metrics.inventarizatsiya
+                    ? "Muntazam bajarilmoqda"
+                    : "Yaxshilash kerak"}
                 </p>
               </div>
               {healthResult.metrics.inventarizatsiya ? (
                 <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
               ) : (
-                <X className="w-6 h-6 text-red-500 flex-shrink-0" strokeWidth={3} />
+                <X
+                  className="w-6 h-6 text-red-500 flex-shrink-0"
+                  strokeWidth={3}
+                />
               )}
             </div>
 
             {/* Ishonchli ma'lumotlar */}
             <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
-              <div className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${healthResult.metrics.ishonchliMalumotlar ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                <BarChart3 className={`w-8 h-8 ${healthResult.metrics.ishonchliMalumotlar ? 'text-green-500' : 'text-muted-foreground'}`} />
+              <div
+                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                  healthResult.metrics.ishonchliMalumotlar
+                    ? "bg-green-500/10"
+                    : "bg-red-500/10"
+                }`}
+              >
+                <BarChart3
+                  className={`w-8 h-8 ${
+                    healthResult.metrics.ishonchliMalumotlar
+                      ? "text-green-500"
+                      : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div className="flex-1">
                 <p className="text-sm md:text-base font-semibold text-foreground mb-1">
                   Ishonchli ma'lumotlar
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {healthResult.metrics.ishonchliMalumotlar ? 'Ma\'lumotlar aniq' : 'Nazorat qiling'}
+                  {healthResult.metrics.ishonchliMalumotlar
+                    ? "Ma'lumotlar aniq"
+                    : "Nazorat qiling"}
                 </p>
               </div>
               {healthResult.metrics.ishonchliMalumotlar ? (
                 <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
               ) : (
-                <X className="w-6 h-6 text-red-500 flex-shrink-0" strokeWidth={3} />
+                <X
+                  className="w-6 h-6 text-red-500 flex-shrink-0"
+                  strokeWidth={3}
+                />
               )}
             </div>
 
             {/* Sog'lom o'sish */}
             <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
-              <div className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${healthResult.metrics.soglomOsish ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                <TrendingUp className={`w-8 h-8 ${healthResult.metrics.soglomOsish ? 'text-green-500' : 'text-muted-foreground'}`} />
+              <div
+                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                  healthResult.metrics.soglomOsish
+                    ? "bg-green-500/10"
+                    : "bg-red-500/10"
+                }`}
+              >
+                <TrendingUp
+                  className={`w-8 h-8 ${
+                    healthResult.metrics.soglomOsish
+                      ? "text-green-500"
+                      : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div className="flex-1">
                 <p className="text-sm md:text-base font-semibold text-foreground mb-1">
                   Sog'lom o'sish
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {healthResult.metrics.soglomOsish ? 'Barqaror rivojlanish' : 'O\'sishni oshiring'}
+                  {healthResult.metrics.soglomOsish
+                    ? "Barqaror rivojlanish"
+                    : "O'sishni oshiring"}
                 </p>
               </div>
               {healthResult.metrics.soglomOsish ? (
                 <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
               ) : (
-                <X className="w-6 h-6 text-red-500 flex-shrink-0" strokeWidth={3} />
+                <X
+                  className="w-6 h-6 text-red-500 flex-shrink-0"
+                  strokeWidth={3}
+                />
               )}
             </div>
 
             {/* Mahsulot nazorati */}
             <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-2xl border-2 border-border">
-              <div className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${healthResult.metrics.mahsulotNazorati ? 'bg-green-500/10' : 'bg-red-500/10'}`}>
-                <Package className={`w-8 h-8 ${healthResult.metrics.mahsulotNazorati ? 'text-green-500' : 'text-muted-foreground'}`} />
+              <div
+                className={`flex-shrink-0 w-14 h-14 flex items-center justify-center rounded-xl ${
+                  healthResult.metrics.mahsulotNazorati
+                    ? "bg-green-500/10"
+                    : "bg-red-500/10"
+                }`}
+              >
+                <Package
+                  className={`w-8 h-8 ${
+                    healthResult.metrics.mahsulotNazorati
+                      ? "text-green-500"
+                      : "text-muted-foreground"
+                  }`}
+                />
               </div>
               <div className="flex-1">
                 <p className="text-sm md:text-base font-semibold text-foreground mb-1">
                   Mahsulot nazorati
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {healthResult.metrics.mahsulotNazorati ? 'Yaxshi nazorat' : 'Nazoratni kuchaytiring'}
+                  {healthResult.metrics.mahsulotNazorati
+                    ? "Yaxshi nazorat"
+                    : "Nazoratni kuchaytiring"}
                 </p>
               </div>
               {healthResult.metrics.mahsulotNazorati ? (
                 <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
               ) : (
-                <X className="w-6 h-6 text-red-500 flex-shrink-0" strokeWidth={3} />
+                <X
+                  className="w-6 h-6 text-red-500 flex-shrink-0"
+                  strokeWidth={3}
+                />
               )}
             </div>
           </div>
 
           {/* Summary */}
           <div className="flex items-center justify-center gap-3 p-4 bg-muted/50 rounded-2xl border-2 border-border">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${healthResult.passedMetrics > 2 ? 'bg-green-500/20' : 'bg-red-500/20'}`}>
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                healthResult.passedMetrics > 2
+                  ? "bg-green-500/20"
+                  : "bg-red-500/20"
+              }`}
+            >
               {healthResult.passedMetrics > 2 ? (
                 <CheckCircle2 className="w-6 h-6 text-green-500" />
               ) : (
@@ -229,7 +344,12 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
         <div className="space-y-3">
           <h2 className="text-lg md:text-xl font-bold text-foreground text-center">
             {healthResult.status === "YAXSHILASH MUMKIN" ? (
-              <>Balingizni oshirish uchun yechim - <span className="text-primary">biznesingizni yanada o'sish</span></>
+              <>
+                Balingizni oshirish uchun yechim -{" "}
+                <span className="text-primary">
+                  biznesingizni yanada o'sish
+                </span>
+              </>
             ) : (
               <>Balingizni oshirish uchun yechim</>
             )}
@@ -238,10 +358,8 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
           <Card className="bg-primary border-2 border-primary p-5 md:p-6 rounded-3xl relative overflow-hidden">
             <div className="flex flex-col items-center gap-4 text-center">
               {/* Rocket Emoji - Top on mobile */}
-              <div className="text-6xl md:text-7xl">
-                🚀
-              </div>
-              
+              <div className="text-6xl md:text-7xl">🚀</div>
+
               {/* Text Content */}
               <div className="space-y-3 max-w-2xl">
                 <h3 className="text-xl md:text-2xl font-bold text-white">
@@ -250,13 +368,14 @@ export const GamifiedResults = ({ data, onContactClick }: GamifiedResultsProps) 
                 <p className="text-white/80 text-sm md:text-base">
                   {healthResult.status === "YAXSHILASH MUMKIN" ? (
                     <>
-                      BILLZ bilan biznesingizni tezroq o'stirish, yangi filiallar ochish va 
-                      samaradorlikni maksimal darajaga ko'tarish mumkin.
+                      BILLZ bilan biznesingizni tezroq o'stirish, yangi
+                      filiallar ochish va samaradorlikni maksimal darajaga
+                      ko'tarish mumkin.
                     </>
                   ) : (
                     <>
-                      Do'konlaringizni tartibga solish, boshqarish va samaradorligini oshirish uchun
-                      to'liq tizim.
+                      Do'konlaringizni tartibga solish, boshqarish va
+                      samaradorligini oshirish uchun to'liq tizim.
                     </>
                   )}
                 </p>
