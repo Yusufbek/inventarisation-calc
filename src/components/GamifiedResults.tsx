@@ -97,58 +97,66 @@ export const GamifiedResults = ({
     <div className="min-h-screen bg-background px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
         {/* Store Health Section */}
-        <Card className="bg-primary border-0 p-8 md:p-10 rounded-3xl shadow-xl">
-          <h2 className="text-xs md:text-sm font-bold text-primary-foreground/60 tracking-widest mb-8 uppercase">
-            DO'KON HOLATI BALLI
-          </h2>
+        <Card className="bg-gradient-to-br from-slate-800 via-slate-850 to-slate-900 border-0 p-8 md:p-12 rounded-3xl shadow-2xl overflow-hidden relative">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-5 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent_50%)]" />
+          
+          <div className="relative">
+            <h2 className="text-xs md:text-sm font-bold text-white/40 tracking-[0.3em] mb-10 uppercase">
+              STORE HEALTH
+            </h2>
 
-          <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mb-8">
-            {/* Score and Status */}
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex items-baseline gap-4 mb-6 justify-center md:justify-start">
-                <span className="text-8xl md:text-9xl font-black text-primary-foreground leading-none">
-                  {healthResult.score}
-                </span>
-                <span className="text-4xl md:text-5xl font-bold text-primary-foreground/50">
-                  /100
-                </span>
+            <div className="flex items-center justify-between gap-8 mb-10">
+              {/* Left: Score and Status */}
+              <div className="flex-1">
+                <div className="flex items-baseline gap-3 mb-6">
+                  <span className="text-8xl md:text-[10rem] font-black text-white leading-none tracking-tight">
+                    {healthResult.score}
+                  </span>
+                  <span className="text-4xl md:text-5xl font-medium text-white/40 mb-4">
+                    /100
+                  </span>
+                </div>
+
+                {/* Status Badge */}
+                <div
+                  className={`inline-flex items-center justify-center ${getStatusColor()} ${getStatusTextColor()} px-7 py-3 rounded-full font-black text-base md:text-lg tracking-wide uppercase shadow-lg`}
+                >
+                  {healthResult.status}
+                </div>
               </div>
 
-              {/* Status Badge */}
-              <div
-                className={`inline-flex items-center justify-center ${getStatusColor()} ${getStatusTextColor()} px-8 py-3 rounded-full font-bold text-lg md:text-xl shadow-lg`}
-              >
-                {healthResult.status}
+              {/* Right: Warning Icon */}
+              <div className="hidden md:flex flex-shrink-0">
+                <div className={`${getStatusColor()} w-44 h-44 flex items-center justify-center rounded-3xl shadow-2xl`}>
+                  <StatusIcon />
+                </div>
               </div>
             </div>
 
-            {/* Status Icon */}
-            <div className="flex-shrink-0">
-              <div
-                className={`${getStatusColor()} w-32 h-32 md:w-36 md:h-36 flex items-center justify-center rounded-3xl shadow-2xl`}
-              >
+            {/* Mobile Warning Icon */}
+            <div className="md:hidden flex justify-center mb-8">
+              <div className={`${getStatusColor()} w-32 h-32 flex items-center justify-center rounded-3xl shadow-2xl`}>
                 <StatusIcon />
               </div>
             </div>
-          </div>
 
-          {/* Short Dynamic Message */}
-          <div className="p-5 md:p-6 bg-white/10 backdrop-blur-sm rounded-2xl border-2 border-white/20">
-            {healthResult.status === "YAXSHILASH MUMKIN" ? (
-              <p className="text-primary-foreground text-base md:text-lg font-semibold leading-relaxed">
-                ✨ Yaxshi natija! Yangi imkoniyatlar uchun tayyor.
-              </p>
-            ) : healthResult.status === "YOMON" ? (
-              <p className="text-white/90 text-base md:text-lg font-semibold leading-relaxed">
-                ⚠️ Yaxshilash talab qilinadi. Oylik yo'qotish:{" "}
-                <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span>
-              </p>
-            ) : (
-              <p className="text-white text-base md:text-lg font-semibold leading-relaxed">
-                🚨 Jiddiy muammo! Oylik yo'qotish:{" "}
-                <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span>
-              </p>
-            )}
+            {/* Bottom Message */}
+            <div className="pt-6 border-t border-white/10">
+              {healthResult.status === "YAXSHILASH MUMKIN" ? (
+                <p className="text-amber-400 text-lg md:text-xl font-semibold leading-relaxed">
+                  ✨ Yaxshi natija! Yangi imkoniyatlar uchun tayyor.
+                </p>
+              ) : healthResult.status === "YOMON" ? (
+                <p className="text-amber-400 text-lg md:text-xl font-semibold leading-relaxed">
+                  Siz oyiga <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span> yo'qotmoqdasiz inventarizatsiya qilmaganingiz uchun.
+                </p>
+              ) : (
+                <p className="text-amber-400 text-lg md:text-xl font-semibold leading-relaxed">
+                  Siz oyiga <span className="font-black">{formatNumber(losses.totalMonthly)} so'm</span> yo'qotmoqdasiz inventarizatsiya qilmaganingiz uchun.
+                </p>
+              )}
+            </div>
           </div>
         </Card>
 
