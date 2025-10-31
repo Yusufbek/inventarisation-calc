@@ -83,9 +83,11 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
         const message = `⭐️ Yangi lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
+        console.log("Sending FormWall lead to Telegram...", { chatId: TELEGRAM_CHAT_ID });
+
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-        await fetch(url, {
+        const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -93,6 +95,14 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
             text: message,
           }),
         });
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+          console.error("Telegram API error:", result);
+        } else {
+          console.log("FormWall lead sent successfully to Telegram:", result);
+        }
 
         // Track Lead event
         event("Lead", {
@@ -126,9 +136,11 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
       const message = `⭐️⭐️ Warm Lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nMijoz mutaxassis bilan bog'lanishni so'radi\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
+      console.log("Sending FormWall warm lead to Telegram...", { chatId: TELEGRAM_CHAT_ID });
+
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
-      await fetch(url, {
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -136,6 +148,14 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
           text: message,
         }),
       });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error("Telegram API error (warm lead):", result);
+      } else {
+        console.log("FormWall warm lead sent successfully to Telegram:", result);
+      }
 
       // Track warm lead event
       eventCustom("WarmLead", {
