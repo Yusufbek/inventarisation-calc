@@ -106,38 +106,39 @@ export const GamifiedResults = ({
               STORE HEALTH
             </h2>
 
-            <div className="flex items-center justify-between gap-8 mb-10">
+            <div className="flex items-center justify-between gap-4 md:gap-8 mb-10">
               {/* Left: Score and Status */}
-              <div className="flex-1">
-                <div className="flex items-baseline gap-3 mb-6">
-                  <span className="text-8xl md:text-[10rem] font-black text-white leading-none tracking-tight">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-baseline gap-2 md:gap-3 mb-4 md:mb-6">
+                  <span className="text-6xl md:text-8xl lg:text-[10rem] font-black text-white leading-none tracking-tight">
                     {healthResult.score}
                   </span>
-                  <span className="text-4xl md:text-5xl font-medium text-white/40 mb-4">
+                  <span className="text-2xl md:text-4xl lg:text-5xl font-medium text-white/40 mb-2 md:mb-4">
                     /100
                   </span>
                 </div>
 
                 {/* Status Badge */}
                 <div
-                  className={`inline-flex items-center justify-center ${getStatusColor()} ${getStatusTextColor()} px-7 py-3 rounded-full font-black text-base md:text-lg tracking-wide uppercase shadow-lg`}
+                  className={`inline-flex items-center justify-center ${getStatusColor()} ${getStatusTextColor()} px-4 py-2 md:px-7 md:py-3 rounded-full font-black text-sm md:text-base lg:text-lg tracking-wide uppercase shadow-lg`}
                 >
                   {healthResult.status}
                 </div>
               </div>
 
-              {/* Right: Warning Icon */}
-              <div className="hidden md:flex flex-shrink-0">
-                <div className={`${getStatusColor()} w-44 h-44 flex items-center justify-center rounded-3xl shadow-2xl`}>
-                  <StatusIcon />
+              {/* Right: Warning Icon - Responsive */}
+              <div className="flex flex-shrink-0">
+                <div className={`${getStatusColor()} w-24 h-24 md:w-36 md:h-36 lg:w-44 lg:h-44 flex items-center justify-center rounded-2xl md:rounded-3xl shadow-2xl`}>
+                  <div className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-white">
+                    {healthResult.status === "KRITIK" ? (
+                      <AlertOctagon className="w-full h-full" strokeWidth={2.5} />
+                    ) : healthResult.status === "YOMON" ? (
+                      <AlertCircle className="w-full h-full" strokeWidth={2.5} />
+                    ) : (
+                      <AlertTriangle className="w-full h-full" strokeWidth={2.5} />
+                    )}
+                  </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Mobile Warning Icon */}
-            <div className="md:hidden flex justify-center mb-8">
-              <div className={`${getStatusColor()} w-32 h-32 flex items-center justify-center rounded-3xl shadow-2xl`}>
-                <StatusIcon />
               </div>
             </div>
 
