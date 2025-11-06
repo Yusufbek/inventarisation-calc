@@ -46,7 +46,7 @@ export const ThankYou = () => {
           <div className="space-y-3">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground">Biznesni rivojlantirish sirlari</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-md mx-auto">
-              Telegram botimizga obuna bo'ling va biznesingizni o'stirish uchun foydali maslahatlar oling
+              Telegram botimizga obuna bo'ling va biznesingizni rivojlantirish uchun foydali maslahatlar oling
             </p>
           </div>
         </div>
