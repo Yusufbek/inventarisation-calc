@@ -10,7 +10,7 @@ export const ThankYou = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-background flex items-center justify-center px-4 py-12">
+    <div className="w-full min-h-screen bg-background flex items-center justify-center px-4 py-12 pb-32">
       <div className="max-w-2xl mx-auto w-full space-y-8 animate-fade-in">
         {/* Logo */}
         <div className="flex justify-center">
@@ -52,12 +52,16 @@ export const ThankYou = () => {
               Telegram botimizga obuna bo'ling va har kuni biznesingizni o'stirish uchun foydali maslahatlar oling
             </p>
           </div>
+        </div>
+      </div>
 
-          {/* CTA Button */}
+      {/* Sticky CTA Button */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-4 shadow-lg z-50">
+        <div className="max-w-2xl mx-auto">
           <Button
             onClick={() => window.open('https://t.me/billzinfobot', '_blank')}
             size="lg"
-            className="h-14 px-12 text-lg rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            className="w-full h-14 text-lg rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             Telegram botga obuna bo'lish
           </Button>
