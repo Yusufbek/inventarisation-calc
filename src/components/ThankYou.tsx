@@ -22,34 +22,31 @@ export const ThankYou = () => {
           <div className="flex justify-center mb-4">
             <CheckCircle className="w-16 h-16 text-success" strokeWidth={1.5} />
           </div>
-          
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Rahmat!
-          </h1>
-          
-          <p className="text-lg text-muted-foreground">
-            Sizning so'rovingiz muvaffaqiyatli qabul qilindi.
-          </p>
+
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Rahmat!</h1>
+
+          <p className="text-lg text-muted-foreground">Sizning so'rovingiz muvaffaqiyatli qabul qilindi.</p>
         </div>
 
         {/* Telegram Bot CTA */}
-        <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10 text-center space-y-6 animate-scale-in" style={{ animationDelay: '0.2s', animationFillMode: 'backwards' }}>
+        <div
+          className="bg-white rounded-3xl shadow-xl p-8 md:p-10 text-center space-y-6 animate-scale-in"
+          style={{ animationDelay: "0.2s", animationFillMode: "backwards" }}
+        >
           {/* Bot Image */}
           <div className="flex justify-center">
-            <img 
-              src={telegramBotImage} 
-              alt="BILLZ Telegram Bot" 
+            <img
+              src={telegramBotImage}
+              alt="BILLZ Telegram Bot"
               className="w-48 h-48 md:w-56 md:h-56 object-cover rounded-2xl shadow-lg"
             />
           </div>
 
           {/* Content */}
           <div className="space-y-3">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Biznesni rivojlantirish sirlari
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Biznesni rivojlantirish sirlari</h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-md mx-auto">
-              Telegram botimizga obuna bo'ling va har kuni biznesingizni o'stirish uchun foydali maslahatlar oling
+              Telegram botimizga obuna bo'ling va biznesingizni o'stirish uchun foydali maslahatlar oling
             </p>
           </div>
         </div>
@@ -59,7 +56,7 @@ export const ThankYou = () => {
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-border p-4 shadow-lg z-50">
         <div className="max-w-2xl mx-auto">
           <Button
-            onClick={() => window.open('https://t.me/billzinfobot', '_blank')}
+            onClick={() => window.open("https://t.me/billzinfobot", "_blank")}
             size="lg"
             className="w-full h-14 text-lg rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
