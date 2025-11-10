@@ -135,13 +135,11 @@ export const Results = ({
                   </div>
                 </button>
 
-                {expandedSection === "inventory" && <div className="px-6 pb-4 animate-fade-in">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-foreground leading-relaxed">
-                        Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar.
-                        Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.
-                      </p>
-                    </div>
+                {expandedSection === "inventory" && <div className="bg-muted/50 px-6 py-4 animate-fade-in border-t border-border/50">
+                    <p className="text-sm text-foreground leading-relaxed">
+                      Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar.
+                      Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.
+                    </p>
                   </div>}
               </div>
 
@@ -167,14 +165,12 @@ export const Results = ({
                   </div>
                 </button>
 
-                {expandedSection === "time" && <div className="px-6 pb-4 animate-fade-in">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-foreground leading-relaxed">
-                        Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun
-                        sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan
-                        shug'ullana olmaydilar.
-                      </p>
-                    </div>
+                {expandedSection === "time" && <div className="bg-muted/50 px-6 py-4 animate-fade-in border-t border-border/50">
+                    <p className="text-sm text-foreground leading-relaxed">
+                      Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun
+                      sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan
+                      shug'ullana olmaydilar.
+                    </p>
                   </div>}
               </div>
 
@@ -200,13 +196,11 @@ export const Results = ({
                   </div>
                 </button>
 
-                {expandedSection === "customer" && <div className="px-6 pb-4 animate-fade-in">
-                    <div className="p-4 bg-muted rounded-lg">
-                      <p className="text-sm text-foreground leading-relaxed">
-                        Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni
-                        topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.
-                      </p>
-                    </div>
+                {expandedSection === "customer" && <div className="bg-muted/50 px-6 py-4 animate-fade-in border-t border-border/50">
+                    <p className="text-sm text-foreground leading-relaxed">
+                      Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni
+                      topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.
+                    </p>
                   </div>}
               </div>
             </div>

@@ -248,7 +248,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </button>
                     </div>
                     {expandedInfo === "inventory" && (
-                      <div className="p-3 md:p-4 bg-gradient-to-br from-destructive/5 to-destructive/10 rounded-xl border border-destructive/20 animate-fade-in">
+                      <div className="bg-destructive/5 px-3 md:px-4 py-3 md:py-4 border-t border-destructive/20 animate-fade-in">
                         <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-destructive">
                             Nima?
@@ -302,7 +302,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </button>
                     </div>
                     {expandedInfo === "time" && (
-                      <div className="p-3 md:p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 animate-fade-in">
+                      <div className="bg-orange-50 px-3 md:px-4 py-3 md:py-4 border-t border-orange-200 animate-fade-in">
                         <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-orange-600">
                             Nima?
@@ -356,7 +356,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                       </button>
                     </div>
                     {expandedInfo === "customer" && (
-                      <div className="p-3 md:p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 animate-fade-in">
+                      <div className="bg-blue-50 px-3 md:px-4 py-3 md:py-4 border-t border-blue-200 animate-fade-in">
                         <p className="text-xs md:text-sm text-foreground leading-relaxed">
                           <span className="font-semibold text-blue-600">
                             Nima?

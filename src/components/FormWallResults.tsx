@@ -255,12 +255,10 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                   </button>
 
                   {expandedSection === loss.id && (
-                    <div className="px-4 md:px-6 pb-4 animate-fade-in">
-                      <div className="p-4 bg-muted rounded-lg">
-                        <p className="text-sm text-foreground leading-relaxed">
-                          {loss.explanation}
-                        </p>
-                      </div>
+                    <div className="bg-muted/50 px-4 md:px-6 py-4 animate-fade-in border-t border-border/50">
+                      <p className="text-sm text-foreground leading-relaxed">
+                        {loss.explanation}
+                      </p>
                     </div>
                   )}
                 </div>
