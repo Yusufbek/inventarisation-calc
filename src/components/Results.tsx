@@ -95,86 +95,121 @@ export const Results = ({
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
     const margin = 15;
-    let yPos = 20;
+    let yPos = 25;
     
-    // Header with logo text
-    pdf.setFontSize(24);
-    pdf.setTextColor(59, 130, 246); // Primary blue
+    // Brand Colors (matching BILLZ brand)
+    const brandBlue: [number, number, number] = [0, 102, 255]; // Primary blue
+    const brandRed: [number, number, number] = [236, 48, 48]; // Destructive red
+    const brandGreen: [number, number, number] = [25, 188, 155]; // Success green
+    const darkGray: [number, number, number] = [30, 30, 30];
+    const mediumGray: [number, number, number] = [100, 100, 100];
+    const lightGray: [number, number, number] = [245, 245, 245];
+    const white: [number, number, number] = [255, 255, 255];
+    
+    // Header - BILLZ Logo
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(32);
+    pdf.setTextColor(brandBlue[0], brandBlue[1], brandBlue[2]);
     pdf.text("BILLZ", pageWidth / 2, yPos, { align: "center" });
     
-    yPos += 15;
-    pdf.setFontSize(16);
-    pdf.setTextColor(220, 38, 38); // Red
+    yPos += 12;
+    pdf.setFontSize(12);
+    pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
+    pdf.setFont(undefined, 'normal');
     pdf.text("Do'kon Yo'qotishlari Hisoboti", pageWidth / 2, yPos, { align: "center" });
     
-    // Main loss section
-    yPos += 20;
-    pdf.setFontSize(14);
-    pdf.setTextColor(100, 100, 100);
+    // Main loss section - Eye-catching box
+    yPos += 18;
+    pdf.setFillColor(255, 245, 245); // Light red background
+    pdf.setDrawColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setLineWidth(0.8);
+    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 38, 4, 4, 'FD');
+    
+    yPos += 10;
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(13);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
     pdf.text("Sizning do'koningiz har oy", pageWidth / 2, yPos, { align: "center" });
     
-    yPos += 15;
-    pdf.setFontSize(28);
-    pdf.setTextColor(220, 38, 38);
-    pdf.text(`${formatNumber(losses.totalMonthly)} so'm`, pageWidth / 2, yPos, { align: "center" });
-    
-    yPos += 10;
-    pdf.setFontSize(14);
-    pdf.text("yo'qotmoqda", pageWidth / 2, yPos, { align: "center" });
-    
-    // Breakdown box
-    yPos += 20;
-    pdf.setDrawColor(200, 200, 200);
-    pdf.setFillColor(248, 248, 248);
-    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 70, 3, 3, 'FD');
-    
-    yPos += 10;
-    pdf.setFontSize(13);
-    pdf.setTextColor(0, 0, 0);
+    yPos += 12;
+    pdf.setFontSize(32);
     pdf.setFont(undefined, 'bold');
-    pdf.text("Yo'qotishlar tafsiloti:", margin + 5, yPos);
+    pdf.setTextColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.text(`${formatNumber(losses.totalMonthly)}`, pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 8;
+    pdf.setFontSize(14);
+    pdf.setFont(undefined, 'bold');
+    pdf.text("so'm yo'qotmoqda", pageWidth / 2, yPos, { align: "center" });
+    
+    // Breakdown section
+    yPos += 18;
+    pdf.setDrawColor(220, 220, 220);
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    pdf.setLineWidth(0.3);
+    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 78, 4, 4, 'FD');
+    
+    yPos += 9;
+    pdf.setFontSize(14);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.text("Yo'qotishlar tafsiloti", margin + 5, yPos);
     
     yPos += 12;
-    pdf.setFont(undefined, 'normal');
+    pdf.setFont(undefined, 'bold');
     pdf.setFontSize(11);
-    pdf.text("Yo'qolgan mahsulotlar:", margin + 5, yPos);
-    pdf.setTextColor(220, 38, 38);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    pdf.text("Yo'qolgan mahsulotlar", margin + 5, yPos);
+    pdf.setTextColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(13);
     pdf.text(`${formatNumber(losses.inventoryLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
     
     yPos += 10;
-    pdf.setTextColor(0, 0, 0);
-    pdf.text("Xodimlar vaqti:", margin + 5, yPos);
-    pdf.setTextColor(220, 38, 38);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(11);
+    pdf.text("Xodimlar vaqti", margin + 5, yPos);
+    pdf.setTextColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(13);
     pdf.text(`${formatNumber(losses.timeLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
     
     yPos += 10;
-    pdf.setTextColor(0, 0, 0);
-    pdf.text("Out-of-stock:", margin + 5, yPos);
-    pdf.setTextColor(220, 38, 38);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(11);
+    pdf.text("Out-of-stock", margin + 5, yPos);
+    pdf.setTextColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setFont(undefined, 'bold');
+    pdf.setFontSize(13);
     pdf.text(`${formatNumber(losses.customerLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
     
-    yPos += 15;
-    pdf.setDrawColor(220, 38, 38);
-    pdf.setLineWidth(0.5);
+    yPos += 14;
+    pdf.setDrawColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setLineWidth(0.7);
     pdf.line(margin + 5, yPos, pageWidth - margin - 5, yPos);
     
-    yPos += 10;
-    pdf.setFontSize(12);
+    yPos += 11;
+    pdf.setFontSize(13);
     pdf.setFont(undefined, 'bold');
-    pdf.setTextColor(0, 0, 0);
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
     pdf.text("Bu 12 oyda:", margin + 5, yPos);
-    pdf.setTextColor(220, 38, 38);
-    pdf.setFontSize(14);
+    pdf.setTextColor(brandRed[0], brandRed[1], brandRed[2]);
+    pdf.setFontSize(16);
+    pdf.setFont(undefined, 'bold');
     pdf.text(`${formatNumber(losses.totalYearly)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
     
-    // Solution section
-    yPos += 25;
-    pdf.setFillColor(34, 197, 94); // Green
-    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 45, 3, 3, 'F');
+    // Solution section - Attractive green box
+    yPos += 20;
+    pdf.setFillColor(brandGreen[0], brandGreen[1], brandGreen[2]);
+    pdf.setDrawColor(brandGreen[0], brandGreen[1], brandGreen[2]);
+    pdf.setLineWidth(0);
+    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 52, 4, 4, 'F');
     
-    yPos += 12;
-    pdf.setFontSize(13);
-    pdf.setTextColor(255, 255, 255);
+    yPos += 11;
+    pdf.setFontSize(14);
+    pdf.setTextColor(white[0], white[1], white[2]);
     pdf.setFont(undefined, 'bold');
     pdf.text("BILLZ bilan bu yo'qotishlarning 60% qismini", pageWidth / 2, yPos, { align: "center" });
     yPos += 7;
@@ -182,18 +217,21 @@ export const Results = ({
     
     yPos += 12;
     pdf.setFontSize(11);
-    pdf.setFont(undefined, 'normal');
+    pdf.setFont(undefined, 'bold');
     pdf.text("Taxminiy tejash:", pageWidth / 2, yPos, { align: "center" });
     
-    yPos += 10;
-    pdf.setFontSize(20);
+    yPos += 12;
+    pdf.setFontSize(24);
     pdf.setFont(undefined, 'bold');
-    pdf.text(`+${formatNumber(losses.recoveredProfit)} so'm/oy`, pageWidth / 2, yPos, { align: "center" });
+    pdf.text(`+${formatNumber(losses.recoveredProfit)}`, pageWidth / 2, yPos, { align: "center" });
+    yPos += 6;
+    pdf.setFontSize(14);
+    pdf.text("so'm/oy", pageWidth / 2, yPos, { align: "center" });
     
     // Footer
-    yPos = pageHeight - 20;
+    yPos = pageHeight - 15;
     pdf.setFontSize(9);
-    pdf.setTextColor(150, 150, 150);
+    pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
     pdf.setFont(undefined, 'normal');
     pdf.text("BILLZ - Do'kon boshqaruvi uchun zamonaviy yechim", pageWidth / 2, yPos, { align: "center" });
     
