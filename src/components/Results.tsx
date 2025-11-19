@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
 import { CalculatorData } from "./Calculator";
-import { ArrowRight, TrendingUp, CheckCircle2, Clock, Users, Package, LineChart, ChevronDown, ChevronUp, Info } from "lucide-react";
+import { ArrowRight, TrendingUp, CheckCircle2, Clock, Users, Package, LineChart, ChevronDown, ChevronUp, Info, Download } from "lucide-react";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
+import jsPDF from "jspdf";
 import { eventCustom } from "@/lib/fpixel";
 interface ResultsProps {
   data: CalculatorData;
@@ -83,12 +84,62 @@ export const Results = ({
       });
     }
   };
+
+  const handleDownloadPDF = () => {
+    const pdf = new jsPDF();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    
+    // Title
+    pdf.setFontSize(20);
+    pdf.setTextColor(220, 38, 38);
+    pdf.text("BILLZ - Do'kon Yo'qotishlari Hisoboti", pageWidth / 2, 20, { align: "center" });
+    
+    // Main loss
+    pdf.setFontSize(16);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Oylik yo'qotish:", 20, 40);
+    pdf.setTextColor(220, 38, 38);
+    pdf.setFontSize(24);
+    pdf.text(`${formatNumber(losses.totalMonthly)} so'm`, 20, 50);
+    
+    // Breakdown
+    pdf.setFontSize(14);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Yo'qotishlar tafsiloti:", 20, 70);
+    
+    pdf.setFontSize(12);
+    pdf.text(`Inventarizatsiya yo'qotishi: ${formatNumber(losses.inventoryLoss)} so'm`, 20, 85);
+    pdf.text(`Vaqt yo'qotishi: ${formatNumber(losses.timeLoss)} so'm`, 20, 95);
+    pdf.text(`Mijozlar yo'qotishi: ${formatNumber(losses.customerLoss)} so'm`, 20, 105);
+    
+    // Yearly
+    pdf.setFontSize(14);
+    pdf.text(`Yillik yo'qotish: ${formatNumber(losses.totalYearly)} so'm`, 20, 125);
+    
+    // Solution
+    pdf.setFontSize(16);
+    pdf.setTextColor(34, 197, 94);
+    pdf.text("BILLZ bilan qaytib olingan foyda:", 20, 145);
+    pdf.setFontSize(20);
+    pdf.text(`${formatNumber(losses.recoveredProfit)} so'm/oy`, 20, 155);
+    
+    pdf.save("billz-hisobot.pdf");
+  };
   return <div className="w-full bg-background">
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-12 pb-4 md:pb-6 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-8">
-          <div className="flex justify-center">
+          <div className="flex justify-center relative">
             <BillzLogo className="h-10 md:h-12 text-foreground" />
+            <Button
+              onClick={handleDownloadPDF}
+              variant="ghost"
+              size="icon"
+              className="absolute right-0 top-0 opacity-20 hover:opacity-60 transition-opacity h-8 w-8"
+              title="PDF yuklab olish"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
           </div>
           <div className="text-center space-y-4 animate-slide-up">
             <h2 className="text-2xl md:text-3xl font-bold text-destructive leading-tight">
