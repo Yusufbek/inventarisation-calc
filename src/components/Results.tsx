@@ -5,7 +5,6 @@ import { CalculatorData } from "./Calculator";
 import { ArrowRight, TrendingUp, CheckCircle2, Clock, Users, Package, LineChart, ChevronDown, ChevronUp, Info, Download } from "lucide-react";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { eventCustom } from "@/lib/fpixel";
 interface ResultsProps {
   data: CalculatorData;
@@ -86,53 +85,121 @@ export const Results = ({
     }
   };
 
-  const handleDownloadPDF = async () => {
-    const element = document.getElementById('results-content');
-    if (!element) return;
-
-    try {
-      // Capture the results page as an image
-      const canvas = await html2canvas(element, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-      });
-
-      const imgData = canvas.toDataURL('image/png');
-      
-      // Create PDF with appropriate dimensions
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4'
-      });
-
-      const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= 297; // A4 height in mm
-
-      // Add additional pages if content is longer
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= 297;
-      }
-
-      pdf.save('billz-hisobot.pdf');
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    }
+  const handleDownloadPDF = () => {
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 15;
+    let yPos = 20;
+    
+    // Header with logo text
+    pdf.setFontSize(24);
+    pdf.setTextColor(59, 130, 246); // Primary blue
+    pdf.text("BILLZ", pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 15;
+    pdf.setFontSize(16);
+    pdf.setTextColor(220, 38, 38); // Red
+    pdf.text("Do'kon Yo'qotishlari Hisoboti", pageWidth / 2, yPos, { align: "center" });
+    
+    // Main loss section
+    yPos += 20;
+    pdf.setFontSize(14);
+    pdf.setTextColor(100, 100, 100);
+    pdf.text("Sizning do'koningiz har oy", pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 15;
+    pdf.setFontSize(28);
+    pdf.setTextColor(220, 38, 38);
+    pdf.text(`${formatNumber(losses.totalMonthly)} so'm`, pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 10;
+    pdf.setFontSize(14);
+    pdf.text("yo'qotmoqda", pageWidth / 2, yPos, { align: "center" });
+    
+    // Breakdown box
+    yPos += 20;
+    pdf.setDrawColor(200, 200, 200);
+    pdf.setFillColor(248, 248, 248);
+    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 70, 3, 3, 'FD');
+    
+    yPos += 10;
+    pdf.setFontSize(13);
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFont(undefined, 'bold');
+    pdf.text("Yo'qotishlar tafsiloti:", margin + 5, yPos);
+    
+    yPos += 12;
+    pdf.setFont(undefined, 'normal');
+    pdf.setFontSize(11);
+    pdf.text("Yo'qolgan mahsulotlar:", margin + 5, yPos);
+    pdf.setTextColor(220, 38, 38);
+    pdf.text(`${formatNumber(losses.inventoryLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
+    
+    yPos += 10;
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Xodimlar vaqti:", margin + 5, yPos);
+    pdf.setTextColor(220, 38, 38);
+    pdf.text(`${formatNumber(losses.timeLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
+    
+    yPos += 10;
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Out-of-stock:", margin + 5, yPos);
+    pdf.setTextColor(220, 38, 38);
+    pdf.text(`${formatNumber(losses.customerLoss)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
+    
+    yPos += 15;
+    pdf.setDrawColor(220, 38, 38);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin + 5, yPos, pageWidth - margin - 5, yPos);
+    
+    yPos += 10;
+    pdf.setFontSize(12);
+    pdf.setFont(undefined, 'bold');
+    pdf.setTextColor(0, 0, 0);
+    pdf.text("Bu 12 oyda:", margin + 5, yPos);
+    pdf.setTextColor(220, 38, 38);
+    pdf.setFontSize(14);
+    pdf.text(`${formatNumber(losses.totalYearly)} so'm`, pageWidth - margin - 5, yPos, { align: "right" });
+    
+    // Solution section
+    yPos += 25;
+    pdf.setFillColor(34, 197, 94); // Green
+    pdf.roundedRect(margin, yPos, pageWidth - 2 * margin, 45, 3, 3, 'F');
+    
+    yPos += 12;
+    pdf.setFontSize(13);
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont(undefined, 'bold');
+    pdf.text("BILLZ bilan bu yo'qotishlarning 60% qismini", pageWidth / 2, yPos, { align: "center" });
+    yPos += 7;
+    pdf.text("bartaraf etish mumkin", pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 12;
+    pdf.setFontSize(11);
+    pdf.setFont(undefined, 'normal');
+    pdf.text("Taxminiy tejash:", pageWidth / 2, yPos, { align: "center" });
+    
+    yPos += 10;
+    pdf.setFontSize(20);
+    pdf.setFont(undefined, 'bold');
+    pdf.text(`+${formatNumber(losses.recoveredProfit)} so'm/oy`, pageWidth / 2, yPos, { align: "center" });
+    
+    // Footer
+    yPos = pageHeight - 20;
+    pdf.setFontSize(9);
+    pdf.setTextColor(150, 150, 150);
+    pdf.setFont(undefined, 'normal');
+    pdf.text("BILLZ - Do'kon boshqaruvi uchun zamonaviy yechim", pageWidth / 2, yPos, { align: "center" });
+    
+    pdf.save('billz-hisobot.pdf');
   };
   return <div className="w-full bg-background">
-      <div id="results-content">
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-12 pb-4 md:pb-6 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-8">
@@ -376,7 +443,6 @@ export const Results = ({
           </div>
         </div>
       </section>
-      </div>
 
       {/* Sticky Bottom Panel */}
       {showStickyButton && <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
