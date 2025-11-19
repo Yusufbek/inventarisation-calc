@@ -5,6 +5,7 @@ import { CalculatorData } from "./Calculator";
 import { ArrowRight, TrendingUp, CheckCircle2, Clock, Users, Package, LineChart, ChevronDown, ChevronUp, Info, Download } from "lucide-react";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import { eventCustom } from "@/lib/fpixel";
 interface ResultsProps {
   data: CalculatorData;
@@ -85,47 +86,53 @@ export const Results = ({
     }
   };
 
-  const handleDownloadPDF = () => {
-    const pdf = new jsPDF();
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    
-    // Title
-    pdf.setFontSize(20);
-    pdf.setTextColor(220, 38, 38);
-    pdf.text("BILLZ - Do'kon Yo'qotishlari Hisoboti", pageWidth / 2, 20, { align: "center" });
-    
-    // Main loss
-    pdf.setFontSize(16);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text("Oylik yo'qotish:", 20, 40);
-    pdf.setTextColor(220, 38, 38);
-    pdf.setFontSize(24);
-    pdf.text(`${formatNumber(losses.totalMonthly)} so'm`, 20, 50);
-    
-    // Breakdown
-    pdf.setFontSize(14);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text("Yo'qotishlar tafsiloti:", 20, 70);
-    
-    pdf.setFontSize(12);
-    pdf.text(`Inventarizatsiya yo'qotishi: ${formatNumber(losses.inventoryLoss)} so'm`, 20, 85);
-    pdf.text(`Vaqt yo'qotishi: ${formatNumber(losses.timeLoss)} so'm`, 20, 95);
-    pdf.text(`Mijozlar yo'qotishi: ${formatNumber(losses.customerLoss)} so'm`, 20, 105);
-    
-    // Yearly
-    pdf.setFontSize(14);
-    pdf.text(`Yillik yo'qotish: ${formatNumber(losses.totalYearly)} so'm`, 20, 125);
-    
-    // Solution
-    pdf.setFontSize(16);
-    pdf.setTextColor(34, 197, 94);
-    pdf.text("BILLZ bilan qaytib olingan foyda:", 20, 145);
-    pdf.setFontSize(20);
-    pdf.text(`${formatNumber(losses.recoveredProfit)} so'm/oy`, 20, 155);
-    
-    pdf.save("billz-hisobot.pdf");
+  const handleDownloadPDF = async () => {
+    const element = document.getElementById('results-content');
+    if (!element) return;
+
+    try {
+      // Capture the results page as an image
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      
+      // Create PDF with appropriate dimensions
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= 297; // A4 height in mm
+
+      // Add additional pages if content is longer
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= 297;
+      }
+
+      pdf.save('billz-hisobot.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
   return <div className="w-full bg-background">
+      <div id="results-content">
       {/* Loss Section */}
       <section className="bg-background px-4 py-8 md:py-12 pb-4 md:pb-6 animate-fade-in relative">
         <div className="max-w-4xl mx-auto space-y-8">
@@ -369,6 +376,7 @@ export const Results = ({
           </div>
         </div>
       </section>
+      </div>
 
       {/* Sticky Bottom Panel */}
       {showStickyButton && <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border shadow-lg p-4 z-50">
