@@ -136,13 +136,13 @@ export const MagnetCalculator = () => {
         const utmParams = getUtmParams();
 
         const webhookPayload = {
-          storetype: calcData.storeType,
+          storeType: calcData.storeType,
           sku: calcData.skuCount,
-          calculated_loss: losses.totalMonthly,
+          calculatedLoss: losses.totalMonthly,
           avgPrice: calcData.avgPrice,
           theft: calcData.theftLevel,
-          out_of_stock: calcData.inventoryFrequency,
-          time: new Date().toISOString(),
+          outOfStock: losses.customerLoss, // Correct: REAL out-of-stock loss
+          time: losses.timeLoss, // Correct: REAL time loss value
           ...utmParams,
         };
 
