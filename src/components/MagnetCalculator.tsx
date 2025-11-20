@@ -141,9 +141,8 @@ export const MagnetCalculator = () => {
           calculatedLoss: losses.totalMonthly,
           avgPrice: calcData.avgPrice,
           theft: calcData.theftLevel,
-          outOfStock: losses.customerLoss, // Correct: REAL out-of-stock loss
-          time: losses.timeLoss, // Correct: REAL time loss value
-          ...utmParams,
+          outOfStock: losses.customerLoss,
+          time: losses.timeLoss,
         };
 
         const response = await fetch("https://n8n-m.billz.work/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
