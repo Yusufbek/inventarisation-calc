@@ -20,9 +20,9 @@ const InventarisationCalc = () => {
     return <Navigate to="/404" replace />;
   }
   
-  // Lite, gamified, and magnet start directly with calculator, main starts with hero
+  // Lite and gamified start directly with calculator, main and magnet start with hero
   const [currentScreen, setCurrentScreen] = useState<Screen>(
-    variant === "lite" || variant === "gamified" || variant === "magnet" ? "calculator" : "hero"
+    variant === "lite" || variant === "gamified" ? "calculator" : "hero"
   );
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
