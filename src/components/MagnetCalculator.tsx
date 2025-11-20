@@ -256,10 +256,9 @@ export const MagnetCalculator = () => {
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-muted-foreground">
-            {step} / {totalSteps}
-          </span>
-          <span className="text-sm font-medium text-muted-foreground">{Math.round(progress)}%</span>
+          <p className="text-sm text-muted-foreground">
+            Savol {step} / {totalSteps}
+          </p>
         </div>
         <Progress value={progress} className="h-2" />
       </div>
@@ -281,181 +280,157 @@ export const MagnetCalculator = () => {
         </div>
       )}
 
-      <div className="space-y-8 animate-fade-in">
-        {/* Step 1: Store Type */}
+      <div className="animate-fade-in">
         {step === 1 && (
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Do'koningiz qaysi sohada?
-              </h2>
-              <p className="text-muted-foreground">Biznesingiz turini tanlang</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Do'koningiz qaysi turga kiradi?
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {storeTypes.map((type) => (
-                <Button
+                <button
                   key={type.id}
-                  variant="outline"
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    handleStoreTypeSelect(type.id);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
                   className={cn(
-                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
-                    data.storeType === type.id && "border-primary bg-primary/5"
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium focus:outline-none",
+                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border"
                   )}
-                  onClick={() => handleStoreTypeSelect(type.id)}
                 >
-                  <span className="font-medium">{type.label}</span>
-                </Button>
+                  {type.label}
+                </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Step 2: SKU Count */}
         {step === 2 && (
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Nechta turdagi mahsulot sotasiz?
-              </h2>
-              <p className="text-muted-foreground">
-                {data.storeType && getStoreTypeHint(data.storeType)}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Do'koningizda nechta mahsulot sotiladi?
+            </h2>
+            <p className="text-muted-foreground">
+              {data.storeType && getStoreTypeHint(data.storeType)}
+            </p>
+            <div className="grid gap-3">
               {skuRanges.map((range) => (
-                <Button
+                <button
                   key={range.id}
-                  variant="outline"
-                  className={cn(
-                    "h-auto py-6 text-center hover:border-primary hover:bg-primary/5 transition-all",
-                    data.skuCount === range.value && "border-primary bg-primary/5"
-                  )}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, skuCount: range.value });
+                    setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border"
+                  )}
                 >
-                  <span className="font-medium">{range.label}</span>
-                </Button>
+                  {range.label}
+                </button>
               ))}
-            </div>
-
-            <div className="pt-6">
-              <Button
-                className="w-full h-12 text-lg"
-                onClick={handleNext}
-                disabled={!canProceed()}
-              >
-                Keyingi
-              </Button>
             </div>
           </div>
         )}
 
-        {/* Step 3: Inventory Frequency */}
         {step === 3 && (
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Qancha vaqt oraliq bilan inventarizatsiya qilasiz?
-              </h2>
-              <p className="text-muted-foreground">Mahsulotlaringizni qanchalik tez-tez sanaysiz</p>
-            </div>
-            <div className="grid grid-cols-1 gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Inventarizatsiyani necha marta o'tkazasiz?
+            </h2>
+            <div className="grid gap-3">
               {frequencies.map((freq) => (
-                <Button
+                <button
                   key={freq.id}
-                  variant="outline"
-                  className={cn(
-                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
-                    data.inventoryFrequency === freq.id && "border-primary bg-primary/5"
-                  )}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, inventoryFrequency: freq.id });
+                    setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "border-border"
+                  )}
                 >
-                  <span className="font-medium">{freq.label}</span>
-                </Button>
+                  {freq.label}
+                </button>
               ))}
-            </div>
-            <div className="pt-6">
-              <Button
-                className="w-full h-12 text-lg"
-                onClick={handleNext}
-                disabled={!canProceed()}
-              >
-                Keyingi
-              </Button>
             </div>
           </div>
         )}
 
-        {/* Step 4: Theft Level */}
         {step === 4 && (
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                Do'koningizda o'g'irlik yoki yo'qolish holatlari yuz beradimi?
-              </h2>
-              <p className="text-muted-foreground">Halol javob bering</p>
-            </div>
-            <div className="grid grid-cols-1 gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold">
+              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi
+              bo'lganmi?
+            </h2>
+            <div className="grid gap-3">
               {theftLevels.map((level) => (
-                <Button
+                <button
                   key={level.id}
-                  variant="outline"
-                  className={cn(
-                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
-                    data.theftLevel === level.id && "border-primary bg-primary/5"
-                  )}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.currentTarget.blur();
                     setData({ ...data, theftLevel: level.id });
+                    setTimeout(handleNext, 300);
                   }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border"
+                  )}
                 >
-                  <span className="font-medium">{level.label}</span>
-                </Button>
+                  {level.label}
+                </button>
               ))}
-            </div>
-            <div className="pt-6">
-              <Button
-                className="w-full h-12 text-lg"
-                onClick={handleNext}
-                disabled={!canProceed()}
-              >
-                Keyingi
-              </Button>
             </div>
           </div>
         )}
 
-        {/* Step 5: Average Price */}
         {step === 5 && (
           <div className="space-y-6">
-            <div className="space-y-2">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-                O'rtacha mahsulot narxi qancha?
-              </h2>
-              <p className="text-muted-foreground">
-                {data.storeType && getPriceHint(data.storeType)}
-              </p>
-            </div>
-            <div className="space-y-4">
-              <Input
-                type="number"
-                placeholder="Narxni kiriting (so'm)"
-                value={data.avgPrice || ""}
-                onChange={(e) => setData({ ...data, avgPrice: parseInt(e.target.value) || 0 })}
-                className="h-14 text-lg"
-              />
-            </div>
-            <div className="pt-6">
-              <Button
-                className="w-full h-12 text-lg"
-                onClick={handleNext}
-                disabled={!canProceed()}
-              >
-                Natijani ko'rish
-              </Button>
-            </div>
+            <h2 className="text-2xl md:text-3xl font-bold">
+              Siz sotadigan mahsulotlarning o'rtacha narxi qancha (so'm)?
+            </h2>
+            <p className="text-muted-foreground">
+              {data.storeType && getPriceHint(data.storeType)}
+            </p>
+            <Input
+              type="text"
+              placeholder="Masalan: 250 000"
+              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\s/g, '');
+                const numValue = parseInt(value) || 0;
+                setData({ ...data, avgPrice: numValue });
+              }}
+              className="h-14 text-lg rounded-2xl"
+              autoFocus
+            />
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="w-full h-14 text-lg rounded-2xl"
+            >
+              Natijani ko'rish
+            </Button>
           </div>
         )}
       </div>
