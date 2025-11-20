@@ -83,11 +83,11 @@ const getPriceHint = (storeTypeId: string): string => {
 const getUtmParams = () => {
   const params = new URLSearchParams(window.location.search);
   return {
-    utm_source: params.get('utm_source') || '',
-    utm_medium: params.get('utm_medium') || '',
-    utm_campaign: params.get('utm_campaign') || '',
-    utm_term: params.get('utm_term') || '',
-    utm_content: params.get('utm_content') || ''
+    utm_source: params.get("utm_source") || "",
+    utm_medium: params.get("utm_medium") || "",
+    utm_campaign: params.get("utm_campaign") || "",
+    utm_term: params.get("utm_term") || "",
+    utm_content: params.get("utm_content") || "",
   };
 };
 
@@ -127,7 +127,7 @@ export const MagnetCalculator = () => {
 
       // Track with Yandex Metrika
       if ((window as any).ym) {
-        (window as any).ym(50093230, 'reachGoal', 'magnet_calculator_complete');
+        (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
       }
 
       try {
@@ -143,31 +143,31 @@ export const MagnetCalculator = () => {
           theft: calcData.theftLevel,
           out_of_stock: calcData.inventoryFrequency,
           time: new Date().toISOString(),
-          ...utmParams
+          ...utmParams,
         };
 
-        const response = await fetch('https://n8n-m.billz.work/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d', {
-          method: 'POST',
+        const response = await fetch("https://n8n-m.billz.work/webhook-test/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(webhookPayload),
         });
 
         if (!response.ok) {
-          throw new Error('Webhook request failed');
+          throw new Error("Webhook request failed");
         }
 
         const result = await response.json();
-        
+
         if (result.telegram_url) {
           setTelegramUrl(result.telegram_url);
         } else {
-          throw new Error('No telegram_url in response');
+          throw new Error("No telegram_url in response");
         }
       } catch (error) {
-        console.error('Failed to send data to webhook:', error);
-        setError('Xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring.');
+        console.error("Failed to send data to webhook:", error);
+        setError("Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.");
       } finally {
         setIsLoading(false);
       }
@@ -195,42 +195,24 @@ export const MagnetCalculator = () => {
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center gap-8 py-12 px-4 animate-fade-in">
         <div className="text-center space-y-6 max-w-md">
           <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-            <svg 
-              className="w-12 h-12 text-primary" 
-              fill="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            <svg className="w-12 h-12 text-primary" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
             </svg>
           </div>
-          
+
           <div className="space-y-2">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-              Tahlil tayyor!
-            </h2>
-            <p className="text-muted-foreground">
-              Natijalaringizni ko'rish uchun Telegram botimizga o'ting
-            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Tahlil tayyor!</h2>
+            <p className="text-muted-foreground">Natijalaringizni ko'rish uchun Telegram botimizga o'ting</p>
           </div>
 
-          <Button
-            size="lg"
-            className="w-full text-lg h-14"
-            onClick={() => window.location.href = telegramUrl}
-          >
-            <svg 
-              className="w-5 h-5 mr-2" 
-              fill="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+          <Button size="lg" className="w-full text-lg h-14" onClick={() => (window.location.href = telegramUrl)}>
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
             </svg>
             Telegram'da natijani ko'rish
           </Button>
 
-          <p className="text-sm text-muted-foreground">
-            Botimiz sizga batafsil hisobot va tavsiyalar beradi
-          </p>
+          <p className="text-sm text-muted-foreground">Botimiz sizga batafsil hisobot va tavsiyalar beradi</p>
         </div>
       </div>
     );
@@ -243,9 +225,18 @@ export const MagnetCalculator = () => {
         <div className="text-center space-y-4">
           <p className="text-3xl md:text-4xl font-bold text-foreground">Tahlil qilinmoqda</p>
           <div className="flex items-center justify-center gap-1.5">
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+            <span
+              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
+              style={{ animationDelay: "0ms" }}
+            ></span>
+            <span
+              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
+              style={{ animationDelay: "150ms" }}
+            ></span>
+            <span
+              className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
+              style={{ animationDelay: "300ms" }}
+            ></span>
           </div>
         </div>
       </div>
@@ -283,9 +274,7 @@ export const MagnetCalculator = () => {
       <div className="animate-fade-in">
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Do'koningiz qaysi turga kiradi?
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz qaysi turga kiradi?</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {storeTypes.map((type) => (
                 <button
@@ -300,7 +289,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium focus:outline-none",
-                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border"
+                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {type.label}
@@ -312,12 +301,8 @@ export const MagnetCalculator = () => {
 
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Do'koningizda nechta mahsulot sotiladi?
-            </h2>
-            <p className="text-muted-foreground">
-              {data.storeType && getStoreTypeHint(data.storeType)}
-            </p>
+            <h2 className="text-2xl md:text-3xl font-bold">Do'koningizda nechta mahsulot sotiladi?</h2>
+            <p className="text-muted-foreground">{data.storeType && getStoreTypeHint(data.storeType)}</p>
             <div className="grid gap-3">
               {skuRanges.map((range) => (
                 <button
@@ -333,7 +318,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border"
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {range.label}
@@ -345,9 +330,7 @@ export const MagnetCalculator = () => {
 
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Inventarizatsiyani necha marta o'tkazasiz?
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Inventarizatsiyani necha marta o'tkazasiz?</h2>
             <div className="grid gap-3">
               {frequencies.map((freq) => (
                 <button
@@ -363,7 +346,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "border-border"
+                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {freq.label}
@@ -376,8 +359,7 @@ export const MagnetCalculator = () => {
         {step === 4 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
-              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi
-              bo'lganmi?
+              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi bo'lganmi?
             </h2>
             <div className="grid gap-3">
               {theftLevels.map((level) => (
@@ -394,7 +376,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border"
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {level.label}
@@ -409,26 +391,20 @@ export const MagnetCalculator = () => {
             <h2 className="text-2xl md:text-3xl font-bold">
               Siz sotadigan mahsulotlarning o'rtacha narxi qancha (so'm)?
             </h2>
-            <p className="text-muted-foreground">
-              {data.storeType && getPriceHint(data.storeType)}
-            </p>
+            <p className="text-muted-foreground">{data.storeType && getPriceHint(data.storeType)}</p>
             <Input
               type="text"
               placeholder="Masalan: 250 000"
-              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString('uz-UZ').replace(/,/g, ' ') : ""}
+              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString("uz-UZ").replace(/,/g, " ") : ""}
               onChange={(e) => {
-                const value = e.target.value.replace(/\s/g, '');
+                const value = e.target.value.replace(/\s/g, "");
                 const numValue = parseInt(value) || 0;
                 setData({ ...data, avgPrice: numValue });
               }}
               className="h-14 text-lg rounded-2xl"
               autoFocus
             />
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed()}
-              className="w-full h-14 text-lg rounded-2xl"
-            >
+            <Button onClick={handleNext} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
               Natijani ko'rish
             </Button>
           </div>
