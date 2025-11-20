@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { Calculator, CalculatorData } from "@/components/Calculator";
 import { LiteCalculator } from "@/components/LiteCalculator";
+import { MagnetCalculator } from "@/components/MagnetCalculator";
 import { Results } from "@/components/Results";
 import { LiteResults } from "@/components/LiteResults";
 import { GamifiedResults } from "@/components/GamifiedResults";
@@ -15,13 +16,13 @@ const InventarisationCalc = () => {
   const { variant } = useParams<{ variant: string }>();
   
   // Validate variant first
-  if (!variant || !["main", "lite", "gamified"].includes(variant)) {
+  if (!variant || !["main", "lite", "gamified", "magnet"].includes(variant)) {
     return <Navigate to="/404" replace />;
   }
   
-  // Lite and gamified start directly with calculator, main starts with hero
+  // Lite, gamified, and magnet start directly with calculator, main starts with hero
   const [currentScreen, setCurrentScreen] = useState<Screen>(
-    variant === "lite" || variant === "gamified" ? "calculator" : "hero"
+    variant === "lite" || variant === "gamified" || variant === "magnet" ? "calculator" : "hero"
   );
   const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
 
@@ -60,6 +61,8 @@ const InventarisationCalc = () => {
         <section className="w-full bg-background py-12 min-h-screen">
           {variant === "main" || variant === "gamified" ? (
             <Calculator onComplete={handleCalculatorComplete} variant={variant} />
+          ) : variant === "magnet" ? (
+            <MagnetCalculator />
           ) : (
             <LiteCalculator onComplete={handleCalculatorComplete} variant={variant} />
           )}
