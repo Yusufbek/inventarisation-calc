@@ -140,7 +140,7 @@ export const MagnetCalculator = () => {
           sku: calcData.skuCount,
           calculatedLoss: losses.totalMonthly,
           avgPrice: calcData.avgPrice,
-          theft: calcData.theftLevel,
+          theft: losses.inventoryLoss,
           outOfStock: losses.customerLoss,
           time: losses.timeLoss,
         };
