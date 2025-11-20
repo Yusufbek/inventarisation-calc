@@ -146,7 +146,7 @@ export const MagnetCalculator = () => {
           ...utmParams,
         };
 
-        const response = await fetch("https://n8n-m.billz.work/webhook-test/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
+        const response = await fetch("https://n8n-m.billz.work/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
