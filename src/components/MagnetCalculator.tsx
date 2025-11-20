@@ -1,0 +1,464 @@
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+import { calculateLosses, formatNumber } from "@/lib/calculations";
+
+export interface CalculatorData {
+  storeType: string;
+  skuCount: number;
+  inventoryFrequency: string;
+  theftLevel: string;
+  avgPrice: number;
+}
+
+const storeTypes = [
+  { id: "kiyim", label: "Kiyim", avgPrice: 300000 },
+  { id: "poyabzal", label: "Poyabzal", avgPrice: 280000 },
+  { id: "kantselyariya", label: "Kantselyariya", avgPrice: 50000 },
+  { id: "qurilish", label: "Qurilish mollari", avgPrice: 180000 },
+  { id: "kosmetika", label: "Kosmetika", avgPrice: 95000 },
+  { id: "aksessuar", label: "Aksessuar", avgPrice: 120000 },
+  { id: "elektronika", label: "Elektronika", avgPrice: 1000000 },
+  { id: "uy-rozgor", label: "Uy-ro'zg'or buyumlari", avgPrice: 200000 },
+  { id: "oziq-ovqat", label: "Oziq-ovqat", avgPrice: 28000 },
+  { id: "dorixona", label: "Dorixona", avgPrice: 60000 },
+  { id: "kafe", label: "Kafe/Restoran", avgPrice: 45000 },
+  { id: "ishlab-chiqarish", label: "Ishlab chiqarish", avgPrice: 350000 },
+  { id: "ombor", label: "Ombor", avgPrice: 250000 },
+  { id: "boshqa", label: "Boshqa", avgPrice: 150000 },
+];
+
+const frequencies = [
+  { id: "hafta", label: "Har hafta" },
+  { id: "oy", label: "Har oy" },
+  { id: "3oy", label: "Har 3 oyda" },
+  { id: "hech", label: "Hech qachon" },
+  { id: "bilmayman", label: "Bilmayman" },
+];
+
+const theftLevels = [
+  { id: "tez-tez", label: "Ha, tez-tez" },
+  { id: "bazan", label: "Ba'zan" },
+  { id: "kam", label: "Juda kam" },
+  { id: "yoq", label: "Yo'q" },
+];
+
+const skuRanges = [
+  { id: "0-100", label: "100 tagacha", value: 50 },
+  { id: "101-500", label: "101 - 500", value: 300 },
+  { id: "501-1000", label: "501 - 1 000", value: 750 },
+  { id: "1001-2000", label: "1 001 - 2 000", value: 1500 },
+  { id: "2001-5000", label: "2 001 - 5 000", value: 3500 },
+  { id: "5001+", label: "5 000+", value: 7000 },
+];
+
+const getStoreTypeHint = (storeTypeId: string): string => {
+  const hints: Record<string, string> = {
+    kiyim: "Odatda 200-500 turdagi mahsulot",
+    poyabzal: "Odatda 150-400 turdagi mahsulot",
+    kosmetika: "Odatda 300-800 turdagi mahsulot",
+    elektronika: "Odatda 100-300 turdagi mahsulot",
+    "oziq-ovqat": "Odatda 500-2000 turdagi mahsulot",
+    dorixona: "Odatda 800-2500 turdagi mahsulot",
+    boshqa: "O'rtacha 200-600 turdagi mahsulot",
+  };
+  return hints[storeTypeId] || "O'rtacha 200-500 turdagi mahsulot";
+};
+
+const getPriceHint = (storeTypeId: string): string => {
+  const hints: Record<string, string> = {
+    kiyim: "Odatda 250–350 ming so'm",
+    poyabzal: "Odatda 200–400 ming so'm",
+    kosmetika: "Odatda 70–120 ming so'm",
+    dorixona: "Odatda 40–80 ming so'm",
+    elektronika: "Odatda 500 ming–1.5 mln so'm",
+    "oziq-ovqat": "Odatda 15–40 ming so'm",
+    kantselyariya: "Odatda 30–70 ming so'm",
+  };
+  return hints[storeTypeId] || "Taxminiy o'rtacha narx";
+};
+
+const getUtmParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_term: params.get('utm_term') || '',
+    utm_content: params.get('utm_content') || ''
+  };
+};
+
+export const MagnetCalculator = () => {
+  const [step, setStep] = useState(1);
+  const [data, setData] = useState<Partial<CalculatorData>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [telegramUrl, setTelegramUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const totalSteps = 5;
+  const progress = (step / totalSteps) * 100;
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
+  // Remove focus from any active element when step changes
+  useEffect(() => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+  }, [step]);
+
+  const handleStoreTypeSelect = (type: string) => {
+    setData({ ...data, storeType: type });
+    setStep(2);
+  };
+
+  const handleNext = async () => {
+    if (step < totalSteps) {
+      setStep(step + 1);
+    } else {
+      setIsLoading(true);
+      setError(null);
+
+      // Track with Yandex Metrika
+      if ((window as any).ym) {
+        (window as any).ym(50093230, 'reachGoal', 'magnet_calculator_complete');
+      }
+
+      try {
+        const calcData = data as CalculatorData;
+        const losses = calculateLosses(calcData);
+        const utmParams = getUtmParams();
+
+        const webhookPayload = {
+          storetype: calcData.storeType,
+          sku: calcData.skuCount,
+          calculated_loss: losses.totalMonthly,
+          avgPrice: calcData.avgPrice,
+          theft: calcData.theftLevel,
+          out_of_stock: calcData.inventoryFrequency,
+          time: new Date().toISOString(),
+          ...utmParams
+        };
+
+        const response = await fetch('https://n8n-m.billz.work/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(webhookPayload),
+        });
+
+        if (!response.ok) {
+          throw new Error('Webhook request failed');
+        }
+
+        const result = await response.json();
+        
+        if (result.telegram_url) {
+          setTelegramUrl(result.telegram_url);
+        } else {
+          throw new Error('No telegram_url in response');
+        }
+      } catch (error) {
+        console.error('Failed to send data to webhook:', error);
+        setError('Xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const canProceed = () => {
+    switch (step) {
+      case 2:
+        return data.skuCount && data.skuCount > 0;
+      case 3:
+        return data.inventoryFrequency;
+      case 4:
+        return data.theftLevel;
+      case 5:
+        return data.avgPrice && data.avgPrice > 0;
+      default:
+        return false;
+    }
+  };
+
+  // Show Telegram redirect screen
+  if (telegramUrl) {
+    return (
+      <div className="w-full min-h-[80vh] flex flex-col items-center justify-center gap-8 py-12 px-4 animate-fade-in">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+            <svg 
+              className="w-12 h-12 text-primary" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+          </div>
+          
+          <div className="space-y-2">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+              Tahlil tayyor!
+            </h2>
+            <p className="text-muted-foreground">
+              Natijalaringizni ko'rish uchun Telegram botimizga o'ting
+            </p>
+          </div>
+
+          <Button
+            size="lg"
+            className="w-full text-lg h-14"
+            onClick={() => window.location.href = telegramUrl}
+          >
+            <svg 
+              className="w-5 h-5 mr-2" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
+            Telegram'da natijani ko'rish
+          </Button>
+
+          <p className="text-sm text-muted-foreground">
+            Botimiz sizga batafsil hisobot va tavsiyalar beradi
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-[500px] flex flex-col items-center justify-center gap-6 py-12 animate-fade-in">
+        <div className="text-center space-y-4">
+          <p className="text-3xl md:text-4xl font-bold text-foreground">Tahlil qilinmoqda</p>
+          <div className="flex items-center justify-center gap-1.5">
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+            <span className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-3xl mx-auto px-4 py-8">
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-muted-foreground">
+            {step} / {totalSteps}
+          </span>
+          <span className="text-sm font-medium text-muted-foreground">{Math.round(progress)}%</span>
+        </div>
+        <Progress value={progress} className="h-2" />
+      </div>
+
+      {error && (
+        <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+          <p className="text-destructive text-sm">{error}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2"
+            onClick={() => {
+              setError(null);
+              handleNext();
+            }}
+          >
+            Qaytadan urinish
+          </Button>
+        </div>
+      )}
+
+      <div className="space-y-8 animate-fade-in">
+        {/* Step 1: Store Type */}
+        {step === 1 && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Do'koningiz qaysi sohada?
+              </h2>
+              <p className="text-muted-foreground">Biznesingiz turini tanlang</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {storeTypes.map((type) => (
+                <Button
+                  key={type.id}
+                  variant="outline"
+                  className={cn(
+                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
+                    data.storeType === type.id && "border-primary bg-primary/5"
+                  )}
+                  onClick={() => handleStoreTypeSelect(type.id)}
+                >
+                  <span className="font-medium">{type.label}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: SKU Count */}
+        {step === 2 && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Nechta turdagi mahsulot sotasiz?
+              </h2>
+              <p className="text-muted-foreground">
+                {data.storeType && getStoreTypeHint(data.storeType)}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {skuRanges.map((range) => (
+                <Button
+                  key={range.id}
+                  variant="outline"
+                  className={cn(
+                    "h-auto py-6 text-center hover:border-primary hover:bg-primary/5 transition-all",
+                    data.skuCount === range.value && "border-primary bg-primary/5"
+                  )}
+                  onClick={() => {
+                    setData({ ...data, skuCount: range.value });
+                  }}
+                >
+                  <span className="font-medium">{range.label}</span>
+                </Button>
+              ))}
+            </div>
+
+            <div className="pt-6">
+              <Button
+                className="w-full h-12 text-lg"
+                onClick={handleNext}
+                disabled={!canProceed()}
+              >
+                Keyingi
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Inventory Frequency */}
+        {step === 3 && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Qancha vaqt oraliq bilan inventarizatsiya qilasiz?
+              </h2>
+              <p className="text-muted-foreground">Mahsulotlaringizni qanchalik tez-tez sanaysiz</p>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {frequencies.map((freq) => (
+                <Button
+                  key={freq.id}
+                  variant="outline"
+                  className={cn(
+                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
+                    data.inventoryFrequency === freq.id && "border-primary bg-primary/5"
+                  )}
+                  onClick={() => {
+                    setData({ ...data, inventoryFrequency: freq.id });
+                  }}
+                >
+                  <span className="font-medium">{freq.label}</span>
+                </Button>
+              ))}
+            </div>
+            <div className="pt-6">
+              <Button
+                className="w-full h-12 text-lg"
+                onClick={handleNext}
+                disabled={!canProceed()}
+              >
+                Keyingi
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 4: Theft Level */}
+        {step === 4 && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                Do'koningizda o'g'irlik yoki yo'qolish holatlari yuz beradimi?
+              </h2>
+              <p className="text-muted-foreground">Halol javob bering</p>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {theftLevels.map((level) => (
+                <Button
+                  key={level.id}
+                  variant="outline"
+                  className={cn(
+                    "h-auto py-4 justify-start text-left hover:border-primary hover:bg-primary/5 transition-all",
+                    data.theftLevel === level.id && "border-primary bg-primary/5"
+                  )}
+                  onClick={() => {
+                    setData({ ...data, theftLevel: level.id });
+                  }}
+                >
+                  <span className="font-medium">{level.label}</span>
+                </Button>
+              ))}
+            </div>
+            <div className="pt-6">
+              <Button
+                className="w-full h-12 text-lg"
+                onClick={handleNext}
+                disabled={!canProceed()}
+              >
+                Keyingi
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 5: Average Price */}
+        {step === 5 && (
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+                O'rtacha mahsulot narxi qancha?
+              </h2>
+              <p className="text-muted-foreground">
+                {data.storeType && getPriceHint(data.storeType)}
+              </p>
+            </div>
+            <div className="space-y-4">
+              <Input
+                type="number"
+                placeholder="Narxni kiriting (so'm)"
+                value={data.avgPrice || ""}
+                onChange={(e) => setData({ ...data, avgPrice: parseInt(e.target.value) || 0 })}
+                className="h-14 text-lg"
+              />
+            </div>
+            <div className="pt-6">
+              <Button
+                className="w-full h-12 text-lg"
+                onClick={handleNext}
+                disabled={!canProceed()}
+              >
+                Natijani ko'rish
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

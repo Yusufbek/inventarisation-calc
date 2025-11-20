@@ -6,6 +6,7 @@ import mainCalcImage from "@/assets/main-calc-icon.png";
 import liteCalcImage from "@/assets/lite-calc-icon.png";
 import formwallIcon from "@/assets/formwall-icon.png";
 import gamifiedIcon from "@/assets/gamified-icon.png";
+import magnetCalcIcon from "@/assets/magnet-calc-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -34,6 +35,12 @@ export const CalculatorHub = () => {
       title: "FormWall Calculator",
       image: formwallIcon,
       imageAlt: "FormWall Calculator icon"
+    },
+    {
+      variant: "magnet",
+      title: "Magnet Calculator",
+      image: magnetCalcIcon,
+      imageAlt: "Magnet Calculator icon"
     }
   ];
 
