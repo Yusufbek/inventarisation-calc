@@ -192,26 +192,68 @@ export const MagnetCalculator = () => {
   if (telegramUrl) {
     return (
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center gap-8 py-12 px-4 animate-fade-in">
-        <div className="text-center space-y-6 max-w-md">
-          <div className="w-24 h-24 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-            <svg className="w-12 h-12 text-primary" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
+        <div className="text-center space-y-8 max-w-lg">
+          {/* PDF Icon with pulse animation */}
+          <div className="relative mx-auto w-32 h-32">
+            <div className="absolute inset-0 bg-primary/20 rounded-3xl animate-pulse"></div>
+            <div className="relative w-full h-full bg-gradient-to-br from-primary to-primary/80 rounded-3xl flex items-center justify-center shadow-2xl">
+              <svg className="w-16 h-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Tahlil tayyor!</h2>
-            <p className="text-muted-foreground">Natijalaringizni ko'rish uchun Telegram botimizga o'ting</p>
+          {/* Main message */}
+          <div className="space-y-3">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Sizning shaxsiy hisobotingiz tayyor!</h2>
+            <p className="text-lg text-muted-foreground">PDF formatida batafsil tahlil tayyorlanmoqda</p>
           </div>
 
-          <Button size="lg" className="w-full text-lg h-14" onClick={() => (window.location.href = telegramUrl)}>
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
-            </svg>
-            Telegram'da natijani ko'rish
-          </Button>
+          {/* Value propositions */}
+          <div className="bg-secondary/50 rounded-2xl p-6 space-y-4 text-left">
+            <p className="font-semibold text-foreground text-center mb-4">Telegram botida sizni nima kutmoqda:</p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-foreground flex-1"><strong>Batafsil PDF hisobot</strong> moliyaviy yo'qotishlar tahlili bilan</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-foreground flex-1"><strong>Maxsus tavsiyalar</strong> biznesingiz uchun</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <p className="text-foreground flex-1"><strong>Mutaxassis bilan bevosita aloqa</strong> savollaringiz uchun</p>
+              </div>
+            </div>
+          </div>
 
-          <p className="text-sm text-muted-foreground">Botimiz sizga batafsil hisobot va tavsiyalar beradi</p>
+          {/* CTA Button */}
+          <div className="space-y-3">
+            <Button 
+              size="lg" 
+              className="w-full text-lg h-16 text-white shadow-xl hover:shadow-2xl transition-all hover:scale-[1.02] active:scale-[0.98]" 
+              onClick={() => (window.location.href = telegramUrl)}
+            >
+              <svg className="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
+              </svg>
+              Hisobotni olish
+            </Button>
+            <p className="text-sm text-muted-foreground">Bir necha soniyada Telegram botimizda tayyor bo'ladi</p>
+          </div>
         </div>
       </div>
     );
