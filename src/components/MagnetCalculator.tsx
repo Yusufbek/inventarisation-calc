@@ -145,13 +145,16 @@ export const MagnetCalculator = () => {
           time: losses.timeLoss,
         };
 
-        const response = await fetch("https://n8n-m.billz.work/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          "https://billzmarketing.app.n8n.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(webhookPayload),
           },
-          body: JSON.stringify(webhookPayload),
-        });
+        );
 
         if (!response.ok) {
           throw new Error("Webhook request failed");
@@ -201,19 +204,15 @@ export const MagnetCalculator = () => {
           </div>
 
           {/* Headline */}
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Hisobotingiz tayyor!
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">Hisobotingiz tayyor!</h2>
 
           {/* Simple Description */}
-          <p className="text-lg text-muted-foreground">
-            Telegram botda batafsil natijalar va tavsiyalar kutmoqda
-          </p>
+          <p className="text-lg text-muted-foreground">Telegram botda batafsil natijalar va tavsiyalar kutmoqda</p>
 
           {/* CTA Button */}
-          <Button 
-            size="lg" 
-            className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]" 
+          <Button
+            size="lg"
+            className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
             onClick={() => (window.location.href = telegramUrl)}
           >
             Telegram botga o'tish
