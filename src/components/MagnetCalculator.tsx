@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
+import { eventCustom, pageView } from "@/lib/fpixel";
 
 export interface CalculatorData {
   storeType: string;
@@ -113,6 +114,11 @@ export const MagnetCalculator = () => {
     }
   }, [step]);
 
+  // Track PageView when user arrives at Magnet Calculator
+  useEffect(() => {
+    pageView();
+  }, []);
+
   const handleStoreTypeSelect = (type: string) => {
     setData({ ...data, storeType: type });
     setStep(2);
@@ -213,7 +219,12 @@ export const MagnetCalculator = () => {
           <Button
             size="lg"
             className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
-            onClick={() => (window.location.href = telegramUrl)}
+            onClick={() => {
+              eventCustom("CalculatorFinished", {
+                content_name: "Inventory loss calculator magnet"
+              });
+              window.location.href = telegramUrl;
+            }}
           >
             Telegram botga o'tish
           </Button>
