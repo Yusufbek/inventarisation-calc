@@ -131,6 +131,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
   };
 
   const sendCalculatorToTelegram = async (calcData: CalculatorData) => {
+    console.log("🚀 Starting Telegram send...");
     try {
       const losses = calculateLosses(calcData);
       
@@ -151,7 +152,9 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
       
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
       
-      await fetch(url, {
+      console.log("📤 Sending to Telegram:", { chat_id: TELEGRAM_CHAT_ID, messageLength: message.length });
+      
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -159,8 +162,16 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
           text: message,
         }),
       });
+      
+      const responseData = await response.json();
+      
+      if (response.ok) {
+        console.log("✅ Telegram message sent successfully:", responseData);
+      } else {
+        console.error("❌ Telegram API error:", responseData);
+      }
     } catch (error) {
-      console.error("Failed to send calculator notification to Telegram:", error);
+      console.error("❌ Failed to send calculator notification to Telegram:", error);
     }
   };
 
