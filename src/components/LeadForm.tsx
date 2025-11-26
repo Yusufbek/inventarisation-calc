@@ -29,7 +29,7 @@ import { sha256 } from "js-sha256";
 // ⚠️ WARNING: Bot token in client-side code is INSECURE!
 // Anyone can view this token in browser DevTools and abuse your bot.
 // Replace with your actual token from @BotFather
-const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
 const TELEGRAM_CHAT_ID = "-1003046303969";
 
 interface LeadFormProps {

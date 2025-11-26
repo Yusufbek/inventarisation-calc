@@ -135,7 +135,7 @@ export const Calculator = ({ onComplete, variant = "main" }: CalculatorProps) =>
     try {
       const losses = calculateLosses(calcData);
       
-      const TELEGRAM_BOT_TOKEN = "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+      const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
       const TELEGRAM_CHAT_ID = "-1003046303969";
       
       const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
