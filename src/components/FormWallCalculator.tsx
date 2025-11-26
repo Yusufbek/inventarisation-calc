@@ -201,7 +201,7 @@ export const FormWallCalculator = ({
     try {
       const losses = calculateLosses(finalAnswers as CalculatorData);
       const TELEGRAM_BOT_TOKEN =
-        "8476842523:AAGdKVP478-q7WR8TJUj1jVocuLjnHYTUGg";
+        "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
       const TELEGRAM_CHAT_ID = "-1003046303969";
       const storeTypeLabel =
         storeTypes.find((t) => t.id === finalAnswers.storeType)?.label ||
