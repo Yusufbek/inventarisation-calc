@@ -98,9 +98,15 @@ export const MagnetCalculator = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
 
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
+
+  // Unsupported store types and Telegram credentials for trash notifications
+  const unsupportedStoreTypes = ["dorixona", "kafe"];
+  const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
+  const TELEGRAM_CHAT_ID = "-1003046303969";
 
   // Scroll to top on mount
   useEffect(() => {
@@ -131,13 +137,34 @@ export const MagnetCalculator = () => {
       setIsLoading(true);
       setError(null);
 
-      // Track with Yandex Metrika
-      if ((window as any).ym) {
-        (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
-      }
-
       try {
         const calcData = data as CalculatorData;
+
+        // Check if store type is unsupported (dorixona or kafe)
+        if (unsupportedStoreTypes.includes(calcData.storeType)) {
+          // Send "trash" notification to Telegram group
+          const storeTypeLabel = storeTypes.find(t => t.id === calcData.storeType)?.label || calcData.storeType;
+          const message = `🗑 Trash - Magnet Calculator\n\nDo'kon turi: ${storeTypeLabel}\nSKU: ${calcData.skuCount}\nO'rtacha narx: ${calcData.avgPrice?.toLocaleString("uz-UZ")} so'm\n\n❌ Faqat chakana savdo uchun`;
+          
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ 
+              chat_id: TELEGRAM_CHAT_ID, 
+              text: message 
+            })
+          });
+          
+          setIsUnsupportedStore(true);
+          setIsLoading(false);
+          return; // Exit early - don't send to n8n, don't track pixels
+        }
+
+        // Track with Yandex Metrika (only for supported stores)
+        if ((window as any).ym) {
+          (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
+        }
+
         const losses = calculateLosses(calcData);
         const utmParams = getUtmParams();
 
@@ -196,6 +223,35 @@ export const MagnetCalculator = () => {
         return false;
     }
   };
+
+  // Show unsupported store message
+  if (isUnsupportedStore) {
+    return (
+      <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+            <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            Afsuski, bu kalkulyator faqat chakana savdo do'konlari uchun
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Dorixona va Kafe/Restoran uchun hisoblash imkoni yo'q. Biz faqat retail do'konlar uchun yo'qotishlarni hisoblashimiz mumkin.
+          </p>
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full text-lg h-14"
+            onClick={() => window.location.href = "/"}
+          >
+            Bosh sahifaga qaytish
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   // Show Telegram redirect screen
   if (telegramUrl) {
