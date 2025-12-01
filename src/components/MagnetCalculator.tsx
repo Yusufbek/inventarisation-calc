@@ -240,14 +240,6 @@ export const MagnetCalculator = () => {
           <p className="text-lg text-muted-foreground">
             Dorixona va Kafe/Restoran uchun hisoblash imkoni yo'q. Biz faqat retail do'konlar uchun yo'qotishlarni hisoblashimiz mumkin.
           </p>
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full text-lg h-14"
-            onClick={() => window.location.href = "/"}
-          >
-            Bosh sahifaga qaytish
-          </Button>
         </div>
       </div>
     );
