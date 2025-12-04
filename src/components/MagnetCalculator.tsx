@@ -104,7 +104,7 @@ export const MagnetCalculator = () => {
   const progress = (step / totalSteps) * 100;
 
   // Unsupported store types and Telegram credentials for trash notifications
-  const unsupportedStoreTypes = ["dorixona", "kafe"];
+  const unsupportedStoreTypes = ["dorixona", "kafe", "ishlab-chiqarish"];
   const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
   const TELEGRAM_CHAT_ID = "-1003046303969";
 
