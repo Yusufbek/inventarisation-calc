@@ -10,7 +10,7 @@ import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { eventCustom } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -86,10 +86,13 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
   // Track CalculatorFinished when results are shown
   useEffect(() => {
     const eventId = crypto.randomUUID();
+    const browserId = getBrowserId();
+
     eventCustom(
       "CalculatorFinished",
       {
         content_name: "Inventory loss calculator lite",
+        external_id: browserId,
       },
       eventId
     );
@@ -97,6 +100,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
     sendCapiEvent({
       eventName: "CalculatorFinished",
       eventId: eventId,
+      externalId: browserId,
       customData: {
         content_name: "Inventory loss calculator lite",
       },

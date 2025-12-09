@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 export interface CalculatorData {
   storeType: string;
   skuCount: number;
@@ -396,10 +396,12 @@ export const MagnetCalculator = () => {
             className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
             onClick={() => {
               const eventId = crypto.randomUUID();
+              const browserId = getBrowserId();
               eventCustom(
                 "CalculatorFinished",
                 {
                   content_name: "Inventory loss calculator magnet",
+                  external_id: browserId,
                 },
                 eventId
               );
@@ -407,11 +409,13 @@ export const MagnetCalculator = () => {
               sendCapiEvent({
                 eventName: "CalculatorFinished",
                 eventId: eventId,
+                externalId: browserId,
                 customData: {
                   content_name: "Inventory loss calculator magnet",
                 },
+              }).then(() => {
+                window.location.href = telegramUrl;
               });
-              window.location.href = telegramUrl;
             }}
           >
             Telegram botga o'tish

@@ -1,3 +1,4 @@
+// No changes needed for fpixel.ts as it already accepts an options object which can contain external_id
 export const FB_PIXEL_ID = "1526114357923558";
 export const access_token =
   "EAAJNJJSYTDEBOzR9PeiZBHHvbe2Mtgujg8M4azC4Enr1h8wlh66ZBPrJvuHJfw8Dw8i28P8z2tIc4AAfX5p9uvZAjcKfXMN1J6b7arRqKoOIUFgqnq6Qj0ZCRbOZAV15TRd15miwBethPZCUVFdw2zULFniR2rAtL1Nsfu5ejR8CvNbg3ZAI178KfeLaPdwdAZDZD";

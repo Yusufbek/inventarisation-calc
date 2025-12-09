@@ -18,7 +18,7 @@ import {
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import jsPDF from "jspdf";
 import { eventCustom } from "@/lib/fpixel";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 interface ResultsProps {
   data: CalculatorData;
   onContactClick: () => void;
@@ -64,16 +64,19 @@ export const Results = ({ data, onContactClick }: ResultsProps) => {
   // Track CalculatorFinished when results are shown
   useEffect(() => {
     const eventId = crypto.randomUUID();
+    const browserId = getBrowserId();
     eventCustom(
       "CalculatorFinished",
       {
         content_name: "Inventory loss calculator",
+        external_id: browserId,
       },
       eventId
     );
     sendCapiEvent({
       eventName: "CalculatorFinished",
       eventId: eventId,
+      externalId: browserId,
       customData: {
         content_name: "Inventory loss calculator",
       },

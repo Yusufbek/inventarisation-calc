@@ -7,7 +7,7 @@ import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { Info, ChevronDown, ChevronUp } from "lucide-react";
 import { eventCustom, event } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -115,6 +115,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         // Track Lead event
         const eventId = crypto.randomUUID();
         const hashedPhone = sha256(data.phone);
+        const browserId = getBrowserId();
 
         // Track Lead event
         event(
@@ -123,6 +124,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
             content_name: "Inventory loss calculator formwall",
             name: data.name,
             ph: hashedPhone,
+            external_id: browserId,
           },
           eventId
         );
@@ -131,6 +133,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
           eventName: "Lead",
           eventId: eventId,
           phones: [hashedPhone],
+          externalId: browserId,
           customData: {
             content_name: "Inventory loss calculator formwall",
             name: data.name,
@@ -144,11 +147,13 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     sendToTelegram();
 
     const eventId = crypto.randomUUID();
+    const browserId = getBrowserId();
 
     eventCustom(
       "CalculatorFinished",
       {
         content_name: "Inventory loss calculator formwall",
+        external_id: browserId,
       },
       eventId
     );
@@ -156,6 +161,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     sendCapiEvent({
       eventName: "CalculatorFinished",
       eventId: eventId,
+      externalId: browserId,
       customData: {
         content_name: "Inventory loss calculator formwall",
       },
@@ -210,10 +216,12 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
       }
 
       // Track warm lead event
+      const browserId = getBrowserId();
       eventCustom("WarmLead", {
         content_name: "FormWall Calculator - Expert Request",
         name: data.name,
         ph: sha256(data.phone),
+        external_id: browserId,
       });
     } catch (error) {
       console.error("Failed to send warm lead to Telegram:", error);

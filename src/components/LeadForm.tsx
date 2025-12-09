@@ -24,7 +24,7 @@ import { CalculatorData } from "./Calculator";
 import { z } from "zod";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 import { sha256 } from "js-sha256";
 import { useNavigate } from "react-router-dom";
 
@@ -287,27 +287,29 @@ export const LeadForm = ({
 
         // Track Lead event
         const eventId = crypto.randomUUID();
-        const hashedPhone = sha256(phoneE164); // Hash the RAW E.164 phone, NOT masked
+        const hashedPhone = sha256(phoneE164);
+        const browserId = getBrowserId();
 
-        // Browser Pixel (Client-side)
+        // Track Lead event - passing external_id in options for Pixel
         eventCustom(
           "Lead",
           {
             content_name: "Inventory loss calculator",
+            name: formData.firstName,
             ph: hashedPhone,
-            name: `${formData.firstName} ${formData.lastName}`,
+            external_id: browserId,
           },
           eventId
-        ); // 3rd arg is eventID
+        );
 
-        // Conversion API (Server-side)
         sendCapiEvent({
           eventName: "Lead",
           eventId: eventId,
           phones: [hashedPhone],
+          externalId: browserId,
           customData: {
             content_name: "Inventory loss calculator",
-            name: `${formData.firstName} ${formData.lastName}`,
+            name: formData.firstName,
           },
         });
 

@@ -5,6 +5,7 @@ interface CapiEventData {
   eventId: string;
   emails?: string[];
   phones?: string[];
+  externalId?: string;
   clientIp?: string;
   userAgent?: string;
   fbp?: string;
@@ -19,9 +20,34 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
+// Helper: Get or create a persistent External ID (Browser ID)
+export const getBrowserId = (): string => {
+  const STORAGE_KEY = "billz_browser_id";
+  let browserId = localStorage.getItem(STORAGE_KEY);
+
+  if (!browserId) {
+    browserId = crypto.randomUUID();
+    localStorage.setItem(STORAGE_KEY, browserId);
+  }
+
+  return browserId;
+};
+
 export const sendCapiEvent = async (data: CapiEventData) => {
   const fbp = data.fbp || getCookie("_fbp");
   const fbc = data.fbc || getCookie("_fbc");
+
+  // Only include user_data fields if they exist
+  const userData: any = {
+    client_ip_address: data.clientIp, // Note: Browser-sent requests implicitly communicate IP, but explicit field helps
+    client_user_agent: data.userAgent || navigator.userAgent,
+    fbp: fbp,
+    fbc: fbc,
+  };
+
+  if (data.emails && data.emails.length > 0) userData.em = data.emails;
+  if (data.phones && data.phones.length > 0) userData.ph = data.phones;
+  if (data.externalId) userData.external_id = data.externalId;
 
   const payload = {
     data: [
@@ -30,14 +56,7 @@ export const sendCapiEvent = async (data: CapiEventData) => {
         event_time: Math.floor(Date.now() / 1000),
         action_source: "website",
         event_id: data.eventId,
-        user_data: {
-          em: data.emails,
-          ph: data.phones,
-          client_ip_address: data.clientIp,
-          client_user_agent: data.userAgent || navigator.userAgent,
-          fbp: fbp,
-          fbc: fbc,
-        },
+        user_data: userData,
         custom_data: data.customData,
       },
     ],

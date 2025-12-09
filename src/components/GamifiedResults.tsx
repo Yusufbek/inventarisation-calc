@@ -19,7 +19,7 @@ import {
   formatNumber,
 } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
-import { sendCapiEvent } from "@/lib/capi";
+import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 interface GamifiedResultsProps {
   data: CalculatorData;
   onContactClick: () => void;
@@ -91,10 +91,12 @@ export const GamifiedResults = ({
   useEffect(() => {
     // Track Lead event
     const eventId = crypto.randomUUID();
+    const browserId = getBrowserId();
     eventCustom(
       "CalculatorFinished",
       {
         content_name: "Inventory loss calculator gamified",
+        external_id: browserId,
       },
       eventId
     );
@@ -102,6 +104,7 @@ export const GamifiedResults = ({
     sendCapiEvent({
       eventName: "CalculatorFinished",
       eventId: eventId,
+      externalId: browserId,
       customData: {
         content_name: "Inventory loss calculator gamified",
       },
