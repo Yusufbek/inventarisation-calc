@@ -10,6 +10,7 @@ import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { eventCustom } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
+import { sendCapiEvent } from "@/lib/capi";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -84,8 +85,21 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
 
   // Track CalculatorFinished when results are shown
   useEffect(() => {
-    eventCustom("CalculatorFinished", {
-      content_name: "Inventory loss calculator lite",
+    const eventId = crypto.randomUUID();
+    eventCustom(
+      "CalculatorFinished",
+      {
+        content_name: "Inventory loss calculator lite",
+      },
+      eventId
+    );
+
+    sendCapiEvent({
+      eventName: "CalculatorFinished",
+      eventId: eventId,
+      customData: {
+        content_name: "Inventory loss calculator lite",
+      },
     });
   }, []);
 
@@ -155,10 +169,12 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
 
       const phoneDigits = phone.replace(/\D/g, "");
       const fullPhone = `+998${phoneDigits}`;
-      
+
       const storeTypeLabel = data.storeType;
 
-      const message = `⭐️ Yangi lead - Lite Calculator\nIsm: ${name}\nTelefon: ${fullPhone}\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      const message = `⭐️ Yangi lead - Lite Calculator\nIsm: ${name}\nTelefon: ${fullPhone}\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(
+        losses.totalMonthly
+      )} so'm`;
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -174,10 +190,28 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
       if (response.ok) {
         // Track Lead event
         console.log("Lead event tracked", fullPhone, name);
-        eventCustom("Lead", {
-          content_name: "Inventory loss calculator lite",
-          name,
-          ph: sha256(fullPhone),
+
+        // Track Lead event
+        const eventId = crypto.randomUUID();
+        const hashedPhone = sha256(fullPhone); // Hash the RAW E.164 phone, NOT masked
+        eventCustom(
+          "Lead",
+          {
+            content_name: "Inventory loss calculator lite",
+            name,
+            ph: hashedPhone,
+          },
+          eventId
+        );
+
+        sendCapiEvent({
+          eventName: "Lead",
+          eventId: eventId,
+          phones: [hashedPhone],
+          customData: {
+            content_name: "Inventory loss calculator lite",
+            name,
+          },
         });
 
         // Navigate to thank you page
@@ -375,7 +409,8 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                           <span className="font-semibold text-blue-600">
                             Ta'sir:
                           </span>{" "}
-                          Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va obro'.
+                          Mijoz boshqa do'konga ketadi — yo'qotilgan savdo va
+                          obro'.
                         </p>
                       </div>
                     )}
@@ -412,7 +447,10 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
       </section>
 
       {/* Solution Section - Single Viewport */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center">
+      <section
+        id="billz-solution"
+        className="bg-gradient-to-b from-background to-muted/30 px-4 py-6 min-h-screen flex items-center"
+      >
         <div className="max-w-3xl mx-auto w-full">
           {/* Green Solution Block */}
           <div className="relative rounded-3xl p-5 md:p-6 text-white overflow-hidden">
@@ -432,7 +470,9 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
               </p>
 
               <div className="text-center space-y-1 py-2">
-                <p className="text-base md:text-lg font-semibold">Taxminiy tejash:</p>
+                <p className="text-base md:text-lg font-semibold">
+                  Taxminiy tejash:
+                </p>
                 <div className="text-4xl md:text-5xl font-black transition-all duration-500">
                   +{formatNumber(animatedRecovered)} so'm / oy
                 </div>
@@ -447,9 +487,9 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 BILLZ siz izlayotgan yechim bo'lishi mumkin.
               </h3>
               <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-                Bizning chakana ekspertimiz siz bilan do'koningizni tahlil
-                qilib chiqadi va aynan siz uchun qanday yechimlar eng
-                foydali bo'lishini ko'rsatadi.
+                Bizning chakana ekspertimiz siz bilan do'koningizni tahlil qilib
+                chiqadi va aynan siz uchun qanday yechimlar eng foydali
+                bo'lishini ko'rsatadi.
               </p>
             </div>
 
@@ -506,9 +546,7 @@ export const LiteResults = ({ data, variant = "lite" }: LiteResultsProps) => {
                 disabled={isSubmitting || !name.trim() || !isPhoneValid()}
                 className="w-full h-12 md:h-14 text-lg md:text-xl rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all"
               >
-                {isSubmitting
-                  ? "Yuborilmoqda..."
-                  : "BILLZ bilan bog'lanish"}
+                {isSubmitting ? "Yuborilmoqda..." : "BILLZ bilan bog'lanish"}
               </Button>
             </form>
 

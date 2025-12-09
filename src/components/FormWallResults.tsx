@@ -7,6 +7,7 @@ import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { Info, ChevronDown, ChevronUp } from "lucide-react";
 import { eventCustom, event } from "@/lib/fpixel";
 import { sha256 } from "js-sha256";
+import { sendCapiEvent } from "@/lib/capi";
 
 const useCountUp = (end: number, duration: number = 2000) => {
   const [count, setCount] = useState(0);
@@ -78,12 +79,19 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
     // Send to Telegram
     const sendToTelegram = async () => {
       try {
-        const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
+        const TELEGRAM_BOT_TOKEN =
+          "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
         const TELEGRAM_CHAT_ID = "-1003046303969";
 
-        const message = `⭐️ Yangi lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+        const message = `⭐️ Yangi lead - FormWall Calculator\nIsm: ${
+          data.name
+        }\nTelefon: ${data.phone}\n-\nDo'kon turi: ${
+          data.storeType
+        }\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
-        console.log("Sending FormWall lead to Telegram...", { chatId: TELEGRAM_CHAT_ID });
+        console.log("Sending FormWall lead to Telegram...", {
+          chatId: TELEGRAM_CHAT_ID,
+        });
 
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -97,7 +105,7 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         });
 
         const result = await response.json();
-        
+
         if (!response.ok) {
           console.error("Telegram API error:", result);
         } else {
@@ -105,10 +113,28 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
         }
 
         // Track Lead event
-        event("Lead", {
-          content_name: "Inventory loss calculator formwall",
-          name: data.name,
-          ph: sha256(data.phone),
+        const eventId = crypto.randomUUID();
+        const hashedPhone = sha256(data.phone);
+
+        // Track Lead event
+        event(
+          "Lead",
+          {
+            content_name: "Inventory loss calculator formwall",
+            name: data.name,
+            ph: hashedPhone,
+          },
+          eventId
+        );
+
+        sendCapiEvent({
+          eventName: "Lead",
+          eventId: eventId,
+          phones: [hashedPhone],
+          customData: {
+            content_name: "Inventory loss calculator formwall",
+            name: data.name,
+          },
         });
       } catch (error) {
         console.error("Failed to send lead to Telegram:", error);
@@ -117,8 +143,22 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
     sendToTelegram();
 
-    eventCustom("CalculatorFinished", {
-      content_name: "Inventory loss calculator formwall",
+    const eventId = crypto.randomUUID();
+
+    eventCustom(
+      "CalculatorFinished",
+      {
+        content_name: "Inventory loss calculator formwall",
+      },
+      eventId
+    );
+
+    sendCapiEvent({
+      eventName: "CalculatorFinished",
+      eventId: eventId,
+      customData: {
+        content_name: "Inventory loss calculator formwall",
+      },
     });
   }, []);
 
@@ -131,12 +171,21 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
   const handleWarmLead = async () => {
     try {
-      const TELEGRAM_BOT_TOKEN = "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
+      const TELEGRAM_BOT_TOKEN =
+        "8476842523:AAGftuNlSSU-ppIsy9DpVQFPL3Nx3KW7bec";
       const TELEGRAM_CHAT_ID = "-1003046303969";
 
-      const message = `⭐️⭐️ Warm Lead - FormWall Calculator\nIsm: ${data.name}\nTelefon: ${data.phone}\n-\nMijoz mutaxassis bilan bog'lanishni so'radi\nDo'kon turi: ${data.storeType}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      const message = `⭐️⭐️ Warm Lead - FormWall Calculator\nIsm: ${
+        data.name
+      }\nTelefon: ${
+        data.phone
+      }\n-\nMijoz mutaxassis bilan bog'lanishni so'radi\nDo'kon turi: ${
+        data.storeType
+      }\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
 
-      console.log("Sending FormWall warm lead to Telegram...", { chatId: TELEGRAM_CHAT_ID });
+      console.log("Sending FormWall warm lead to Telegram...", {
+        chatId: TELEGRAM_CHAT_ID,
+      });
 
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -150,11 +199,14 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
       });
 
       const result = await response.json();
-      
+
       if (!response.ok) {
         console.error("Telegram API error (warm lead):", result);
       } else {
-        console.log("FormWall warm lead sent successfully to Telegram:", result);
+        console.log(
+          "FormWall warm lead sent successfully to Telegram:",
+          result
+        );
       }
 
       // Track warm lead event
@@ -176,19 +228,22 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
       id: "inventory",
       title: "Yo'qolgan mahsulotlar",
       amount: animatedInventory,
-      explanation: "Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar. Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.",
+      explanation:
+        "Inventarizatsiya qilishda amalda yo'q, lekin hisobda ko'rsatilgan mahsulotlar. Bu o'g'irlik, xato hisoblash yoki mahsulot buzilishi natijasida yuzaga keladi.",
     },
     {
       id: "time",
       title: "Xodimlar vaqti",
       amount: animatedTime,
-      explanation: "Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan shug'ullana olmaydilar.",
+      explanation:
+        "Xodimlarning inventarizatsiya qilish, qayta sanash va farqlarni tuzatish uchun sarflaydigan vaqti. Bu vaqtda ular sotish yoki boshqa muhim ishlar bilan shug'ullana olmaydilar.",
     },
     {
       id: "customer",
       title: "Out-of-stock (mijoz yo'qotilishi)",
       amount: animatedCustomer,
-      explanation: "Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.",
+      explanation:
+        "Mahsulot tugab qolganda yoki noto'g'ri hisoblanganda mijozlar kerakli mahsulotni topa olmaydilar va boshqa do'konga ketishadi. Bu yo'qotilgan savdo imkoniyatidir.",
     },
   ];
 
@@ -225,7 +280,9 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                 <div key={loss.id}>
                   <button
                     onClick={() =>
-                      setExpandedSection(expandedSection === loss.id ? null : loss.id)
+                      setExpandedSection(
+                        expandedSection === loss.id ? null : loss.id
+                      )
                     }
                     className="w-full px-3 md:px-6 py-4 hover:bg-secondary/50 transition-colors"
                   >
@@ -273,7 +330,9 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                     <div className="text-2xl md:text-4xl font-bold text-destructive whitespace-nowrap">
                       {formatNumber(animatedYearly)}
                     </div>
-                    <div className="text-xs md:text-sm text-destructive">so'm</div>
+                    <div className="text-xs md:text-sm text-destructive">
+                      so'm
+                    </div>
                   </div>
                 </div>
               </div>
@@ -283,7 +342,10 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
       </section>
 
       {/* Solution Section */}
-      <section id="billz-solution" className="bg-gradient-to-b from-background to-muted/30 px-4 pt-4 md:pt-6 pb-8">
+      <section
+        id="billz-solution"
+        className="bg-gradient-to-b from-background to-muted/30 px-4 pt-4 md:pt-6 pb-8"
+      >
         <div className="max-w-3xl mx-auto w-full">
           <div className="relative rounded-3xl p-5 md:p-6 text-white overflow-hidden text-center">
             <div className="absolute inset-0 bg-gradient-to-br from-success/90 to-emerald-500/90"></div>
@@ -291,11 +353,14 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
 
             <div className="relative z-10 space-y-3">
               <p className="text-lg md:text-xl font-bold">
-                BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish mumkin.
+                BILLZ bilan bu yo'qotishlarning 60% qismini bartaraf etish
+                mumkin.
               </p>
 
               <div className="space-y-1 py-2">
-                <p className="text-base md:text-lg font-semibold">Taxminiy tejash:</p>
+                <p className="text-base md:text-lg font-semibold">
+                  Taxminiy tejash:
+                </p>
                 <div className="text-4xl md:text-5xl font-black">
                   +{formatNumber(animatedRecovered)} so'm / oy
                 </div>
@@ -310,7 +375,8 @@ export const FormWallResults = ({ data, variant }: FormWallResultsProps) => {
                 Natijalaringizni muhokama qilaylik
               </h2>
               <p className="text-base md:text-lg text-muted-foreground">
-                Bizning mutaxassis siz bilan bog'lanib, inventarizatsiyani qanday yaxshilash mumkinligini tushuntiradi.
+                Bizning mutaxassis siz bilan bog'lanib, inventarizatsiyani
+                qanday yaxshilash mumkinligini tushuntiradi.
               </p>
             </div>
             <Button

@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CalculatorData } from "./Calculator";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
+import { sendCapiEvent } from "@/lib/capi";
 interface FormWallCalculatorProps {
   onComplete: (
     data: CalculatorData & {
@@ -223,8 +224,24 @@ export const FormWallCalculator = ({
           text: message,
         }),
       });
-      eventCustom("CalculatorFinished", {
-        content_name: "Inventory loss calculator formwall",
+
+      // Track Lead event
+      const eventId = crypto.randomUUID();
+
+      eventCustom(
+        "CalculatorFinished",
+        {
+          content_name: "Inventory loss calculator formwall",
+        },
+        eventId
+      );
+
+      sendCapiEvent({
+        eventName: "CalculatorFinished",
+        eventId: eventId,
+        customData: {
+          content_name: "Inventory loss calculator formwall",
+        },
       });
 
       const result = await response.json();

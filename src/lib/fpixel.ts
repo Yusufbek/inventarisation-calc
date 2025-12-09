@@ -6,13 +6,29 @@ export const pageView = () => {
   if (!!window?.fbq) window?.fbq("track", "PageView");
 };
 
+declare global {
+  interface Window {
+    fbq: (
+      type: string,
+      eventName: string,
+      params?: any,
+      options?: { eventID?: string }
+    ) => void;
+  }
+}
+
 // https://developers.facebook.com/docs/facebook-pixel/advanced/
-export const event = (name, options = {}) => {
-  if (!!window?.fbq) window?.fbq("track", name, options);
+// https://developers.facebook.com/docs/facebook-pixel/advanced/
+export const event = (name: string, options = {}, eventId?: string) => {
+  if (!!window?.fbq) {
+    const params = eventId ? { eventID: eventId } : {};
+    window?.fbq("track", name, options, params);
+  }
 };
 
-export const eventCustom = (name, options = {}) => {
+export const eventCustom = (name: string, options = {}, eventId?: string) => {
   if (!!window?.fbq) {
-    window?.fbq("trackCustom", name, options);
+    const params = eventId ? { eventID: eventId } : {};
+    window?.fbq("trackCustom", name, options, params);
   }
 };

@@ -24,7 +24,9 @@ import { CalculatorData } from "./Calculator";
 import { z } from "zod";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom } from "@/lib/fpixel";
+import { sendCapiEvent } from "@/lib/capi";
 import { sha256 } from "js-sha256";
+import { useNavigate } from "react-router-dom";
 
 // ⚠️ WARNING: Bot token in client-side code is INSECURE!
 // Anyone can view this token in browser DevTools and abuse your bot.
@@ -82,7 +84,11 @@ const BILLZ_WHATSAPP = `https://wa.me/998712009900?text=${encodeURIComponent(
   "Assalomu alaykum, BILLZ haqida ma'lumot olmoqchiman"
 )}`;
 
-export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) => {
+export const LeadForm = ({
+  onSuccess,
+  calculatorData,
+  variant,
+}: LeadFormProps) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -94,6 +100,7 @@ export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) 
   const [retryCount, setRetryCount] = useState(0);
   const [showFallback, setShowFallback] = useState(false);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Scroll to top when form is displayed
   useEffect(() => {
@@ -145,10 +152,17 @@ export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) 
     if (calculatorData) {
       const losses = calculateLosses(calculatorData);
       const storeTypeLabel = calculatorData.storeType;
-      lossesText = `\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(losses.totalMonthly)} so'm`;
+      lossesText = `\n-\nDo'kon turi: ${storeTypeLabel}\nOylik yo'qotish: ${formatNumber(
+        losses.totalMonthly
+      )} so'm`;
     }
 
-    const variantName = variant === "gamified" ? "Gamified" : variant === "lite" ? "Lite" : "Asosiy";
+    const variantName =
+      variant === "gamified"
+        ? "Gamified"
+        : variant === "lite"
+        ? "Lite"
+        : "Asosiy";
     const message = `⭐️ Yangi lead - ${variantName} Calculator\nIsm: ${data.firstName} ${data.lastName}\nTelefon: ${data.phoneNumber}\nSana: ${data.appointmentDate}\nVaqt: ${data.appointmentTime}${lossesText}`;
 
     try {
@@ -272,11 +286,29 @@ export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) 
         localStorage.removeItem("billz_form_backup");
 
         // Track Lead event
+        const eventId = crypto.randomUUID();
+        const hashedPhone = sha256(phoneE164); // Hash the RAW E.164 phone, NOT masked
 
-        eventCustom("Lead", {
-          content_name: "Inventory loss calculator",
-          ph: sha256(maskPhone(phoneE164)),
-          name: `${formData.firstName} ${formData.lastName}`,
+        // Browser Pixel (Client-side)
+        eventCustom(
+          "Lead",
+          {
+            content_name: "Inventory loss calculator",
+            ph: hashedPhone,
+            name: `${formData.firstName} ${formData.lastName}`,
+          },
+          eventId
+        ); // 3rd arg is eventID
+
+        // Conversion API (Server-side)
+        sendCapiEvent({
+          eventName: "Lead",
+          eventId: eventId,
+          phones: [hashedPhone],
+          customData: {
+            content_name: "Inventory loss calculator",
+            name: `${formData.firstName} ${formData.lastName}`,
+          },
         });
 
         toast({
@@ -286,7 +318,9 @@ export const LeadForm = ({ onSuccess, calculatorData, variant }: LeadFormProps) 
 
         setIsSubmitting(false);
         setRetryCount(0);
-        onSuccess?.();
+        // onSuccess?.();
+        // return;
+        navigate(`/thank-you/inventarisation-calc/${variant}`);
         return;
       }
 

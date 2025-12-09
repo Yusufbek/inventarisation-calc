@@ -14,17 +14,19 @@ type Screen = "hero" | "calculator" | "results" | "lead-form";
 
 const InventarisationCalc = () => {
   const { variant } = useParams<{ variant: string }>();
-  
+
   // Validate variant first
   if (!variant || !["main", "lite", "gamified", "magnet"].includes(variant)) {
     return <Navigate to="/404" replace />;
   }
-  
+
   // Lite and gamified start directly with calculator, main and magnet start with hero
   const [currentScreen, setCurrentScreen] = useState<Screen>(
     variant === "lite" || variant === "gamified" ? "calculator" : "hero"
   );
-  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(null);
+  const [calculatorData, setCalculatorData] = useState<CalculatorData | null>(
+    null
+  );
 
   // Track PageView on mount
   useEffect(() => {
@@ -48,7 +50,7 @@ const InventarisationCalc = () => {
   };
 
   const handleLeadSuccess = () => {
-    window.location.href = `/thank-you/inventarisation-calc/${variant}`;
+    // window.location.href = `/thank-you/inventarisation-calc/${variant}`;
   };
 
   return (
@@ -60,11 +62,17 @@ const InventarisationCalc = () => {
       {currentScreen === "calculator" && (
         <section className="w-full bg-background py-12 min-h-screen">
           {variant === "main" || variant === "gamified" ? (
-            <Calculator onComplete={handleCalculatorComplete} variant={variant} />
+            <Calculator
+              onComplete={handleCalculatorComplete}
+              variant={variant}
+            />
           ) : variant === "magnet" ? (
             <MagnetCalculator />
           ) : (
-            <LiteCalculator onComplete={handleCalculatorComplete} variant={variant} />
+            <LiteCalculator
+              onComplete={handleCalculatorComplete}
+              variant={variant}
+            />
           )}
         </section>
       )}
@@ -72,22 +80,29 @@ const InventarisationCalc = () => {
       {currentScreen === "results" && calculatorData && (
         <div className="min-h-screen">
           {variant === "main" ? (
-            <Results data={calculatorData} onContactClick={handleContactClick} />
+            <Results
+              data={calculatorData}
+              onContactClick={handleContactClick}
+            />
           ) : variant === "gamified" ? (
-            <GamifiedResults data={calculatorData} onContactClick={handleContactClick} />
+            <GamifiedResults
+              data={calculatorData}
+              onContactClick={handleContactClick}
+            />
           ) : (
             <LiteResults data={calculatorData} variant={variant} />
           )}
         </div>
       )}
 
-      {currentScreen === "lead-form" && (variant === "main" || variant === "gamified") && (
-        <LeadForm
-          calculatorData={calculatorData}
-          variant={variant}
-          onSuccess={handleLeadSuccess}
-        />
-      )}
+      {currentScreen === "lead-form" &&
+        (variant === "main" || variant === "gamified") && (
+          <LeadForm
+            calculatorData={calculatorData}
+            variant={variant}
+            onSuccess={handleLeadSuccess}
+          />
+        )}
     </div>
   );
 };
