@@ -244,27 +244,20 @@ export const MagnetCalculator = () => {
         // Check if store type is unsupported (dorixona or kafe)
         if (unsupportedStoreTypes.includes(calcData.storeType)) {
           // Send "trash" notification to Telegram group
-          const storeTypeLabel =
-            storeTypes.find((t) => t.id === calcData.storeType)?.label ||
-            calcData.storeType;
+          const storeTypeLabel = storeTypes.find((t) => t.id === calcData.storeType)?.label || calcData.storeType;
           const message = `🗑 Trash - Magnet Calculator\n\nDo'kon turi: ${storeTypeLabel}\nSKU: ${
             calcData.skuCount
-          }\nO'rtacha narx: ${calcData.avgPrice?.toLocaleString(
-            "uz-UZ"
-          )} so'm\n\n❌ Faqat chakana savdo uchun`;
-          await fetch(
-            `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                chat_id: TELEGRAM_CHAT_ID,
-                text: message,
-              }),
-            }
-          );
+          }\nO'rtacha narx: ${calcData.avgPrice?.toLocaleString("uz-UZ")} so'm\n\n❌ Faqat chakana savdo uchun`;
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              chat_id: TELEGRAM_CHAT_ID,
+              text: message,
+            }),
+          });
           setIsUnsupportedStore(true);
           setIsLoading(false);
           return; // Exit early - don't send to n8n, don't track pixels
@@ -272,11 +265,7 @@ export const MagnetCalculator = () => {
 
         // Track with Yandex Metrika (only for supported stores)
         if ((window as any).ym) {
-          (window as any).ym(
-            50093230,
-            "reachGoal",
-            "magnet_calculator_complete"
-          );
+          (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
         }
         const losses = calculateLosses(calcData);
         const utmParams = getUtmParams();
@@ -290,14 +279,14 @@ export const MagnetCalculator = () => {
           time: losses.timeLoss,
         };
         const response = await fetch(
-          "https://billzmarketing.app.n8n.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
+          "https://n8n.srv1192199.hstgr.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify(webhookPayload),
-          }
+          },
         );
         if (!response.ok) {
           throw new Error("Webhook request failed");
@@ -337,27 +326,16 @@ export const MagnetCalculator = () => {
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
         <div className="text-center space-y-6 max-w-md">
           <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center">
-            <svg
-              className="w-10 h-10 text-muted-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">
             Afsuski, bu kalkulyator faqat chakana savdo do'konlari uchun
           </h2>
           <p className="text-lg text-muted-foreground">
-            Dorixona, Kafe/Restoran, Ishlab-chiqarish uchun hisoblash imkoni
-            yo'q. Biz faqat retail do'konlar uchun yo'qotishlarni hisoblashimiz
-            mumkin.
+            Dorixona, Kafe/Restoran, Ishlab-chiqarish uchun hisoblash imkoni yo'q. Biz faqat retail do'konlar uchun
+            yo'qotishlarni hisoblashimiz mumkin.
           </p>
         </div>
       </div>
@@ -371,24 +349,16 @@ export const MagnetCalculator = () => {
         <div className="text-center space-y-6 max-w-md">
           {/* Simple Telegram Icon */}
           <div className="mx-auto w-20 h-20 bg-[#0088cc] rounded-full flex items-center justify-center shadow-lg">
-            <svg
-              className="w-12 h-12 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z" />
             </svg>
           </div>
 
           {/* Headline */}
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Hisobotingiz tayyor!
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">Hisobotingiz tayyor!</h2>
 
           {/* Simple Description */}
-          <p className="text-lg text-muted-foreground">
-            Telegram botda batafsil natijalar va tavsiyalar kutmoqda
-          </p>
+          <p className="text-lg text-muted-foreground">Telegram botda batafsil natijalar va tavsiyalar kutmoqda</p>
 
           {/* CTA Button */}
           <Button
@@ -403,7 +373,7 @@ export const MagnetCalculator = () => {
                   content_name: "Inventory loss calculator magnet",
                   external_id: browserId,
                 },
-                eventId
+                eventId,
               );
 
               sendCapiEvent({
@@ -430,9 +400,7 @@ export const MagnetCalculator = () => {
     return (
       <div className="w-full min-h-[500px] flex flex-col items-center justify-center gap-6 py-12 animate-fade-in">
         <div className="text-center space-y-4">
-          <p className="text-3xl md:text-4xl font-bold text-foreground">
-            Tahlil qilinmoqda
-          </p>
+          <p className="text-3xl md:text-4xl font-bold text-foreground">Tahlil qilinmoqda</p>
           <div className="flex items-center justify-center gap-1.5">
             <span
               className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce"
@@ -488,9 +456,7 @@ export const MagnetCalculator = () => {
       <div className="animate-fade-in">
         {step === 1 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Do'koningiz qaysi turga kiradi?
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz qaysi turga kiradi?</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {storeTypes.map((type) => (
                 <button
@@ -505,9 +471,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium focus:outline-none",
-                    data.storeType === type.id
-                      ? "border-primary bg-secondary"
-                      : "border-border"
+                    data.storeType === type.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {type.label}
@@ -519,12 +483,8 @@ export const MagnetCalculator = () => {
 
         {step === 2 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Do'koningizda nechta mahsulot sotiladi?
-            </h2>
-            <p className="text-muted-foreground">
-              {data.storeType && getStoreTypeHint(data.storeType)}
-            </p>
+            <h2 className="text-2xl md:text-3xl font-bold">Do'koningizda nechta mahsulot sotiladi?</h2>
+            <p className="text-muted-foreground">{data.storeType && getStoreTypeHint(data.storeType)}</p>
             <div className="grid gap-3">
               {skuRanges.map((range) => (
                 <button
@@ -543,9 +503,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.skuCount === range.value
-                      ? "border-primary bg-secondary"
-                      : "border-border"
+                    data.skuCount === range.value ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {range.label}
@@ -557,9 +515,7 @@ export const MagnetCalculator = () => {
 
         {step === 3 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Inventarizatsiyani necha marta o'tkazasiz?
-            </h2>
+            <h2 className="text-2xl md:text-3xl font-bold">Inventarizatsiyani necha marta o'tkazasiz?</h2>
             <div className="grid gap-3">
               {frequencies.map((freq) => (
                 <button
@@ -578,9 +534,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.inventoryFrequency === freq.id
-                      ? "border-primary bg-secondary"
-                      : "border-border"
+                    data.inventoryFrequency === freq.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {freq.label}
@@ -593,8 +547,7 @@ export const MagnetCalculator = () => {
         {step === 4 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
-              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi
-              bo'lganmi?
+              So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi bo'lganmi?
             </h2>
             <div className="grid gap-3">
               {theftLevels.map((level) => (
@@ -614,9 +567,7 @@ export const MagnetCalculator = () => {
                   className={cn(
                     "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
                     "font-medium text-lg focus:outline-none",
-                    data.theftLevel === level.id
-                      ? "border-primary bg-secondary"
-                      : "border-border"
+                    data.theftLevel === level.id ? "border-primary bg-secondary" : "border-border",
                   )}
                 >
                   {level.label}
@@ -631,17 +582,11 @@ export const MagnetCalculator = () => {
             <h2 className="text-2xl md:text-3xl font-bold">
               Siz sotadigan mahsulotlarning o'rtacha narxi qancha (so'm)?
             </h2>
-            <p className="text-muted-foreground">
-              {data.storeType && getPriceHint(data.storeType)}
-            </p>
+            <p className="text-muted-foreground">{data.storeType && getPriceHint(data.storeType)}</p>
             <Input
               type="text"
               placeholder="Masalan: 250 000"
-              value={
-                data.avgPrice && data.avgPrice > 0
-                  ? data.avgPrice.toLocaleString("uz-UZ").replace(/,/g, " ")
-                  : ""
-              }
+              value={data.avgPrice && data.avgPrice > 0 ? data.avgPrice.toLocaleString("uz-UZ").replace(/,/g, " ") : ""}
               onChange={(e) => {
                 const value = e.target.value.replace(/\s/g, "");
                 const numValue = parseInt(value) || 0;
@@ -653,11 +598,7 @@ export const MagnetCalculator = () => {
               className="h-14 text-lg rounded-2xl"
               autoFocus
             />
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed()}
-              className="w-full h-14 text-lg rounded-2xl"
-            >
+            <Button onClick={handleNext} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
               Natijani ko'rish
             </Button>
           </div>
