@@ -9,7 +9,7 @@ export const pageView = () => {
 
 declare global {
   interface Window {
-    fbq: (
+    fbq?: (
       type: string,
       eventName: string,
       params?: any,
