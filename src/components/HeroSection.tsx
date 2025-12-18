@@ -1,20 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { BillzLogo } from "@/components/BillzLogo";
 import heroImage from "@/assets/hero-inventory.webp";
-import { trackCalcEvent } from "@/lib/calcAnalytics";
 
 interface HeroSectionProps {
   onStartCalculator: () => void;
-  variant?: string;
 }
 
-export const HeroSection = ({ onStartCalculator, variant }: HeroSectionProps) => {
-  const handleStartClick = () => {
-    if (variant === "magnet") {
-      trackCalcEvent("CALC_Start");
-    }
-    onStartCalculator();
-  };
+export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
   return (
     <section className="w-full bg-secondary py-12 px-4 md:py-20 pb-24 md:pb-32">
       <div className="max-w-6xl mx-auto">
@@ -45,7 +37,7 @@ export const HeroSection = ({ onStartCalculator, variant }: HeroSectionProps) =>
         <div className="max-w-3xl mx-auto">
           <Button 
             size="lg"
-            onClick={handleStartClick}
+            onClick={onStartCalculator}
             className="w-full h-14 text-lg rounded-2xl"
           >
             Hisoblashni boshlash

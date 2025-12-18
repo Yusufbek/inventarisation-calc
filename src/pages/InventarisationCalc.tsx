@@ -56,7 +56,7 @@ const InventarisationCalc = () => {
   return (
     <div className="min-h-screen bg-background">
       {currentScreen === "hero" && (
-        <HeroSection onStartCalculator={handleStartCalculator} variant={variant} />
+        <HeroSection onStartCalculator={handleStartCalculator} />
       )}
 
       {currentScreen === "calculator" && (
