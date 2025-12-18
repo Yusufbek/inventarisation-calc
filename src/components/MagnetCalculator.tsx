@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
+import { trackCalcEvent } from "@/lib/calcAnalytics";
 export interface CalculatorData {
   storeType: string;
   skuCount: number;
@@ -226,6 +227,8 @@ export const MagnetCalculator = () => {
     pageView();
   }, []);
   const handleStoreTypeSelect = (type: string) => {
+    const storeTypeLabel = storeTypes.find((t) => t.id === type)?.label || type;
+    trackCalcEvent("CALC_1qstn", { storeType: type, storeTypeLabel });
     setData({
       ...data,
       storeType: type,
@@ -365,6 +368,7 @@ export const MagnetCalculator = () => {
             size="lg"
             className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
             onClick={() => {
+              trackCalcEvent("CALC_finish");
               const eventId = crypto.randomUUID();
               const browserId = getBrowserId();
               eventCustom(
@@ -491,6 +495,7 @@ export const MagnetCalculator = () => {
                   key={range.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    trackCalcEvent("CALC_2qstn", { skuCount: range.value, skuLabel: range.label });
                     setData({
                       ...data,
                       skuCount: range.value,
@@ -522,6 +527,7 @@ export const MagnetCalculator = () => {
                   key={freq.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    trackCalcEvent("CALC_3qstn", { inventoryFrequency: freq.id, frequencyLabel: freq.label });
                     setData({
                       ...data,
                       inventoryFrequency: freq.id,
@@ -555,6 +561,7 @@ export const MagnetCalculator = () => {
                   key={level.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    trackCalcEvent("CALC_4qstn", { theftLevel: level.id, theftLabel: level.label });
                     setData({
                       ...data,
                       theftLevel: level.id,
@@ -598,7 +605,20 @@ export const MagnetCalculator = () => {
               className="h-14 text-lg rounded-2xl"
               autoFocus
             />
-            <Button onClick={handleNext} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
+            <Button 
+              onClick={() => {
+                trackCalcEvent("CALC_qstnsfinish", {
+                  storeType: data.storeType,
+                  skuCount: data.skuCount,
+                  inventoryFrequency: data.inventoryFrequency,
+                  theftLevel: data.theftLevel,
+                  avgPrice: data.avgPrice,
+                });
+                handleNext();
+              }} 
+              disabled={!canProceed()} 
+              className="w-full h-14 text-lg rounded-2xl"
+            >
               Natijani ko'rish
             </Button>
           </div>
