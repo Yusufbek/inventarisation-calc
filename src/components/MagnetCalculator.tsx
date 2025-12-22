@@ -6,13 +6,16 @@ import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
+
 export interface CalculatorData {
   storeType: string;
   skuCount: number;
   inventoryFrequency: string;
   theftLevel: string;
   avgPrice: number;
+  revenue?: number;
 }
+
 const storeTypes = [
   {
     id: "kiyim",
@@ -85,6 +88,7 @@ const storeTypes = [
     avgPrice: 150000,
   },
 ];
+
 const frequencies = [
   {
     id: "hafta",
@@ -107,6 +111,7 @@ const frequencies = [
     label: "Bilmayman",
   },
 ];
+
 const theftLevels = [
   {
     id: "tez-tez",
@@ -125,6 +130,7 @@ const theftLevels = [
     label: "Yo'q",
   },
 ];
+
 const skuRanges = [
   {
     id: "0-100",
@@ -157,6 +163,15 @@ const skuRanges = [
     value: 7000,
   },
 ];
+
+const revenueRanges = [
+  { id: "0-50", label: "< 50 mln so'm", value: 25000000 },
+  { id: "50-100", label: "50–100 mln so'm", value: 75000000 },
+  { id: "100-200", label: "100–200 mln so'm", value: 150000000 },
+  { id: "200-500", label: "200–500 mln so'm", value: 350000000 },
+  { id: "500+", label: "500 mln+ so'm", value: 750000000 },
+];
+
 const getStoreTypeHint = (storeTypeId: string): string => {
   const hints: Record<string, string> = {
     kiyim: "Odatda 200-500 turdagi mahsulot",
@@ -169,6 +184,7 @@ const getStoreTypeHint = (storeTypeId: string): string => {
   };
   return hints[storeTypeId] || "O'rtacha 200-500 turdagi mahsulot";
 };
+
 const getPriceHint = (storeTypeId: string): string => {
   const hints: Record<string, string> = {
     kiyim: "Odatda 250–350 ming so'm",
@@ -181,6 +197,7 @@ const getPriceHint = (storeTypeId: string): string => {
   };
   return hints[storeTypeId] || "Taxminiy o'rtacha narx";
 };
+
 const getUtmParams = () => {
   const params = new URLSearchParams(window.location.search);
   return {
@@ -191,6 +208,7 @@ const getUtmParams = () => {
     utm_content: params.get("utm_content") || "",
   };
 };
+
 export const MagnetCalculator = () => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<CalculatorData>>({});
@@ -198,7 +216,9 @@ export const MagnetCalculator = () => {
   const [telegramUrl, setTelegramUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
-  const totalSteps = 5;
+  const [hasNoStore, setHasNoStore] = useState(false);
+  
+  const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
 
   // Unsupported store types and Telegram credentials for trash notifications
@@ -225,100 +245,143 @@ export const MagnetCalculator = () => {
   useEffect(() => {
     pageView();
   }, []);
+
+  const handleHasStoreSelect = (hasStore: boolean) => {
+    if (hasStore) {
+      setStep(2);
+    } else {
+      setHasNoStore(true);
+    }
+  };
+
   const handleStoreTypeSelect = (type: string) => {
     setData({
       ...data,
       storeType: type,
     });
-    setStep(2);
+    setStep(3);
   };
+
   const handleNext = async () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const calcData = data as CalculatorData;
-
-        // Check if store type is unsupported (dorixona or kafe)
-        if (unsupportedStoreTypes.includes(calcData.storeType)) {
-          // Send "trash" notification to Telegram group
-          const storeTypeLabel = storeTypes.find((t) => t.id === calcData.storeType)?.label || calcData.storeType;
-          const message = `🗑 Trash - Magnet Calculator\n\nDo'kon turi: ${storeTypeLabel}\nSKU: ${
-            calcData.skuCount
-          }\nO'rtacha narx: ${calcData.avgPrice?.toLocaleString("uz-UZ")} so'm\n\n❌ Faqat chakana savdo uchun`;
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              chat_id: TELEGRAM_CHAT_ID,
-              text: message,
-            }),
-          });
-          setIsUnsupportedStore(true);
-          setIsLoading(false);
-          return; // Exit early - don't send to n8n, don't track pixels
-        }
-
-        // Track with Yandex Metrika (only for supported stores)
-        if ((window as any).ym) {
-          (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
-        }
-        const losses = calculateLosses(calcData);
-        const utmParams = getUtmParams();
-        const webhookPayload = {
-          storeType: calcData.storeType,
-          sku: calcData.skuCount,
-          calculatedLoss: losses.totalMonthly,
-          avgPrice: calcData.avgPrice,
-          theft: losses.inventoryLoss,
-          outOfStock: losses.customerLoss,
-          time: losses.timeLoss,
-        };
-        const response = await fetch(
-          "https://n8n.srv1192199.hstgr.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(webhookPayload),
-          },
-        );
-        if (!response.ok) {
-          throw new Error("Webhook request failed");
-        }
-        const result = await response.json();
-        if (result.telegram_url) {
-          setTelegramUrl(result.telegram_url);
-        } else {
-          throw new Error("No telegram_url in response");
-        }
-      } catch (error) {
-        console.error("Failed to send data to webhook:", error);
-        setError("Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.");
-      } finally {
-        setIsLoading(false);
-      }
+      await submitCalculator();
     }
   };
+
+  const handleSkipRevenue = async () => {
+    await submitCalculator();
+  };
+
+  const submitCalculator = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const calcData = data as CalculatorData;
+
+      // Check if store type is unsupported (dorixona or kafe)
+      if (unsupportedStoreTypes.includes(calcData.storeType)) {
+        // Send "trash" notification to Telegram group
+        const storeTypeLabel = storeTypes.find((t) => t.id === calcData.storeType)?.label || calcData.storeType;
+        const message = `🗑 Trash - Magnet Calculator\n\nDo'kon turi: ${storeTypeLabel}\nSKU: ${
+          calcData.skuCount
+        }\nO'rtacha narx: ${calcData.avgPrice?.toLocaleString("uz-UZ")} so'm\n\n❌ Faqat chakana savdo uchun`;
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+          }),
+        });
+        setIsUnsupportedStore(true);
+        setIsLoading(false);
+        return; // Exit early - don't send to n8n, don't track pixels
+      }
+
+      // Track with Yandex Metrika (only for supported stores)
+      if ((window as any).ym) {
+        (window as any).ym(50093230, "reachGoal", "magnet_calculator_complete");
+      }
+      const losses = calculateLosses(calcData);
+      const utmParams = getUtmParams();
+      const webhookPayload = {
+        storeType: calcData.storeType,
+        sku: calcData.skuCount,
+        calculatedLoss: losses.totalMonthly,
+        avgPrice: calcData.avgPrice,
+        theft: losses.inventoryLoss,
+        outOfStock: losses.customerLoss,
+        time: losses.timeLoss,
+        revenue: calcData.revenue,
+      };
+      const response = await fetch(
+        "https://n8n.srv1192199.hstgr.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(webhookPayload),
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Webhook request failed");
+      }
+      const result = await response.json();
+      if (result.telegram_url) {
+        setTelegramUrl(result.telegram_url);
+      } else {
+        throw new Error("No telegram_url in response");
+      }
+    } catch (error) {
+      console.error("Failed to send data to webhook:", error);
+      setError("Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const canProceed = () => {
     switch (step) {
-      case 2:
-        return data.skuCount && data.skuCount > 0;
       case 3:
-        return data.inventoryFrequency;
+        return data.skuCount && data.skuCount > 0;
       case 4:
-        return data.theftLevel;
+        return data.inventoryFrequency;
       case 5:
+        return data.theftLevel;
+      case 6:
         return data.avgPrice && data.avgPrice > 0;
+      case 7:
+        return data.revenue && data.revenue > 0;
       default:
         return false;
     }
   };
+
+  // Show "no store" message
+  if (hasNoStore) {
+    return (
+      <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
+        <div className="text-center space-y-6 max-w-md">
+          <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center">
+            <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            Bu kalkulyator faqat do'kon egalari uchun
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Kafe, ishlab chiqarish va boshqa biznes turlari uchun hisoblash imkoni yo'q. Do'koningiz bo'lsa, qaytadan urinib ko'ring.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Show unsupported store message
   if (isUnsupportedStore) {
@@ -425,6 +488,7 @@ export const MagnetCalculator = () => {
       </div>
     );
   }
+
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
       <div className="mb-8">
@@ -445,7 +509,7 @@ export const MagnetCalculator = () => {
             className="mt-2"
             onClick={() => {
               setError(null);
-              handleNext();
+              submitCalculator();
             }}
           >
             Qaytadan urinish
@@ -454,7 +518,41 @@ export const MagnetCalculator = () => {
       )}
 
       <div className="animate-fade-in">
+        {/* Step 1: Do you have a store? */}
         {step === 1 && (
+          <div className="space-y-6">
+            <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz bormi?</h2>
+            <div className="grid gap-3">
+              <button
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleHasStoreSelect(true);
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.blur();
+                }}
+                className="p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98] font-medium text-lg focus:outline-none border-border"
+              >
+                Ha, do'konim bor
+              </button>
+              <button
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleHasStoreSelect(false);
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.blur();
+                }}
+                className="p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98] font-medium text-lg focus:outline-none border-border"
+              >
+                Yo'q, do'konim yo'q
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Store type */}
+        {step === 2 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz qaysi turga kiradi?</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -481,7 +579,8 @@ export const MagnetCalculator = () => {
           </div>
         )}
 
-        {step === 2 && (
+        {/* Step 3: SKU count */}
+        {step === 3 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningizda nechta mahsulot sotiladi?</h2>
             <p className="text-muted-foreground">{data.storeType && getStoreTypeHint(data.storeType)}</p>
@@ -513,7 +612,8 @@ export const MagnetCalculator = () => {
           </div>
         )}
 
-        {step === 3 && (
+        {/* Step 4: Inventory frequency */}
+        {step === 4 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">Inventarizatsiyani necha marta o'tkazasiz?</h2>
             <div className="grid gap-3">
@@ -544,7 +644,8 @@ export const MagnetCalculator = () => {
           </div>
         )}
 
-        {step === 4 && (
+        {/* Step 5: Theft level */}
+        {step === 5 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
               So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi bo'lganmi?
@@ -577,7 +678,8 @@ export const MagnetCalculator = () => {
           </div>
         )}
 
-        {step === 5 && (
+        {/* Step 6: Average price */}
+        {step === 6 && (
           <div className="space-y-6">
             <h2 className="text-2xl md:text-3xl font-bold">
               Siz sotadigan mahsulotlarning o'rtacha narxi qancha (so'm)?
@@ -599,8 +701,64 @@ export const MagnetCalculator = () => {
               autoFocus
             />
             <Button onClick={handleNext} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
-              Natijani ko'rish
+              Keyingi savol
             </Button>
+          </div>
+        )}
+
+        {/* Step 7: Revenue (Optional) */}
+        {step === 7 && (
+          <div className="space-y-6 pb-28">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
+              </h2>
+              <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
+                <span className="text-lg">💡</span>
+                <span>Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.</span>
+              </p>
+            </div>
+            <div className="grid gap-3">
+              {revenueRanges.map((range) => (
+                <button
+                  key={range.id}
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    setData({ ...data, revenue: range.value });
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.revenue === range.value ? "border-primary bg-secondary" : "border-border",
+                  )}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Sticky footer CTA */}
+            <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
+              <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+                <Button
+                  onClick={handleNext}
+                  disabled={!data.revenue}
+                  className="flex-1 h-12 text-base md:text-lg rounded-xl"
+                >
+                  Natijani ko'rish
+                </Button>
+                <Button
+                  onClick={handleSkipRevenue}
+                  variant="ghost"
+                  className="h-12 text-base rounded-xl"
+                >
+                  O'tkazib yuborish
+                </Button>
+              </div>
+            </div>
           </div>
         )}
       </div>
