@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
+import { ArrowLeft } from "lucide-react";
 
 export interface CalculatorData {
   storeType: string;
@@ -270,6 +271,12 @@ export const MagnetCalculator = () => {
     }
   };
 
+  const handleBack = () => {
+    if (step > 1) {
+      setStep(step - 1);
+    }
+  };
+
   const handleSkipRevenue = async () => {
     await submitCalculator();
   };
@@ -378,6 +385,14 @@ export const MagnetCalculator = () => {
           <p className="text-lg text-muted-foreground">
             Kafe, ishlab chiqarish va boshqa biznes turlari uchun hisoblash imkoni yo'q. Do'koningiz bo'lsa, qaytadan urinib ko'ring.
           </p>
+          <Button
+            variant="outline"
+            onClick={() => setHasNoStore(false)}
+            className="mt-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Orqaga qaytish
+          </Button>
         </div>
       </div>
     );
@@ -554,6 +569,13 @@ export const MagnetCalculator = () => {
         {/* Step 2: Store type */}
         {step === 2 && (
           <div className="space-y-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz qaysi turga kiradi?</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {storeTypes.map((type) => (
@@ -582,6 +604,13 @@ export const MagnetCalculator = () => {
         {/* Step 3: SKU count */}
         {step === 3 && (
           <div className="space-y-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningizda nechta mahsulot sotiladi?</h2>
             <p className="text-muted-foreground">{data.storeType && getStoreTypeHint(data.storeType)}</p>
             <div className="grid gap-3">
@@ -615,6 +644,13 @@ export const MagnetCalculator = () => {
         {/* Step 4: Inventory frequency */}
         {step === 4 && (
           <div className="space-y-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">Inventarizatsiyani necha marta o'tkazasiz?</h2>
             <div className="grid gap-3">
               {frequencies.map((freq) => (
@@ -647,6 +683,13 @@ export const MagnetCalculator = () => {
         {/* Step 5: Theft level */}
         {step === 5 && (
           <div className="space-y-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">
               So'nggi 3 oyda mahsulot yo'qolishi yoki noto'g'ri sanalishi bo'lganmi?
             </h2>
@@ -681,6 +724,13 @@ export const MagnetCalculator = () => {
         {/* Step 6: Average price */}
         {step === 6 && (
           <div className="space-y-6">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">
               Siz sotadigan mahsulotlarning o'rtacha narxi qancha (so'm)?
             </h2>
@@ -709,6 +759,13 @@ export const MagnetCalculator = () => {
         {/* Step 7: Revenue (Optional) */}
         {step === 7 && (
           <div className="space-y-6 pb-28">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
                 O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
