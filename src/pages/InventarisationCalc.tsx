@@ -12,7 +12,11 @@ import { pageView } from "@/lib/fpixel";
 
 type Screen = "hero" | "calculator" | "results" | "lead-form";
 
-const InventarisationCalc = () => {
+interface InventarisationCalcProps {
+  isTestMode?: boolean;
+}
+
+const InventarisationCalc = ({ isTestMode = false }: InventarisationCalcProps) => {
   const { variant } = useParams<{ variant: string }>();
 
   // Validate variant first
@@ -67,7 +71,7 @@ const InventarisationCalc = () => {
               variant={variant}
             />
           ) : variant === "magnet" ? (
-            <MagnetCalculator />
+            <MagnetCalculator isTestMode={isTestMode} />
           ) : (
             <LiteCalculator
               onComplete={handleCalculatorComplete}

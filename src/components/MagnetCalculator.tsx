@@ -210,7 +210,11 @@ const getUtmParams = () => {
   };
 };
 
-export const MagnetCalculator = () => {
+interface MagnetCalculatorProps {
+  isTestMode?: boolean;
+}
+
+export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) => {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<CalculatorData>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -218,7 +222,6 @@ export const MagnetCalculator = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
   const [hasNoStore, setHasNoStore] = useState(false);
-  const [isTestMode, setIsTestMode] = useState(false);
   
   const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
@@ -538,16 +541,6 @@ export const MagnetCalculator = () => {
         {/* Step 1: Do you have a store? */}
         {step === 1 && (
           <div className="space-y-6">
-            {/* Hidden test button - before question */}
-            <button
-              onClick={() => setIsTestMode(!isTestMode)}
-              className={cn(
-                "text-xs transition-colors",
-                isTestMode ? "text-primary/40" : "text-muted-foreground/10 hover:text-muted-foreground/20"
-              )}
-            >
-              {isTestMode ? "test ✓" : "test"}
-            </button>
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz bormi?</h2>
             <div className="grid gap-3">
               <button
