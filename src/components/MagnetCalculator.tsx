@@ -511,6 +511,13 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
+      {/* Test mode indicator */}
+      {isTestMode && (
+        <div className="mb-4 px-3 py-1.5 bg-amber-500/10 border border-amber-500/30 rounded-lg inline-flex items-center gap-2">
+          <span className="w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+          <span className="text-xs font-medium text-amber-600">Test Mode</span>
+        </div>
+      )}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <p className="text-sm text-muted-foreground">
