@@ -537,7 +537,17 @@ export const MagnetCalculator = () => {
       <div className="animate-fade-in">
         {/* Step 1: Do you have a store? */}
         {step === 1 && (
-          <div className="space-y-6 relative">
+          <div className="space-y-6">
+            {/* Hidden test button - before question */}
+            <button
+              onClick={() => setIsTestMode(!isTestMode)}
+              className={cn(
+                "text-xs transition-colors",
+                isTestMode ? "text-primary/40" : "text-muted-foreground/10 hover:text-muted-foreground/20"
+              )}
+            >
+              {isTestMode ? "test ✓" : "test"}
+            </button>
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz bormi?</h2>
             <div className="grid gap-3">
               <button
@@ -565,16 +575,6 @@ export const MagnetCalculator = () => {
                 Yo'q, do'konim yo'q
               </button>
             </div>
-            {/* Hidden test button */}
-            <button
-              onClick={() => setIsTestMode(true)}
-              className={cn(
-                "absolute bottom-0 right-0 text-xs transition-colors",
-                isTestMode ? "text-primary/40" : "text-muted-foreground/10 hover:text-muted-foreground/20"
-              )}
-            >
-              {isTestMode ? "test ✓" : "test"}
-            </button>
           </div>
         )}
 
