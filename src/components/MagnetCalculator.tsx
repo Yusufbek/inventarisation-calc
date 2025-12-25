@@ -218,6 +218,7 @@ export const MagnetCalculator = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
   const [hasNoStore, setHasNoStore] = useState(false);
+  const [isTestMode, setIsTestMode] = useState(false);
   
   const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
@@ -324,6 +325,7 @@ export const MagnetCalculator = () => {
         outOfStock: losses.customerLoss,
         time: losses.timeLoss,
         revenue: calcData.revenue,
+        isTest: isTestMode,
       };
       const response = await fetch(
         "https://n8n.srv1192199.hstgr.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
@@ -535,7 +537,7 @@ export const MagnetCalculator = () => {
       <div className="animate-fade-in">
         {/* Step 1: Do you have a store? */}
         {step === 1 && (
-          <div className="space-y-6">
+          <div className="space-y-6 relative">
             <h2 className="text-2xl md:text-3xl font-bold">Do'koningiz bormi?</h2>
             <div className="grid gap-3">
               <button
@@ -563,6 +565,16 @@ export const MagnetCalculator = () => {
                 Yo'q, do'konim yo'q
               </button>
             </div>
+            {/* Hidden test button */}
+            <button
+              onClick={() => setIsTestMode(true)}
+              className={cn(
+                "absolute bottom-0 right-0 text-xs transition-colors",
+                isTestMode ? "text-primary/40" : "text-muted-foreground/10 hover:text-muted-foreground/20"
+              )}
+            >
+              {isTestMode ? "test ✓" : "test"}
+            </button>
           </div>
         )}
 
