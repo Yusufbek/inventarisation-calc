@@ -166,12 +166,16 @@ const skuRanges = [
 ];
 
 const revenueRanges = [
-  { id: "0-50", label: "< 50 mln so'm", value: 25000000 },
-  { id: "50-100", label: "50–100 mln so'm", value: 75000000 },
-  { id: "100-200", label: "100–200 mln so'm", value: 150000000 },
-  { id: "200-500", label: "200–500 mln so'm", value: 350000000 },
-  { id: "500+", label: "500 mln+ so'm", value: 750000000 },
+  { id: "micro", label: "< 80 mln so'm", value: 40000000, category: "micro" },
+  { id: "small", label: "80–800 mln so'm", value: 440000000, category: "small" },
+  { id: "medium", label: "800 mln–1 mlrd so'm", value: 900000000, category: "medium" },
 ];
+
+const getRevenueCategory = (value: number | undefined): string | undefined => {
+  if (!value) return undefined;
+  const range = revenueRanges.find(r => r.value === value);
+  return range?.category;
+};
 
 const getStoreTypeHint = (storeTypeId: string): string => {
   const hints: Record<string, string> = {
@@ -327,7 +331,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         theft: losses.inventoryLoss,
         outOfStock: losses.customerLoss,
         time: losses.timeLoss,
-        revenue: calcData.revenue,
+        revenue: getRevenueCategory(calcData.revenue),
         isTest: isTestMode,
       };
       const response = await fetch("https://n8n-m2.makebillz.top/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
