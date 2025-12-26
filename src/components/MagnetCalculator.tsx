@@ -214,6 +214,8 @@ const getUtmParams = () => {
   };
 };
 
+const TRACKING_WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/e2b981b8-e691-4f70-a9b8-2b82cfa42386";
+
 interface MagnetCalculatorProps {
   isTestMode?: boolean;
 }
@@ -226,6 +228,22 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   const [error, setError] = useState<string | null>(null);
   const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
   const [hasNoStore, setHasNoStore] = useState(false);
+
+  // Fire-and-forget tracking function - never blocks the user flow
+  const sendTrackingEvent = (event: string, eventData?: Record<string, any>) => {
+    fetch(TRACKING_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        event,
+        timestamp: new Date().toISOString(),
+        isTest: isTestMode,
+        ...eventData,
+      }),
+    }).catch(() => {
+      // Silently ignore errors - user should not be affected
+    });
+  };
 
   const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
@@ -256,6 +274,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   }, []);
 
   const handleHasStoreSelect = (hasStore: boolean) => {
+    sendTrackingEvent("CALC_1qstn", { hasStore });
     if (hasStore) {
       setStep(2);
     } else {
@@ -264,6 +283,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   };
 
   const handleStoreTypeSelect = (type: string) => {
+    sendTrackingEvent("CALC_2qstn", { storeType: type });
     setData({
       ...data,
       storeType: type,
@@ -286,6 +306,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   };
 
   const handleSkipRevenue = async () => {
+    sendTrackingEvent("CALC_7qstn", { revenue: "skipped" });
     await submitCalculator();
   };
 
@@ -444,6 +465,16 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
             size="lg"
             className="w-full text-lg h-14 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
             onClick={() => {
+              // Track CALC_finish event
+              sendTrackingEvent("CALC_finish", {
+                storeType: data.storeType,
+                skuCount: data.skuCount,
+                inventoryFrequency: data.inventoryFrequency,
+                theftLevel: data.theftLevel,
+                avgPrice: data.avgPrice,
+                revenue: data.revenue ? getRevenueCategory(data.revenue) : undefined,
+              });
+
               const eventId = crypto.randomUUID();
               const browserId = getBrowserId();
               eventCustom(
@@ -549,6 +580,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               <button
                 onClick={(e) => {
                   e.currentTarget.blur();
+                  sendTrackingEvent("CALC_Start");
                   handleHasStoreSelect(true);
                 }}
                 onTouchEnd={(e) => {
@@ -561,6 +593,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               <button
                 onClick={(e) => {
                   e.currentTarget.blur();
+                  sendTrackingEvent("CALC_Start");
                   handleHasStoreSelect(false);
                 }}
                 onTouchEnd={(e) => {
@@ -627,6 +660,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                   key={range.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    sendTrackingEvent("CALC_3qstn", { skuCount: range.value });
                     setData({
                       ...data,
                       skuCount: range.value,
@@ -666,6 +700,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                   key={freq.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    sendTrackingEvent("CALC_4qstn", { inventoryFrequency: freq.id });
                     setData({
                       ...data,
                       inventoryFrequency: freq.id,
@@ -707,6 +742,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                   key={level.id}
                   onClick={(e) => {
                     e.currentTarget.blur();
+                    sendTrackingEvent("CALC_5qstn", { theftLevel: level.id });
                     setData({
                       ...data,
                       theftLevel: level.id,
@@ -758,7 +794,10 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               className="h-14 text-lg rounded-2xl"
               autoFocus
             />
-            <Button onClick={handleNext} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
+            <Button onClick={() => {
+              sendTrackingEvent("CALC_6qstn", { avgPrice: data.avgPrice });
+              handleNext();
+            }} disabled={!canProceed()} className="w-full h-14 text-lg rounded-2xl">
               Keyingi savol
             </Button>
           </div>
@@ -809,13 +848,34 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
             <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
               <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
                 <Button
-                  onClick={handleNext}
+                  onClick={() => {
+                    sendTrackingEvent("CALC_7qstn", { revenue: getRevenueCategory(data.revenue) });
+                    sendTrackingEvent("CALC_qstnsfinish", {
+                      storeType: data.storeType,
+                      skuCount: data.skuCount,
+                      inventoryFrequency: data.inventoryFrequency,
+                      theftLevel: data.theftLevel,
+                      avgPrice: data.avgPrice,
+                      revenue: getRevenueCategory(data.revenue),
+                    });
+                    handleNext();
+                  }}
                   disabled={!data.revenue}
                   className="flex-1 h-12 text-base md:text-lg rounded-xl"
                 >
                   Natijani ko'rish
                 </Button>
-                <Button onClick={handleSkipRevenue} variant="ghost" className="h-12 text-base rounded-xl">
+                <Button onClick={() => {
+                  sendTrackingEvent("CALC_qstnsfinish", {
+                    storeType: data.storeType,
+                    skuCount: data.skuCount,
+                    inventoryFrequency: data.inventoryFrequency,
+                    theftLevel: data.theftLevel,
+                    avgPrice: data.avgPrice,
+                    revenue: "skipped",
+                  });
+                  handleSkipRevenue();
+                }} variant="ghost" className="h-12 text-base rounded-xl">
                   O'tkazib yuborish
                 </Button>
               </div>
