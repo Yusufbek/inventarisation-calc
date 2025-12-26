@@ -222,7 +222,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   const [error, setError] = useState<string | null>(null);
   const [isUnsupportedStore, setIsUnsupportedStore] = useState(false);
   const [hasNoStore, setHasNoStore] = useState(false);
-  
+
   const totalSteps = 7;
   const progress = (step / totalSteps) * 100;
 
@@ -330,16 +330,13 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         revenue: calcData.revenue,
         isTest: isTestMode,
       };
-      const response = await fetch(
-        "https://n8n.srv1192199.hstgr.cloud/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(webhookPayload),
+      const response = await fetch("https://n8n-m2.makebillz.top/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(webhookPayload),
+      });
       if (!response.ok) {
         throw new Error("Webhook request failed");
       }
@@ -384,17 +381,12 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-            Bu kalkulyator faqat do'kon egalari uchun
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">Bu kalkulyator faqat do'kon egalari uchun</h2>
           <p className="text-lg text-muted-foreground">
-            Kafe, ishlab chiqarish va boshqa biznes turlari uchun hisoblash imkoni yo'q. Do'koningiz bo'lsa, qaytadan urinib ko'ring.
+            Kafe, ishlab chiqarish va boshqa biznes turlari uchun hisoblash imkoni yo'q. Do'koningiz bo'lsa, qaytadan
+            urinib ko'ring.
           </p>
-          <Button
-            variant="outline"
-            onClick={() => setHasNoStore(false)}
-            className="mt-4"
-          >
+          <Button variant="outline" onClick={() => setHasNoStore(false)} className="mt-4">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Orqaga qaytish
           </Button>
@@ -819,11 +811,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                 >
                   Natijani ko'rish
                 </Button>
-                <Button
-                  onClick={handleSkipRevenue}
-                  variant="ghost"
-                  className="h-12 text-base rounded-xl"
-                >
+                <Button onClick={handleSkipRevenue} variant="ghost" className="h-12 text-base rounded-xl">
                   O'tkazib yuborish
                 </Button>
               </div>
