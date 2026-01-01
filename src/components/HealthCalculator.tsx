@@ -209,7 +209,7 @@ export const HealthCalculator = ({ isTestMode = false }: HealthCalculatorProps) 
       };
 
       // TODO: Replace with actual webhook URL when ready
-      const response = await fetch("https://n8n-m2.makebillz.top/webhook/health-calculator", {
+      const response = await fetch("https://n8n-m2.makebillz.top/webhook/ba05f99c-f727-4a03-b36e-496565588958", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(webhookPayload),
