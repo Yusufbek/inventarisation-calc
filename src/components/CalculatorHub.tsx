@@ -7,6 +7,7 @@ import liteCalcImage from "@/assets/lite-calc-icon.png";
 import formwallIcon from "@/assets/formwall-icon.png";
 import gamifiedIcon from "@/assets/gamified-icon.png";
 import magnetCalcIcon from "@/assets/magnet-calc-icon.png";
+import healthCalcIcon from "@/assets/health-calc-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -41,6 +42,13 @@ export const CalculatorHub = () => {
       title: "Magnet Calculator",
       image: magnetCalcIcon,
       imageAlt: "Magnet Calculator icon"
+    },
+    {
+      variant: "health",
+      title: "Biznes Salomatligi",
+      image: healthCalcIcon,
+      imageAlt: "Health Calculator icon",
+      isHealthCalc: true
     }
   ];
 
@@ -65,7 +73,7 @@ export const CalculatorHub = () => {
             <Card 
               key={calc.variant}
               className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group flex flex-row items-center"
-              onClick={() => navigate(`/inventarisation-calc/${calc.variant}`)}
+              onClick={() => navigate((calc as any).isHealthCalc ? `/health-calc` : `/inventarisation-calc/${calc.variant}`)}
             >
               <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4 rounded-lg">
                 <img 
@@ -80,7 +88,7 @@ export const CalculatorHub = () => {
                   className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base"
                   onClick={(e) => {
                     e.stopPropagation();
-                    navigate(`/inventarisation-calc/${calc.variant}`);
+                    navigate((calc as any).isHealthCalc ? `/health-calc` : `/inventarisation-calc/${calc.variant}`);
                   }}
                 >
                   Boshlash

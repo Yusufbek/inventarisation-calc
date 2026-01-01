@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import InventarisationCalc from "./pages/InventarisationCalc";
 import FormWallCalc from "./pages/FormWallCalc";
+import HealthCalc from "./pages/HealthCalc";
 import ThankYouVariant from "./pages/ThankYouVariant";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
@@ -23,6 +24,8 @@ const App = () => (
           <Route path="/inventarisation-calc/:variant" element={<InventarisationCalc />} />
           <Route path="/inventarisation-calc/:variant/test" element={<InventarisationCalc isTestMode />} />
           <Route path="/inventarisation-calc/formwall" element={<FormWallCalc />} />
+          <Route path="/health-calc" element={<HealthCalc />} />
+          <Route path="/health-calc/test" element={<HealthCalc isTestMode />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
           {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />
