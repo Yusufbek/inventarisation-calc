@@ -819,7 +819,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               </h2>
               <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
                 <span className="text-lg">🔒</span>
-                <span>Biz hech qanday ma'lumotni ommaga oshkor qilmaymiz. Bu faqat natijani aniqroq hisoblash uchun kerak.</span>
+                <span>Natijangizni aniqroq hisoblash uchun kerak.</span>
               </p>
             </div>
             <div className="grid gap-3">
