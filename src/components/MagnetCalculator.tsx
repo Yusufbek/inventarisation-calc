@@ -818,8 +818,8 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                 O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
               </h2>
               <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
-                <span className="text-lg">💡</span>
-                <span>Bu savol majburiy emas, lekin natija aniqroq bo'lishi uchun tavsiya qilamiz.</span>
+                <span className="text-lg">🔒</span>
+                <span>Biz hech qanday ma'lumotni ommaga oshkor qilmaymiz. Bu faqat natijani aniqroq hisoblash uchun kerak.</span>
               </p>
             </div>
             <div className="grid gap-3">
@@ -846,7 +846,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
 
             {/* Sticky footer CTA */}
             <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
-              <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
+              <div className="max-w-3xl mx-auto px-4 py-3">
                 <Button
                   onClick={() => {
                     sendTrackingEvent("CALC_7qstn", { revenue: getRevenueCategory(data.revenue) });
@@ -861,22 +861,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                     handleNext();
                   }}
                   disabled={!data.revenue}
-                  className="flex-1 h-12 text-base md:text-lg rounded-xl"
+                  className="w-full h-12 text-base md:text-lg rounded-xl"
                 >
                   Natijani ko'rish
-                </Button>
-                <Button onClick={() => {
-                  sendTrackingEvent("CALC_qstnsfinish", {
-                    storeType: data.storeType,
-                    skuCount: data.skuCount,
-                    inventoryFrequency: data.inventoryFrequency,
-                    theftLevel: data.theftLevel,
-                    avgPrice: data.avgPrice,
-                    revenue: "skipped",
-                  });
-                  handleSkipRevenue();
-                }} variant="ghost" className="h-12 text-base rounded-xl">
-                  O'tkazib yuborish
                 </Button>
               </div>
             </div>
