@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
@@ -15,6 +16,7 @@ export interface CalculatorData {
   theftLevel: string;
   avgPrice: number;
   revenue?: number;
+  region?: string;
 }
 
 const storeTypes = [
@@ -171,6 +173,23 @@ const revenueRanges = [
   { id: "medium", label: "800 mln–1 mlrd so'm", value: 900000000, category: "medium" },
 ];
 
+const uzbekistanRegions = [
+  { id: "toshkent-shahar", label: "Toshkent shahri" },
+  { id: "toshkent-viloyat", label: "Toshkent viloyati" },
+  { id: "andijon", label: "Andijon viloyati" },
+  { id: "buxoro", label: "Buxoro viloyati" },
+  { id: "fargona", label: "Farg'ona viloyati" },
+  { id: "jizzax", label: "Jizzax viloyati" },
+  { id: "xorazm", label: "Xorazm viloyati" },
+  { id: "namangan", label: "Namangan viloyati" },
+  { id: "navoiy", label: "Navoiy viloyati" },
+  { id: "qashqadaryo", label: "Qashqadaryo viloyati" },
+  { id: "samarqand", label: "Samarqand viloyati" },
+  { id: "sirdaryo", label: "Sirdaryo viloyati" },
+  { id: "surxondaryo", label: "Surxondaryo viloyati" },
+  { id: "qoraqalpogiston", label: "Qoraqalpog'iston Respublikasi" },
+];
+
 const getRevenueCategory = (value: number | undefined): string | undefined => {
   if (!value) return undefined;
   const range = revenueRanges.find(r => r.value === value);
@@ -245,7 +264,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
     });
   };
 
-  const totalSteps = 7;
+  const totalSteps = 8;
   const progress = (step / totalSteps) * 100;
 
   // Unsupported store types and Telegram credentials for trash notifications
@@ -353,6 +372,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         outOfStock: losses.customerLoss,
         time: losses.timeLoss,
         revenue: getRevenueCategory(calcData.revenue),
+        region: calcData.region,
         isTest: isTestMode,
       };
       const response = await fetch("https://n8n-m2.makebillz.top/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
@@ -391,6 +411,8 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         return data.avgPrice && data.avgPrice > 0;
       case 7:
         return data.revenue && data.revenue > 0;
+      case 8:
+        return !!data.region;
       default:
         return false;
     }
@@ -850,6 +872,58 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                 <Button
                   onClick={() => {
                     sendTrackingEvent("CALC_7qstn", { revenue: getRevenueCategory(data.revenue) });
+                    handleNext();
+                  }}
+                  disabled={!data.revenue}
+                  className="w-full h-12 text-base md:text-lg rounded-xl"
+                >
+                  Keyingi savol
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 8: Region Selection */}
+        {step === 8 && (
+          <div className="space-y-6 pb-28">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Qaysi viloyatdansiz?
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Hududingizni tanlang
+              </p>
+            </div>
+            <Select 
+              value={data.region} 
+              onValueChange={(value) => setData({ ...data, region: value })}
+            >
+              <SelectTrigger className="h-14 text-lg rounded-2xl">
+                <SelectValue placeholder="Viloyatni tanlang" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border z-50">
+                {uzbekistanRegions.map((region) => (
+                  <SelectItem key={region.id} value={region.id}>
+                    {region.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Sticky footer CTA */}
+            <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
+              <div className="max-w-3xl mx-auto px-4 py-3">
+                <Button
+                  onClick={() => {
+                    sendTrackingEvent("CALC_8qstn", { region: data.region });
                     sendTrackingEvent("CALC_qstnsfinish", {
                       storeType: data.storeType,
                       skuCount: data.skuCount,
@@ -857,10 +931,11 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                       theftLevel: data.theftLevel,
                       avgPrice: data.avgPrice,
                       revenue: getRevenueCategory(data.revenue),
+                      region: data.region,
                     });
                     handleNext();
                   }}
-                  disabled={!data.revenue}
+                  disabled={!data.region}
                   className="w-full h-12 text-base md:text-lg rounded-xl"
                 >
                   Natijani ko'rish
