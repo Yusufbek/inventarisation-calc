@@ -902,21 +902,27 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                 Hududingizni tanlang
               </p>
             </div>
-            <Select 
-              value={data.region} 
-              onValueChange={(value) => setData({ ...data, region: value })}
-            >
-              <SelectTrigger className="h-14 text-lg rounded-2xl">
-                <SelectValue placeholder="Viloyatni tanlang" />
-              </SelectTrigger>
-              <SelectContent className="bg-background border z-50">
-                {uzbekistanRegions.map((region) => (
-                  <SelectItem key={region.id} value={region.id}>
-                    {region.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid gap-2.5 max-h-[50vh] overflow-y-auto pr-1">
+              {uzbekistanRegions.map((region) => (
+                <button
+                  key={region.id}
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    setData({ ...data, region: region.id });
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.region === region.id ? "border-primary bg-secondary" : "border-border",
+                  )}
+                >
+                  {region.label}
+                </button>
+              ))}
+            </div>
 
             {/* Sticky footer CTA */}
             <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
