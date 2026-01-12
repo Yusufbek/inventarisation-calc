@@ -230,6 +230,7 @@ const getUtmParams = () => {
     utm_campaign: params.get("utm_campaign") || "",
     utm_term: params.get("utm_term") || "",
     utm_content: params.get("utm_content") || "",
+    fbclid: params.get("fbclid") || "",
   };
 };
 
@@ -374,6 +375,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         revenue: getRevenueCategory(calcData.revenue),
         region: calcData.region,
         isTest: isTestMode,
+        ...utmParams,
       };
       const response = await fetch("https://n8n-m2.makebillz.top/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d", {
         method: "POST",
