@@ -478,8 +478,8 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   if (telegramUrl) {
     return (
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
-        <header className="w-full flex justify-center mb-8">
-          <BillzCalculatorLogo className="h-8 md:h-10" />
+        <header className="w-full flex justify-center mb-12">
+          <BillzCalculatorLogo className="h-10 md:h-14" />
         </header>
         <div className="text-center space-y-6 max-w-md">
           {/* Simple Telegram Icon */}
