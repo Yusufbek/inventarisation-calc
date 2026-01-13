@@ -8,6 +8,7 @@ import { calculateLosses, formatNumber } from "@/lib/calculations";
 import { eventCustom, pageView } from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 import { ArrowLeft } from "lucide-react";
+import { BillzCalculatorLogo } from "./BillzCalculatorLogo";
 
 export interface CalculatorData {
   storeType: string;
@@ -424,6 +425,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   if (hasNoStore) {
     return (
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
+        <header className="w-full flex justify-center mb-8">
+          <BillzCalculatorLogo className="h-8 md:h-10" />
+        </header>
         <div className="text-center space-y-6 max-w-md">
           <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center">
             <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -448,6 +452,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   if (isUnsupportedStore) {
     return (
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
+        <header className="w-full flex justify-center mb-8">
+          <BillzCalculatorLogo className="h-8 md:h-10" />
+        </header>
         <div className="text-center space-y-6 max-w-md">
           <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center">
             <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -470,6 +477,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   if (telegramUrl) {
     return (
       <div className="w-full min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 animate-fade-in">
+        <header className="w-full flex justify-center mb-8">
+          <BillzCalculatorLogo className="h-8 md:h-10" />
+        </header>
         <div className="text-center space-y-6 max-w-md">
           {/* Simple Telegram Icon */}
           <div className="mx-auto w-20 h-20 bg-[#0088cc] rounded-full flex items-center justify-center shadow-lg">
@@ -533,6 +543,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
   if (isLoading) {
     return (
       <div className="w-full min-h-[500px] flex flex-col items-center justify-center gap-6 py-12 animate-fade-in">
+        <header className="w-full flex justify-center mb-8">
+          <BillzCalculatorLogo className="h-8 md:h-10" />
+        </header>
         <div className="text-center space-y-4">
           <p className="text-3xl md:text-4xl font-bold text-foreground">Tahlil qilinmoqda</p>
           <div className="flex items-center justify-center gap-1.5">
@@ -562,6 +575,9 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-8">
+      <header className="w-full flex justify-center mb-8">
+        <BillzCalculatorLogo className="h-8 md:h-10" />
+      </header>
       {/* Test mode indicator */}
       {isTestMode && (
         <div className="mb-4 px-3 py-1.5 bg-amber-500/10 border border-amber-500/30 rounded-lg inline-flex items-center gap-2">
