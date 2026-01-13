@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { BillzLogo } from "@/components/BillzLogo";
+import { BillzCalculatorLogo } from "@/components/BillzCalculatorLogo";
 import heroImage from "@/assets/hero-inventory.webp";
 
 interface HeroSectionProps {
@@ -11,7 +11,7 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
     <section className="w-full bg-secondary py-12 px-4 md:py-20 pb-24 md:pb-32">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-center mb-8">
-          <BillzLogo className="h-10 md:h-12 text-foreground" />
+          <BillzCalculatorLogo className="h-10 md:h-14" />
         </div>
         <div className="flex flex-col items-center text-center gap-8">
           <img 

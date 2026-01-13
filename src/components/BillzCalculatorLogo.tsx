@@ -4,7 +4,7 @@ interface BillzCalculatorLogoProps {
   className?: string;
 }
 
-export const BillzCalculatorLogo = ({ className = "h-8 md:h-10" }: BillzCalculatorLogoProps) => {
+export const BillzCalculatorLogo = ({ className = "h-10 md:h-14" }: BillzCalculatorLogoProps) => {
   return (
     <img 
       src={logoSrc} 
