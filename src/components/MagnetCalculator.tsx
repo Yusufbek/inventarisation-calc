@@ -168,9 +168,9 @@ const skuRanges = [
 ];
 
 const revenueRanges = [
-  { id: "micro", label: "< 80 mln so'm", value: 40000000, category: "micro" },
-  { id: "small", label: "80–800 mln so'm", value: 440000000, category: "small" },
-  { id: "medium", label: "800 mln–1 mlrd so'm", value: 900000000, category: "medium" },
+  { id: "micro", label: "< 2.500.000", value: 40000000, category: "micro" },
+  { id: "small", label: "2.500.000 – 25.000.000", value: 440000000, category: "small" },
+  { id: "medium", label: "25.000.000+", value: 900000000, category: "medium" },
 ];
 
 const uzbekistanRegions = [
@@ -839,7 +839,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
             </button>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                O'tgan oyda do'koningiz savdosi (taxminan) qancha bo'lgan?
+                Kunlik tushum (taxminan) qancha?
               </h2>
               <p className="text-sm text-muted-foreground flex items-start gap-2 bg-secondary/50 p-4 rounded-xl">
                 <span className="text-lg">🔒</span>
