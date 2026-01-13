@@ -168,9 +168,9 @@ const skuRanges = [
 ];
 
 const revenueRanges = [
-  { id: "micro", label: "< 2.500.000", value: 40000000, category: "micro" },
-  { id: "small", label: "2.500.000 – 25.000.000", value: 440000000, category: "small" },
-  { id: "medium", label: "25.000.000+", value: 900000000, category: "medium" },
+  { id: "micro", label: "2.500.000dan kamroq so'm", value: 40000000, category: "micro" },
+  { id: "small", label: "2.500.000 – 25.000.000 so'm", value: 440000000, category: "small" },
+  { id: "medium", label: "25.500.000dan ko'proq so'm", value: 900000000, category: "medium" },
 ];
 
 const uzbekistanRegions = [
