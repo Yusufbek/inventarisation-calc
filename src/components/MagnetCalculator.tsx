@@ -169,8 +169,8 @@ const skuRanges = [
 ];
 
 const revenueRanges = [
-  { id: "nano", label: "1.500.000 so'mdan kamroq", value: 20000000, category: "nano" },
-  { id: "micro", label: "1.500.000 – 2.500.000 so'm", value: 40000000, category: "micro" },
+  { id: "nano", label: "500.000 so'mdan kamroq", value: 20000000, category: "nano" },
+  { id: "micro", label: "600.000 - 2.500.000 so'm", value: 40000000, category: "micro" },
   { id: "small", label: "2.500.000 – 25.000.000 so'm", value: 440000000, category: "small" },
   { id: "medium", label: "25.000.000dan ko'proq so'm", value: 900000000, category: "medium" },
 ];
