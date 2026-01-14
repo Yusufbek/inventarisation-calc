@@ -17,6 +17,7 @@ export interface CalculatorData {
   theftLevel: string;
   avgPrice: number;
   revenue?: number;
+  storeSpecific?: string;
   region?: string;
 }
 
@@ -192,6 +193,14 @@ const uzbekistanRegions = [
   { id: "qoraqalpogiston", label: "Qoraqalpog'iston Respublikasi" },
 ];
 
+const storeFormats = [
+  { id: "online", label: "Faqat onlayn sotuv" },
+  { id: "rasta", label: "Rasta (yoyma)" },
+  { id: "orolcha", label: "Orolcha" },
+  { id: "dokon", label: "Do'kon" },
+  { id: "ombor", label: "Ombor" },
+];
+
 const getRevenueCategory = (value: number | undefined): string | undefined => {
   if (!value) return undefined;
   const range = revenueRanges.find(r => r.value === value);
@@ -267,7 +276,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
     });
   };
 
-  const totalSteps = 8;
+  const totalSteps = 9;
   const progress = (step / totalSteps) * 100;
 
   // Unsupported store types and Telegram credentials for trash notifications
@@ -375,6 +384,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         outOfStock: losses.customerLoss,
         time: losses.timeLoss,
         revenue: getRevenueCategory(calcData.revenue),
+        storeSpecific: calcData.storeSpecific,
         region: calcData.region,
         isTest: isTestMode,
         ...utmParams,
@@ -416,6 +426,8 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
       case 7:
         return data.revenue && data.revenue > 0;
       case 8:
+        return !!data.storeSpecific;
+      case 9:
         return !!data.region;
       default:
         return false;
@@ -903,8 +915,63 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
           </div>
         )}
 
-        {/* Step 8: Region Selection */}
+        {/* Step 8: Store Format */}
         {step === 8 && (
+          <div className="space-y-6 pb-28">
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Orqaga</span>
+            </button>
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2">
+                Savdo nuqtasi formati qanday?
+              </h2>
+            </div>
+            <div className="grid gap-3">
+              {storeFormats.map((format) => (
+                <button
+                  key={format.id}
+                  onClick={(e) => {
+                    e.currentTarget.blur();
+                    setData({ ...data, storeSpecific: format.id });
+                  }}
+                  onTouchEnd={(e) => {
+                    e.currentTarget.blur();
+                  }}
+                  className={cn(
+                    "p-4 rounded-2xl border-2 text-left transition-all active:scale-[0.98]",
+                    "font-medium text-lg focus:outline-none",
+                    data.storeSpecific === format.id ? "border-primary bg-secondary" : "border-border",
+                  )}
+                >
+                  {format.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Sticky footer CTA */}
+            <div className="fixed inset-x-0 bottom-0 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border">
+              <div className="max-w-3xl mx-auto px-4 py-3">
+                <Button
+                  onClick={() => {
+                    sendTrackingEvent("CALC_8qstn", { storeSpecific: data.storeSpecific });
+                    handleNext();
+                  }}
+                  disabled={!data.storeSpecific}
+                  className="w-full h-12 text-base md:text-lg rounded-xl"
+                >
+                  Keyingi savol
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 9: Region Selection */}
+        {step === 9 && (
           <div className="space-y-6 pb-28">
             <button
               onClick={handleBack}
@@ -948,7 +1015,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
               <div className="max-w-3xl mx-auto px-4 py-3">
                 <Button
                   onClick={() => {
-                    sendTrackingEvent("CALC_8qstn", { region: data.region });
+                    sendTrackingEvent("CALC_9qstn", { region: data.region });
                     sendTrackingEvent("CALC_qstnsfinish", {
                       storeType: data.storeType,
                       skuCount: data.skuCount,
@@ -956,6 +1023,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
                       theftLevel: data.theftLevel,
                       avgPrice: data.avgPrice,
                       revenue: getRevenueCategory(data.revenue),
+                      storeSpecific: data.storeSpecific,
                       region: data.region,
                     });
                     handleNext();
