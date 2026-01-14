@@ -384,7 +384,7 @@ export const MagnetCalculator = ({ isTestMode = false }: MagnetCalculatorProps) 
         outOfStock: losses.customerLoss,
         time: losses.timeLoss,
         revenue: getRevenueCategory(calcData.revenue),
-        storeSpecific: calcData.storeSpecific,
+        storeFormat: calcData.storeSpecific,
         region: calcData.region,
         isTest: isTestMode,
         ...utmParams,
