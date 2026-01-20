@@ -26,7 +26,7 @@ const WebinarFoydaWebinar = () => {
     <div className="min-h-screen bg-background">
       <WebinarHero onRegisterClick={handleRegisterClick} />
       <WebinarTrust />
-      <WebinarMission />
+      <WebinarMission onRegisterClick={handleRegisterClick} />
       <WebinarSpeaker />
       <WebinarCTA onRegisterClick={handleRegisterClick} />
       
