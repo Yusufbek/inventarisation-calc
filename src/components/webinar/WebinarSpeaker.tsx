@@ -9,7 +9,7 @@ const speakerBrands = [
 
 export const WebinarSpeaker = () => {
   return (
-    <section className="py-12 md:py-20 lg:py-24 bg-secondary/30">
+    <section className="py-12 md:py-20 lg:py-24 bg-background">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Header */}
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-foreground mb-10 md:mb-14">
@@ -17,7 +17,7 @@ export const WebinarSpeaker = () => {
         </h2>
 
         {/* Speaker Card - Horizontal Layout */}
-        <div className="bg-background rounded-2xl md:rounded-3xl overflow-hidden shadow-lg">
+        <div className="bg-secondary/30 rounded-2xl md:rounded-3xl overflow-hidden">
           <div className="grid md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-0">
             {/* Photo */}
             <div className="relative h-64 md:h-full">

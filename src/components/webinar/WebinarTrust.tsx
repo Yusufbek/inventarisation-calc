@@ -31,7 +31,7 @@ const stats = [
 
 export const WebinarTrust = () => {
   return (
-    <section className="py-12 md:py-20 lg:py-24 bg-secondary/30">
+    <section className="py-12 md:py-20 lg:py-24 bg-secondary/20">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Headline */}
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-foreground mb-10 md:mb-14 max-w-3xl mx-auto leading-snug">
