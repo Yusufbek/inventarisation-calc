@@ -79,7 +79,7 @@ export const CalculatorHub = () => {
                 <img 
                   src={calc.image} 
                   alt={calc.imageAlt}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
+                  className="w-full h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
                 />
               </div>
               <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-4">
