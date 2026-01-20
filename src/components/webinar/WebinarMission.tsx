@@ -69,7 +69,7 @@ export const WebinarMission = ({ onRegisterClick }: WebinarMissionProps) => {
               onClick={onRegisterClick}
               className="inline-flex items-center justify-center bg-primary text-primary-foreground font-semibold text-base md:text-lg px-10 md:px-12 py-4 rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl"
             >
-              Darsga ro'yxatdan o'tish
+              Vebinarga yozilish
             </button>
           )}
         </div>

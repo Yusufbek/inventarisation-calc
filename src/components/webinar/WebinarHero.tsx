@@ -9,7 +9,7 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
     <section className="bg-background py-8 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
         {/* Logo */}
-        <div className="mb-10 md:mb-16">
+        <div className="mb-10 md:mb-16 flex justify-center lg:justify-start">
           <BillzLogo className="h-8 md:h-10" />
         </div>
 
@@ -37,7 +37,7 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
               onClick={onRegisterClick}
               className="inline-flex items-center justify-center bg-primary text-primary-foreground font-semibold text-base md:text-lg px-10 md:px-14 py-4 md:py-5 rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
             >
-              Darsga ro'yxatdan o'tish
+              Vebinarga yozilish
             </button>
           </div>
 
