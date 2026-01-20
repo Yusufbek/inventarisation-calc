@@ -23,7 +23,7 @@ const WebinarFoydaWebinar = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background font-gilroy">
+    <div className="min-h-screen bg-background">
       <WebinarHero onRegisterClick={handleRegisterClick} />
       <WebinarTrust />
       <WebinarMission />
