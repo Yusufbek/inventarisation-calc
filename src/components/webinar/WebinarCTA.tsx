@@ -4,13 +4,19 @@ interface WebinarCTAProps {
   onRegisterClick: () => void;
 }
 
-const syllabus = [
-  "Kassadan chetlab sotish",
-  "Tovarni o'g'irlash",
-  "Narxlar bilan firibgarlik",
-  "Tovarni almashtirish",
-  "Kamroq miqdorni qayd etish",
-  'Kassada "minus"',
+const syllabusItems = [
+  {
+    title: "Kassa va moliyaviy intizom",
+    description: "Chetlab sotish hamda kassadagi kamomat (\"minus\") ni bartaraf etish."
+  },
+  {
+    title: "Mulk himoyasi",
+    description: "O'g'rilik va tovarlarni almashtirib qo'yish holatlarining oldini olish."
+  },
+  {
+    title: "Hisob-kitob nazorati",
+    description: "Narxlar va mahsulot miqdori bilan bo'ladigan firibgarliklarni fosh etish."
+  }
 ];
 
 // Get next Friday date
@@ -48,12 +54,9 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
           {/* Main CTA Card */}
           <div className="bg-primary/5 rounded-3xl p-6 md:p-10 lg:p-12">
             {/* Headline */}
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-3">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-8">
               Do'koningiz xavfsizligini ta'minlashga tayyormisiz?
             </h2>
-            <p className="text-center text-primary font-semibold text-lg md:text-xl mb-8">
-              Keyingi juma kuni bizga qo'shiling
-            </p>
 
             {/* Two Column Layout */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-10 mb-8">
@@ -77,16 +80,16 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
                     <Clock className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <span className="font-medium text-foreground">16:00</span>
+                    <span className="font-medium text-foreground">17:00</span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center">
-                    <Gift className="w-5 h-5 text-success" />
+                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                    <Gift className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <span className="font-medium text-success">Ishtirok bepul</span>
+                    <span className="font-semibold text-green-600">Ishtirok bepul</span>
                   </div>
                 </div>
               </div>
@@ -94,23 +97,21 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
               {/* Right - Syllabus */}
               <div>
                 <h3 className="font-semibold text-foreground text-lg mb-4">
-                  Nimalarni o'rganasiz:
+                  Nimalarni o'rganasiz: Xavfsizlik va Nazorat
                 </h3>
-                <div className="grid grid-cols-1 gap-2">
-                  {syllabus.map((item) => (
-                    <div key={item} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                      <span className="text-foreground text-sm md:text-base">{item}</span>
+                <div className="space-y-3">
+                  {syllabusItems.map((item) => (
+                    <div key={item.title} className="flex items-start gap-2">
+                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <div className="text-left">
+                        <span className="font-medium text-foreground">{item.title}:</span>{" "}
+                        <span className="text-muted-foreground">{item.description}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-
-            {/* Closing Hook */}
-            <p className="text-center text-muted-foreground text-sm md:text-base mb-8 max-w-xl mx-auto">
-              Birinchi oydan boshlab yo'qotishlarni kamaytirishga yordam beradigan haqiqiy misollar va vositalarni namoyish etamiz.
-            </p>
 
             {/* CTA Button */}
             <div className="text-center">
