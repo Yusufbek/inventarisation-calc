@@ -1,4 +1,4 @@
-import { Check, Calendar, Clock, Gift } from "lucide-react";
+import { Check, Calendar, Clock, Gift, ArrowRight } from "lucide-react";
 
 interface WebinarCTAProps {
   onRegisterClick: () => void;
@@ -31,8 +31,7 @@ const formatDateUzbek = (date: Date): string => {
   ];
   const day = date.getDate();
   const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  return `Juma, ${day}-${month} ${year}`;
+  return `${day}-${month}`;
 };
 
 export const getFormattedFridayDate = (): string => {
@@ -43,78 +42,86 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
   const nextFridayFormatted = getFormattedFridayDate();
 
   return (
-    <section className="bg-background py-12 md:py-20">
+    <section className="bg-secondary/30 py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Headline */}
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-10">
-            Do'koningiz xavfsizligini ta'minlashga tayyormisiz?{" "}
-            <span className="text-primary">Keyingi juma kuni bizga qo'shiling.</span>
-          </h2>
+          {/* Main CTA Card */}
+          <div className="bg-primary/5 rounded-3xl p-6 md:p-10 lg:p-12">
+            {/* Headline */}
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-3">
+              Do'koningiz xavfsizligini ta'minlashga tayyormisiz?
+            </h2>
+            <p className="text-center text-primary font-semibold text-lg md:text-xl mb-8">
+              Keyingi juma kuni bizga qo'shiling
+            </p>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Date Box */}
-            <div className="bg-secondary/30 rounded-3xl p-6 md:p-8">
-              <h3 className="text-lg font-semibold text-foreground mb-6">
-                Keyingi vebinar
-              </h3>
-              
+            {/* Two Column Layout */}
+            <div className="grid md:grid-cols-2 gap-8 md:gap-10 mb-8">
+              {/* Left - Date & Time */}
               <div className="space-y-4">
+                <h3 className="font-semibold text-foreground text-lg mb-4">
+                  Keyingi vebinar
+                </h3>
+                
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-background rounded-xl flex items-center justify-center shadow-sm">
                     <Calendar className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="font-medium text-foreground">{nextFridayFormatted}</span>
+                  <div>
+                    <span className="font-medium text-foreground">Juma, {nextFridayFormatted}</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-background rounded-xl flex items-center justify-center shadow-sm">
                     <Clock className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="font-medium text-foreground">Vaqt: 16:00</span>
+                  <div>
+                    <span className="font-medium text-foreground">16:00</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-success/10 rounded-xl flex items-center justify-center">
                     <Gift className="w-5 h-5 text-success" />
                   </div>
-                  <span className="font-medium text-success">Ishtirok bepul</span>
+                  <div>
+                    <span className="font-medium text-success">Ishtirok bepul</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right - Syllabus */}
+              <div>
+                <h3 className="font-semibold text-foreground text-lg mb-4">
+                  Nimalarni o'rganasiz:
+                </h3>
+                <div className="grid grid-cols-1 gap-2">
+                  {syllabus.map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary flex-shrink-0" />
+                      <span className="text-foreground text-sm md:text-base">{item}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {/* Syllabus */}
-            <div className="bg-secondary/30 rounded-3xl p-6 md:p-8">
-              <h3 className="text-lg font-semibold text-foreground mb-6">
-                Vebinarda nimalarni o'rganasiz:
-              </h3>
-              
-              <div className="space-y-3">
-                {syllabus.map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="w-4 h-4 text-primary-foreground" />
-                    </div>
-                    <span className="text-foreground">{item}</span>
-                  </div>
-                ))}
-              </div>
+            {/* Closing Hook */}
+            <p className="text-center text-muted-foreground text-sm md:text-base mb-8 max-w-xl mx-auto">
+              Birinchi oydan boshlab yo'qotishlarni kamaytirishga yordam beradigan haqiqiy misollar va vositalarni namoyish etamiz.
+            </p>
+
+            {/* CTA Button */}
+            <div className="text-center">
+              <button
+                onClick={onRegisterClick}
+                className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-base md:text-lg px-10 md:px-14 py-4 md:py-5 rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] group"
+              >
+                Vebinarga yozilish
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-          </div>
-
-          {/* Closing Hook */}
-          <p className="text-center text-muted-foreground mt-8 mb-8 max-w-2xl mx-auto">
-            Birinchi oydan boshlab yo'qotishlarni kamaytirishga yordam beradigan haqiqiy misollar va vositalarni namoyish etamiz.
-          </p>
-
-          {/* CTA Button */}
-          <div className="text-center">
-            <button
-              onClick={onRegisterClick}
-              className="inline-flex items-center justify-center bg-primary text-primary-foreground font-semibold text-lg px-10 py-4 rounded-full hover:bg-primary/90 transition-colors shadow-lg hover:shadow-xl"
-            >
-              Vebinarga yozilish
-            </button>
           </div>
         </div>
       </div>
