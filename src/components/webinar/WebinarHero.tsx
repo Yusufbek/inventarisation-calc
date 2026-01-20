@@ -6,7 +6,7 @@ interface WebinarHeroProps {
 
 export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
   return (
-    <section className="relative min-h-[100svh] bg-gradient-to-b from-background to-secondary/20 overflow-hidden">
+    <section className="relative min-h-[100svh] bg-background overflow-hidden">
       {/* Header */}
       <header className="w-full py-4 md:py-6 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">

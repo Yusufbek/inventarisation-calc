@@ -20,7 +20,7 @@ export const WebinarCTA = ({ onRegisterClick, nextFriday }: WebinarCTAProps) => 
   const formattedDate = format(nextFriday, "d MMMM yyyy", { locale: uz });
 
   return (
-    <section className="py-12 md:py-20 lg:py-24 bg-secondary/20">
+    <section className="py-12 md:py-20 lg:py-24 bg-background">
       <div className="max-w-4xl mx-auto px-4 md:px-8">
         {/* Headline */}
         <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-center text-foreground mb-2 md:mb-3">
