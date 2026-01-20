@@ -10,6 +10,7 @@ import HealthCalc from "./pages/HealthCalc";
 import ThankYouVariant from "./pages/ThankYouVariant";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
+import WebinarFoydaWebinar from "./pages/WebinarFoydaWebinar";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/inventarisation-calc/formwall" element={<FormWallCalc />} />
           <Route path="/health-calc" element={<HealthCalc />} />
           <Route path="/health-calc/test" element={<HealthCalc isTestMode />} />
+          <Route path="/webinar/foyda-webinar" element={<WebinarFoydaWebinar />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
           {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />
