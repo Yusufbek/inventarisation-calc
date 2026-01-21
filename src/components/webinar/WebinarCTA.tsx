@@ -60,9 +60,9 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
 
             {/* Two Column Layout */}
             <div className="grid md:grid-cols-2 gap-8 md:gap-10 mb-8">
-              {/* Left - Date & Time */}
-              <div className="space-y-4">
-                <h3 className="font-semibold text-foreground text-lg mb-4">
+              {/* Left - Date & Time - Blue Container */}
+              <div className="bg-primary/10 rounded-2xl p-6 space-y-4">
+                <h3 className="font-semibold text-foreground text-lg">
                   Keyingi vebinar
                 </h3>
                 

@@ -158,7 +158,7 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
                   <div className="flex items-center space-x-3 bg-secondary/30 p-4 rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
                     <RadioGroupItem value="yes" id="yes" />
                     <Label htmlFor="yes" className="cursor-pointer flex-1">
-                      Ha, kelaman!
+                      Ha, qatnashaman
                     </Label>
                   </div>
                   <div className="flex items-center space-x-3 bg-secondary/30 p-4 rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
