@@ -23,6 +23,7 @@ const getUtmParams = () => {
     utm_campaign: params.get("utm_campaign") || "",
     utm_term: params.get("utm_term") || "",
     utm_content: params.get("utm_content") || "",
+    utm_refer: params.get("utm_refer") || "",
     fbclid: params.get("fbclid") || "",
   };
 };
