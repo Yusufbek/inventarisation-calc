@@ -17,14 +17,16 @@ const TELEGRAM_GROUP_URL = "https://t.me/billzwebinar";
 
 const getUtmParams = () => {
   const params = new URLSearchParams(window.location.search);
-  return {
-    utm_source: params.get("utm_source") || "",
-    utm_medium: params.get("utm_medium") || "",
-    utm_campaign: params.get("utm_campaign") || "",
-    utm_term: params.get("utm_term") || "",
-    utm_content: params.get("utm_content") || "",
-    fbclid: params.get("fbclid") || "",
-  };
+  const utmParams: Record<string, string> = {};
+  
+  // Capture all utm_ prefixed parameters and fbclid
+  params.forEach((value, key) => {
+    if (key.startsWith("utm_") || key === "fbclid") {
+      utmParams[key] = value;
+    }
+  });
+  
+  return utmParams;
 };
 
 export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistrationPopupProps) => {
