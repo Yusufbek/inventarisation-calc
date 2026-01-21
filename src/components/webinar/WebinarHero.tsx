@@ -45,7 +45,7 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
           <div className="flex-1 flex justify-center lg:justify-end">
             <div className="relative">
               <img
-                src="/images/webinar/hero-specialist.png"
+                src="/images/webinar/hero-specialist.jpg"
                 alt="BILLZ Vebinar mutaxassisi"
                 className="w-full max-w-sm md:max-w-md lg:max-w-lg rounded-3xl shadow-2xl"
               />
