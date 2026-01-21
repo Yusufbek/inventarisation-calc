@@ -15,6 +15,18 @@ interface WebinarRegistrationPopupProps {
 const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/22939f18-3a11-458d-8faf-33d30b92f10d";
 const TELEGRAM_GROUP_URL = "https://t.me/billzwebinar";
 
+const getUtmParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    utm_source: params.get("utm_source") || "",
+    utm_medium: params.get("utm_medium") || "",
+    utm_campaign: params.get("utm_campaign") || "",
+    utm_term: params.get("utm_term") || "",
+    utm_content: params.get("utm_content") || "",
+    fbclid: params.get("fbclid") || "",
+  };
+};
+
 export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistrationPopupProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
@@ -54,12 +66,14 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
     setIsSubmitting(true);
 
     const webinarType = `Foydangiz qayerga yo'qolyapti | ${getFormattedFridayDate()}`;
+    const utmParams = getUtmParams();
 
     const payload = {
       name: name.trim(),
       phone,
       webinarType,
       willAttend,
+      ...utmParams,
     };
 
     try {
