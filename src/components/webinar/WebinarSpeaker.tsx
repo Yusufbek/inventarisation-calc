@@ -23,7 +23,7 @@ export const WebinarSpeaker = () => {
             <div className="w-full md:w-1/2 flex-shrink-0">
               <div className="relative">
                 <img
-                  src="/images/webinar/speaker-shohrukh-v2.png"
+                  src="/images/webinar/speaker-shohrukh-v2.jpg"
                   alt="Shohrukh Pirmuhametov"
                   className="w-full max-w-sm md:max-w-md mx-auto rounded-3xl shadow-xl"
                 />
