@@ -116,7 +116,7 @@ export const CalculatorHub = () => {
               />
             </div>
             <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-4">
-              <CardTitle className="text-lg md:text-2xl lg:text-3xl">BILLZ Vebinar</CardTitle>
+              <CardTitle className="text-lg md:text-2xl lg:text-3xl">Foyda Webinar</CardTitle>
               <Button 
                 className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base"
                 onClick={(e) => {
