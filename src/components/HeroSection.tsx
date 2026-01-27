@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BillzCalculatorLogo } from "@/components/BillzCalculatorLogo";
+import { Store } from "lucide-react";
 import heroImage from "@/assets/hero-inventory.webp";
 
 interface HeroSectionProps {
@@ -22,7 +23,8 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
           />
           
           <div className="space-y-6 max-w-3xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <Badge variant="secondary" className="px-4 py-1.5 text-sm">
+            <Badge className="px-4 py-2 text-sm bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 transition-colors">
+              <Store className="w-4 h-4 mr-2" />
               Faqat Chakana Savdo do'kon egalari uchun
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
