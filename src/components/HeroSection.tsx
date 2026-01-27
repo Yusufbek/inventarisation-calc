@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { BillzCalculatorLogo } from "@/components/BillzCalculatorLogo";
 import heroImage from "@/assets/hero-inventory.webp";
 
@@ -21,6 +22,9 @@ export const HeroSection = ({ onStartCalculator }: HeroSectionProps) => {
           />
           
           <div className="space-y-6 max-w-3xl animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <Badge variant="secondary" className="px-4 py-1.5 text-sm">
+              Faqat Chakana Savdo do'kon egalari uchun
+            </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
               <span className="text-primary">Inventarizatsiyasiz</span> har oy qancha pul yo'qotyapsiz?
             </h1>
