@@ -1,50 +1,24 @@
 
-## Add Badge to Magnet Calculator Hero Page
 
-Adding a badge-style text element to the hero/landing page of the Magnet Calculator to indicate this tool is specifically for retail store owners.
+## Host Image for Public URL
 
-### What Will Be Added
+### What Will Be Done
 
-A badge with the text **"Faqat Chakana Savdo do'kon egalari uchun"** (Only for retail store owners) will be placed on the hero page, positioned above the main heading.
+Copy your uploaded image to the `public/images/` folder so it becomes accessible via a public URL.
 
-### Visual Result
+### Technical Details
 
-```text
-┌─────────────────────────────────────────────────┐
-│                                                 │
-│              [BILLZ CALCULATOR Logo]            │
-│                                                 │
-│           ┌─────────────────────────┐           │
-│           │      [Hero Image]       │           │
-│           └─────────────────────────┘           │
-│                                                 │
-│  ╭──────────────────────────────────────────╮   │
-│  │ Faqat Chakana Savdo do'kon egalari uchun │   │  ← NEW BADGE
-│  ╰──────────────────────────────────────────╯   │
-│                                                 │
-│     Inventarizatsiyasiz har oy qancha           │
-│          pul yo'qotyapsiz?                      │
-│                                                 │
-│     5 ta savolga javob bering...                │
-│                                                 │
-│         [Hisoblashni boshlash]                  │
-└─────────────────────────────────────────────────┘
-```
+**Action**: Copy `user-uploads://13_2.png` to `public/images/13_2.png`
 
-### Technical Changes
+### Result
 
-**File: `src/components/HeroSection.tsx`**
+After publishing, your image will be available at:
 
-1. Add import for the Badge component
-2. Insert a Badge element above the heading (inside the `space-y-6` div)
-3. Style the badge with:
-   - `variant="secondary"` for the subtle gray/blue background
-   - Rounded pill shape (default from Badge component)
-   - Slightly larger padding for better visibility: `px-4 py-1.5`
-   - Appropriate text size: `text-sm`
+**URL**: `https://inventarisation-calc.lovable.app/images/13_2.png`
 
-### Design Notes
+You can use this URL anywhere you need - in ads, social media, external platforms, etc.
 
-- Uses the existing Badge component which follows the project's corporate SaaS aesthetic
-- The `secondary` variant provides a subtle, professional look that doesn't compete with the main heading
-- The badge will be centered to match the overall text alignment of the hero section
+### Note
+
+The image won't be displayed on any page of your website - it will just be hosted and accessible via the direct URL above.
+
