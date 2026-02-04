@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { BillzCalculatorLogo } from "@/components/BillzCalculatorLogo";
 import { PdfHero } from "@/components/webinar/PdfHero";
-import { PdfContent } from "@/components/webinar/PdfContent";
 import { PdfStickyCta } from "@/components/webinar/PdfStickyCta";
 import { Button } from "@/components/ui/button";
 import { pageView, eventCustom } from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 import { Send } from "lucide-react";
 
-const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/f88e72ec-197c-401a-8028-6d9cf5ee188d";
+const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/bcd50c0e-ba5d-4b4c-9231-9f34f677ac9b";
 
 const getUtmParams = () => {
   const params = new URLSearchParams(window.location.search);
@@ -141,15 +140,13 @@ const WebinarInventarizatsiyaPdf = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-lg mx-auto px-4 py-6 pb-28">
         {/* Header */}
-        <header className="w-full flex justify-center mb-6">
+        <header className="w-full flex items-center gap-3 mb-6">
           <BillzCalculatorLogo className="h-8 md:h-10" />
+          <span className="text-muted-foreground font-medium">Amaliy qo'llanmalar</span>
         </header>
 
         {/* Hero Section */}
-        <PdfHero onDownloadClick={handleDownloadClick} isLoading={isLoading} />
-
-        {/* Content Section */}
-        <PdfContent />
+        <PdfHero />
 
         {/* Error Message */}
         {error && (
