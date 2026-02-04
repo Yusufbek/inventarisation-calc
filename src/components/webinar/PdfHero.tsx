@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import heroImage from "@/assets/pdf-hero-inventory.webp";
 
 export const PdfHero = () => {
@@ -15,10 +14,6 @@ export const PdfHero = () => {
 
       {/* Content */}
       <div className="text-center space-y-5 px-2">
-        <Badge className="bg-primary/10 text-primary border-0 px-5 py-2 text-sm font-semibold hover:bg-primary/10 shadow-sm">
-          Bepul
-        </Badge>
-
         <h1 className="text-2xl md:text-3xl font-bold text-foreground leading-snug tracking-tight">
           4000+ o'zbek do'konlari to'g'ri inventarizatsiya qilib, millionlab so'm yo'qotishni qanday to'xtatdi
         </h1>
