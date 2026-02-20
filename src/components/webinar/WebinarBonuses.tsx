@@ -1,17 +1,13 @@
-import { Users, BookOpen } from "lucide-react";
-
 const bonuses = [
   {
-    icon: Users,
     title: "Avtomatlashtirish eksperti bilan uchrashuv",
     description:
       "Do'koningizni tizimlashtirish va foydani oshirish bo'yicha individual tavsiyalar",
   },
   {
-    icon: BookOpen,
     title: "Do'koningiz uchun amaliy qo'llanmalar",
     description:
-      "Savdo nazorati, yo'qotishlarni kamaytirish va samaradorlikni oshirish bo'yicha tayyor yechimlar",
+      "Savdo nazorati va samaradorlikni oshirish bo'yicha tayyor yechimlar",
   },
 ];
 
@@ -28,22 +24,20 @@ export const WebinarBonuses = () => {
             {bonuses.map((bonus) => (
               <div
                 key={bonus.title}
-                className="relative bg-secondary/40 border border-border rounded-2xl p-6 md:p-8 overflow-hidden min-h-[200px] flex flex-col justify-center"
+                className="relative bg-secondary/30 rounded-3xl p-7 md:p-9 overflow-hidden min-h-[180px] md:min-h-[200px]"
               >
-                {/* Text content */}
-                <div className="relative z-10 pr-20 md:pr-28">
-                  <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">
+                <div className="relative z-10 pr-16 sm:pr-24">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 leading-tight">
                     {bonus.title}
                   </h3>
                   <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
                     {bonus.description}
                   </p>
                 </div>
-                {/* Gift icon in bottom-right */}
                 <img
                   src="/images/webinar/gift-box.png"
                   alt="Sovg'a"
-                  className="absolute bottom-0 right-2 w-24 md:w-32 opacity-90"
+                  className="absolute bottom-[-4px] right-2 w-20 sm:w-24 md:w-28 max-w-full h-auto opacity-80"
                 />
               </div>
             ))}
