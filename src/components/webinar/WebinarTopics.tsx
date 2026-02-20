@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ArrowRight } from "lucide-react";
 
 interface WebinarTopicsProps {
   onRegisterClick: () => void;
@@ -22,7 +22,7 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
           </h2>
 
           {/* Dark section with two columns */}
-          <div className="bg-[#1a1f36] rounded-3xl p-5 md:p-8">
+          <div className="bg-primary rounded-3xl p-5 md:p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {/* Left column */}
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
@@ -52,6 +52,17 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
                 </ul>
               </div>
             </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={onRegisterClick}
+              className="bg-foreground text-background font-semibold text-lg px-12 py-4 rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
+            >
+              Vebinarga yozilish
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
