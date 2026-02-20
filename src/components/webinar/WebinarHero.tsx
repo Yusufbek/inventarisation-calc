@@ -24,9 +24,6 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
               <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
                 27 fevral
               </span>
-              <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
-                soat 16:00da
-              </span>
             </div>
             
             {/* Headline */}

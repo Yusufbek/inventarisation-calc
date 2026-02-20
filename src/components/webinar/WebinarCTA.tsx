@@ -1,4 +1,4 @@
-import { Check, Calendar, Clock, Gift, ArrowRight } from "lucide-react";
+import { Check, Calendar, Gift, ArrowRight } from "lucide-react";
 
 interface WebinarCTAProps {
   onRegisterClick: () => void;
@@ -75,15 +75,6 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
                   </div>
                   <div>
                     <span className="font-medium text-foreground">Juma, {nextFridayFormatted}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-background rounded-xl flex items-center justify-center shadow-sm">
-                    <Clock className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <span className="font-medium text-foreground">17:00</span>
                   </div>
                 </div>
 
