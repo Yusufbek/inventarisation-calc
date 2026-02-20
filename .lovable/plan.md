@@ -1,30 +1,23 @@
 
 
-# UI Adjustments: Topics and Bonuses Sections
+# Adjust Topics Section Color and Add CTA
 
-## 1. Remove the 3 colored topic cards
-**File:** `src/components/webinar/WebinarTopics.tsx`
-- Delete the `topicCards` array (lines 7-32) entirely
-- Remove the "Part A" grid section (lines 51-66) that renders the 3 colored cards
-- Keep only the section heading and the dark "Part B" section below
-
-## 2. Fix text visibility in "Nima haqida gaplashamiz?" section
+## 1. Change dark section background to primary blue
 **File:** `src/components/webinar/WebinarTopics.tsx`
 
-The inner cards currently use `bg-primary/10` with `text-foreground` and `text-muted-foreground`, which don't contrast well on the dark navy background. Based on the reference screenshot:
-- Change inner card backgrounds from `bg-primary/10` to a semi-transparent dark style: `bg-white/5 border border-white/10`
-- Change heading text from `text-foreground` to `text-white`
-- Change body/description text from `text-muted-foreground` to `text-white/70`
-- Change CheckCircle icon color to `text-blue-400` for better visibility
-- Change list item text from `text-muted-foreground` to `text-white/70`
+The outer dark container currently uses `bg-[#1a1f36]` (dark navy). Change it to use the project's primary blue (`bg-primary`) so it matches the blue used throughout the site.
 
-## 3. Make first bonus icon bigger
-**File:** `src/components/webinar/WebinarBonuses.tsx`
-- Increase the chat bubble icon (first card) size from `w-20 sm:w-24 md:w-28` to `w-24 sm:w-28 md:w-32`
-- Keep the second card icon at its current size
+- Line 25: `bg-[#1a1f36]` -> `bg-primary`
+- Inner cards stay `bg-white/5 border border-white/10` (they look fine on blue too)
+
+## 2. Add CTA button below the dark section
+Add a "Vebinarga yozilish" button centered below the blue container, using the `onRegisterClick` prop that already exists. Style it as a white/light button on the page background with an ArrowRight icon, rounded-full, similar to the CTA used in other sections.
+
+- Import `ArrowRight` from lucide-react
+- Add the button after the blue container div, inside the max-w-5xl wrapper
+- Style: `bg-foreground text-background font-semibold text-lg px-12 py-4 rounded-full` with hover effects
 
 ### Technical Summary
-**File to modify:**
-- `src/components/webinar/WebinarTopics.tsx` -- remove 3 cards, fix colors in dark section
-- `src/components/webinar/WebinarBonuses.tsx` -- increase first icon size
-
+**File to modify:** `src/components/webinar/WebinarTopics.tsx`
+- Change background color from navy to primary blue
+- Add CTA button beneath the section
