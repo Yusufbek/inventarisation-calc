@@ -1,4 +1,4 @@
-import { ArrowRight, ShieldCheck, PackageSearch, Calculator } from "lucide-react";
+import { ArrowRight, ShieldCheck, PackageSearch, Calculator, Target } from "lucide-react";
 
 interface WebinarTopicsProps {
   onRegisterClick: () => void;
@@ -55,10 +55,15 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
             Nimalarni <span className="text-primary">o'rganasiz?</span>
           </h2>
 
-          <p className="text-muted-foreground text-center text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
-            Ushbu vebinar do'konida xavfsizlik va nazoratni kuchaytirishni istagan tadbirkorlar uchun mo'ljallangan.
-            Biz yo'qotishlarga olib keladigan asosiy xavflarni aniqlash va ularni tizimli ravishda bartaraf etish yo'llarini ko'rsatamiz.
-          </p>
+          <div className="bg-gradient-to-r from-primary/5 to-primary/10 border-l-4 border-primary rounded-2xl p-5 md:p-6 max-w-2xl mx-auto mb-10 flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Target className="w-5 h-5 text-primary" />
+            </div>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+              Ushbu vebinar do'konida xavfsizlik va nazoratni kuchaytirishni istagan tadbirkorlar uchun mo'ljallangan.
+              Biz yo'qotishlarga olib keladigan asosiy xavflarni aniqlash va ularni tizimli ravishda bartaraf etish yo'llarini ko'rsatamiz.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10">
             {topics.map((topic, i) => (
