@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Send } from "lucide-react";
 import { eventCustom } from "@/lib/fpixel";
@@ -23,7 +22,6 @@ const getUtmParams = () => {
 export const WebinarInlineRegistration = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
-  const [willAttend, setWillAttend] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const hasTrackedWebinarFinished = useRef(false);
@@ -40,7 +38,7 @@ export const WebinarInlineRegistration = () => {
 
   const isPhoneValid = () => phone.length === 13;
 
-  const canSubmit = () => name.trim().length > 0 && isPhoneValid() && willAttend !== "";
+  const canSubmit = () => name.trim().length > 0 && isPhoneValid();
 
   const handleSubmit = async () => {
     if (!canSubmit() || isSubmitting) return;
@@ -53,7 +51,7 @@ export const WebinarInlineRegistration = () => {
       name: name.trim(),
       phone,
       webinarType,
-      willAttend,
+      willAttend: "yes",
       ...utmParams,
     };
 
@@ -82,92 +80,70 @@ export const WebinarInlineRegistration = () => {
     window.open(TELEGRAM_GROUP_URL, "_blank");
   };
 
-  const getDaysUntilFriday = (): number => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    return (5 - dayOfWeek + 7) % 7 || 7;
-  };
-
-  const daysUntilFriday = getDaysUntilFriday();
-
   return (
     <section id="registration" className="bg-primary/5 py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-xl mx-auto">
           {!isSuccess ? (
             <>
-              {/* Tag */}
-              <div className="flex justify-center mb-4">
-                <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs md:text-sm font-medium">
-                  Ro'yxatdan o'tish
+              {/* Tag pills */}
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs md:text-sm font-semibold">
+                  Bepul
+                </span>
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-foreground text-background text-xs md:text-sm font-semibold">
+                  27 fevral
+                </span>
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-foreground text-background text-xs md:text-sm font-semibold">
+                  soat 16:00da
                 </span>
               </div>
 
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-3">
-                Vebinarga ro'yxatdan o'ting
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-2">
+                Ro'yxatdan o'tish
               </h2>
 
-              <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+              <p className="text-muted-foreground text-center text-sm md:text-base mb-8">
+                Vebinar haqida barcha ma'lumotlar Telegram guruhida beriladi
+              </p>
 
-                <div className="space-y-5">
-                  {/* Name */}
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-name" className="text-foreground font-medium">
-                      Ismingiz
-                    </Label>
-                    <Input
-                      id="reg-name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="Ismingizni kiriting"
-                      className="h-12 rounded-xl"
-                    />
-                  </div>
-
-                  {/* Phone */}
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-phone" className="text-foreground font-medium">
-                      Telefon raqamingiz
-                    </Label>
-                    <Input
-                      id="reg-phone"
-                      value={phone}
-                      onChange={handlePhoneChange}
-                      placeholder="+998XXXXXXXXX"
-                      className="h-12 rounded-xl"
-                    />
-                  </div>
-
-                  {/* Attendance */}
-                  <div className="space-y-3">
-                    <Label className="text-foreground font-medium">
-                      {daysUntilFriday} kundan keyin vebinarga qatnashasizmi?
-                    </Label>
-                    <RadioGroup value={willAttend} onValueChange={setWillAttend}>
-                      <div className="flex items-center space-x-3 bg-secondary/30 p-4 rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
-                        <RadioGroupItem value="yes" id="reg-yes" />
-                        <Label htmlFor="reg-yes" className="cursor-pointer flex-1">
-                          Ha, qatnashaman
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-3 bg-secondary/30 p-4 rounded-xl cursor-pointer hover:bg-secondary/50 transition-colors">
-                        <RadioGroupItem value="maybe" id="reg-maybe" />
-                        <Label htmlFor="reg-maybe" className="cursor-pointer flex-1">
-                          Bilmayman
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  {/* Submit */}
-                  <button
-                    onClick={handleSubmit}
-                    disabled={!canSubmit() || isSubmitting}
-                    className="w-full bg-primary text-primary-foreground font-semibold text-lg py-4 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? "Yuborilmoqda..." : "Yuborish"}
-                  </button>
+              <div className="space-y-4">
+                {/* Name */}
+                <div className="space-y-2">
+                  <Label htmlFor="reg-name" className="text-foreground font-medium">
+                    Ismingiz
+                  </Label>
+                  <Input
+                    id="reg-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Ismingizni kiriting"
+                    className="h-14 rounded-2xl border-border/50 bg-background text-base"
+                  />
                 </div>
+
+                {/* Phone */}
+                <div className="space-y-2">
+                  <Label htmlFor="reg-phone" className="text-foreground font-medium">
+                    Telefon raqamingiz
+                  </Label>
+                  <Input
+                    id="reg-phone"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    placeholder="+998XXXXXXXXX"
+                    className="h-14 rounded-2xl border-border/50 bg-background text-base"
+                  />
+                </div>
+
+                {/* Submit */}
+                <button
+                  onClick={handleSubmit}
+                  disabled={!canSubmit() || isSubmitting}
+                  className="w-full bg-foreground text-background font-semibold text-lg py-4 rounded-full hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                >
+                  {isSubmitting ? "Yuborilmoqda..." : "Yuborish"}
+                </button>
               </div>
             </>
           ) : (
