@@ -1,100 +1,101 @@
-import { ArrowRight, ShieldCheck, PackageSearch, Calculator, Target } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 
 interface WebinarTopicsProps {
   onRegisterClick: () => void;
 }
 
-const topics = [
+const topicCards = [
   {
-    icon: Calculator,
-    step: "01",
     title: "Kassa va moliyaviy intizom",
     description:
       "Chetlab sotish va kassadagi kamomadni aniqlash hamda bartaraf etish usullari.",
-    gradient: "from-primary/10 to-primary/5",
-    iconBg: "bg-primary/15",
-    iconColor: "text-primary",
-    borderColor: "border-l-primary",
-    badgeBg: "bg-primary/10",
-    badgeText: "text-primary",
+    bg: "bg-[#1a1f36]",
+    text: "text-white",
+    descText: "text-white/70",
   },
   {
-    icon: ShieldCheck,
-    step: "02",
     title: "Mulk himoyasi",
     description:
       "O'g'rilik va yashirin yo'qotishlarning oldini olish bo'yicha amaliy choralar.",
-    gradient: "from-emerald-50 to-emerald-50/50",
-    iconBg: "bg-emerald-100",
-    iconColor: "text-emerald-600",
-    borderColor: "border-l-emerald-500",
-    badgeBg: "bg-emerald-50",
-    badgeText: "text-emerald-600",
+    bg: "bg-[#ff5a5f]",
+    text: "text-white",
+    descText: "text-white/70",
   },
   {
-    icon: PackageSearch,
-    step: "03",
     title: "Hisob-kitob nazorati",
     description:
       "Narx va miqdor bilan bog'liq firibgarliklarni aniqlash usullari.",
-    gradient: "from-amber-50 to-amber-50/50",
-    iconBg: "bg-amber-100",
-    iconColor: "text-amber-600",
-    borderColor: "border-l-amber-500",
-    badgeBg: "bg-amber-50",
-    badgeText: "text-amber-600",
+    bg: "bg-primary/10",
+    text: "text-foreground",
+    descText: "text-muted-foreground",
   },
+];
+
+const learningItems = [
+  "Kassadagi kamomad va chetlab sotishni qanday aniqlash",
+  "Xodimlar tomonidan yo'qotishlarning oldini olish",
+  "Tovar qoldiqlarini real vaqtda nazorat qilish",
+  "Har bir tovar bo'yicha haqiqiy foydani hisoblash",
+  "Avtomatlashtirilgan hisobotlar orqali vaqtni tejash",
 ];
 
 export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
   return (
     <section className="bg-background py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-4">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-10">
             Nimalarni <span className="text-primary">o'rganasiz?</span>
           </h2>
 
-          <div className="bg-gradient-to-r from-primary/5 to-primary/10 border-l-4 border-primary rounded-2xl p-5 md:p-6 max-w-2xl mx-auto mb-10 flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Target className="w-5 h-5 text-primary" />
-            </div>
-            <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
-              Ushbu vebinar do'konida xavfsizlik va nazoratni kuchaytirishni istagan tadbirkorlar uchun mo'ljallangan.
-              Biz yo'qotishlarga olib keladigan asosiy xavflarni aniqlash va ularni tizimli ravishda bartaraf etish yo'llarini ko'rsatamiz.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-10">
-            {topics.map((topic, i) => (
+          {/* Part A: 3 colored cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mb-6">
+            {topicCards.map((card, i) => (
               <div
                 key={i}
-                className={`relative bg-gradient-to-br ${topic.gradient} border border-border rounded-2xl p-6 md:p-7 hover:shadow-lg transition-all duration-300`}
+                className={`${card.bg} rounded-3xl p-7 md:p-8 flex flex-col justify-between min-h-[200px]`}
               >
-                <span className={`absolute top-4 right-4 text-xs font-bold ${topic.badgeText} ${topic.badgeBg} rounded-full w-8 h-8 flex items-center justify-center`}>
-                  {topic.step}
-                </span>
-                <div className={`w-14 h-14 rounded-2xl ${topic.iconBg} flex items-center justify-center mb-4`}>
-                  <topic.icon className={`w-7 h-7 ${topic.iconColor}`} />
-                </div>
-                <h3 className="text-foreground font-bold text-base md:text-lg mb-2">
-                  {topic.title}
+                <h3 className={`${card.text} font-bold text-lg md:text-xl mb-3 leading-tight`}>
+                  {card.title}
                 </h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {topic.description}
+                <p className={`${card.descText} text-sm md:text-base leading-relaxed`}>
+                  {card.description}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="text-center">
-            <button
-              onClick={onRegisterClick}
-              className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-base md:text-lg px-10 md:px-14 py-4 md:py-5 rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] group"
-            >
-              Vebinarga yozilish
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+          {/* Part B: Dark section with two columns */}
+          <div className="bg-[#1a1f36] rounded-3xl p-5 md:p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              {/* Left column */}
+              <div className="bg-primary/10 rounded-2xl p-6 md:p-8">
+                <h3 className="text-foreground font-bold text-lg md:text-xl mb-3">
+                  Nima haqida gaplashamiz?
+                </h3>
+                <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                  Ushbu vebinar do'konida xavfsizlik va nazoratni kuchaytirishni istagan tadbirkorlar uchun mo'ljallangan.
+                  Biz yo'qotishlarga olib keladigan asosiy xavflarni aniqlash va ularni tizimli ravishda bartaraf etish yo'llarini ko'rsatamiz.
+                </p>
+              </div>
+
+              {/* Right column */}
+              <div className="bg-primary/10 rounded-2xl p-6 md:p-8">
+                <h3 className="text-foreground font-bold text-lg md:text-xl mb-4">
+                  Vebinarda o'rganasiz
+                </h3>
+                <ul className="space-y-3">
+                  {learningItems.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground text-sm md:text-base leading-relaxed">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
