@@ -21,14 +21,12 @@ export const WebinarSpeaker = () => {
           <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12 lg:gap-16">
             {/* Photo - Full Color, Large */}
             <div className="w-full md:w-1/2 flex-shrink-0">
-              <div className="relative">
+              <div className="relative flex justify-center">
                 <img
                   src="/images/webinar/speaker-shohrukh-v3.png"
                   alt="Shohrukh Pirmuhametov"
-                  className="w-full max-w-sm md:max-w-md mx-auto rounded-full shadow-xl"
+                  className="w-64 md:w-72 lg:w-80 object-contain"
                 />
-                {/* Decorative blur */}
-                <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-primary/10 rounded-full blur-3xl" />
               </div>
             </div>
 
