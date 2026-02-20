@@ -1,82 +1,38 @@
 
 
-# Edits for /webinar/foyda-webinar Page
-
-## Overview
-Redesigning the webinar landing page with 4 major changes: updated hero with tag pills, removed sections, two new content sections, and an inline registration form replacing the popup.
+# Content and Layout Updates for /webinar/foyda-webinar
 
 ## Changes
 
-### 1. Hero Section - Add Tag Pills
-Update `WebinarHero.tsx` to add three horizontal tag pills above the headline (like in the reference screenshot):
-- "Bepul Vebinar" | "27 fevral" | "soat 16:00da"
-- Style: rounded-full pills with border, inline-flex row, similar to the reference
+### 1. WebinarTopics - Add description text and update topic cards
+- Add a paragraph below the heading with the provided text about the webinar's target audience
+- Update the 3 topic cards with new content:
+  1. **Kassa va moliyaviy intizom** - Chetlab sotish holatlari va kassadagi kamomad ("minus") paydo bo'lishining sabablarini aniqlash hamda ularni bartaraf etish usullari.
+  2. **Mulk himoyasi** - O'g'rilik, tovarlarni almashtirib qo'yish va yashirin yo'qotishlarning oldini olish bo'yicha amaliy choralar.
+  3. **Hisob-kitob nazorati** - Narxlar o'zgarishi, mahsulot miqdori bilan bog'liq firibgarliklar va noto'g'ri hisob-kitoblarni qanday aniqlash mumkinligi.
+- Change from 2x2 grid to 3-column (or stacked) layout since there are now 3 items instead of 4
+- Each card gets a bold title + description text
 
-Also remove the "BILLZ VEBINAR" uppercase tracking label since the pills replace it.
+### 2. Remove WebinarCTA section
+- Remove `WebinarCTA` import and usage from `WebinarFoydaWebinar.tsx`
+- The "Do'koningiz xavfsizligini ta'minlashga tayyormisiz?" section will be gone
 
-### 2. Remove Sections
-Remove `WebinarTrust` and `WebinarMission` from the page:
-- Delete their imports and usage from `WebinarFoydaWebinar.tsx`
-- This removes the brand logos section and the "super kuch" feature cards section
+### 3. Update WebinarBonuses - New texts and bolder design
+- Card 1: **Avtomatlashtirish eksperti bilan uchrashuv** / Do'koningizni tizimlashtirish va foydani oshirish bo'yicha individual tavsiyalar
+- Card 2: **Do'koningiz uchun amaliy qo'llanmalar** / Savdo nazorati, yo'qotishlarni kamaytirish va samaradorlikni oshirish bo'yicha tayyor yechimlar
+- Make cards more colorful: gradient backgrounds, larger icons (w-10 h-10 or bigger), vibrant primary/accent colors instead of subtle borders
 
-### 3. Add Two New Sections
-Create two new components (content to be provided by you later, will use placeholder text for now):
-
-**a) `WebinarTopics.tsx`** - "Nimalarni o'rganasiz?"
-- Layout: heading + 2x2 grid of rounded cards with light blue/primary-tinted backgrounds
-- Each card has a short text description
-- A "Vebinarga yozilish" CTA button below the grid
-- Style matches the reference screenshot
-
-**b) `WebinarBonuses.tsx`** - "Yana nimalarga ega bo'lasiz?"
-- Layout: heading + two side-by-side cards
-- Each card has a title and description
-- Rounded corners, soft shadow, clean design matching the reference
-
-### 4. Inline Registration Form
-Replace the popup registration with an inline section on the page:
-
-**a) Create `WebinarInlineRegistration.tsx`**
-- Light blue/primary-tinted background section
-- Tag pill at top: "Ro'yxatdan o'tish"
-- Headline and description text
-- "Shaxsiy ma'lumotlar" label
-- Form fields: Name input, Phone input (+998 format)
-- Attendance radio buttons (same as current popup)
-- Submit button
-- Same webhook logic, UTM capture, and success state (Telegram redirect) from the current popup
-
-**b) Update `WebinarFoydaWebinar.tsx`**
-- Remove the popup state management (`isPopupOpen`, `setIsPopupOpen`)
-- Remove `WebinarRegistrationPopup` import/usage
-- Remove `onRegisterClick` prop passing (CTA buttons will scroll to the registration section instead)
-- Add scroll-to-registration behavior for all "Vebinarga yozilish" buttons
-
-### Updated Page Order
-1. Hero (with tag pills)
-2. Speaker section (kept as-is)
-3. "Nimalarni o'rganasiz?" (new topics section)
-4. "Yana nimalarga ega bo'lasiz?" (new bonuses section)
-5. CTA section (kept, button scrolls to registration)
-6. Inline Registration Form (new, at the bottom)
-
----
+### 4. Move Speaker section before Registration
+- Reorder sections in `WebinarFoydaWebinar.tsx` to:
+  1. Hero
+  2. Topics
+  3. Bonuses
+  4. Speaker
+  5. Inline Registration
 
 ### Technical Details
 
-**Files to create:**
-- `src/components/webinar/WebinarTopics.tsx` - topics grid section
-- `src/components/webinar/WebinarBonuses.tsx` - bonuses cards section
-- `src/components/webinar/WebinarInlineRegistration.tsx` - inline form with webhook logic
-
 **Files to modify:**
-- `src/components/webinar/WebinarHero.tsx` - add tag pills, change CTA to scroll-to behavior
-- `src/pages/WebinarFoydaWebinar.tsx` - restructure sections, remove popup logic
-- `src/components/webinar/WebinarCTA.tsx` - change button to scroll-to behavior
-
-**No files deleted** (existing components stay in codebase for potential reuse).
-
-**Webhook & tracking:** All existing webhook URL, UTM capture, pixel events (`WebinarFinished`), and CAPI support will be preserved in the inline form, moved from the popup component.
-
-**Note:** The topics and bonuses sections will have placeholder Uzbek text. Please provide the exact content and I will update them.
-
+- `src/components/webinar/WebinarTopics.tsx` - add description paragraph, update to 3 titled topic cards
+- `src/components/webinar/WebinarBonuses.tsx` - new texts, more colorful/vibrant card design with bigger icons
+- `src/pages/WebinarFoydaWebinar.tsx` - remove WebinarCTA, reorder Speaker before Registration
