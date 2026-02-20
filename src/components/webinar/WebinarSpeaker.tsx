@@ -36,7 +36,7 @@ export const WebinarSpeaker = () => {
                 Shohrukh Pirmuhametov
               </h3>
               <p className="text-muted-foreground text-base md:text-lg mb-8">
-                Mijozlarni ulash va o'qitish bo'yicha rahbar
+                Do'konlarni avtomatlashtirish bo'yicha ekspert
               </p>
 
               {/* Stats Cards - Side by Side */}

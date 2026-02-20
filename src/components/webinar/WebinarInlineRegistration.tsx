@@ -106,14 +106,8 @@ export const WebinarInlineRegistration = () => {
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-3">
                 Vebinarga ro'yxatdan o'ting
               </h2>
-              <p className="text-muted-foreground text-center mb-8 max-w-md mx-auto">
-                Ma'lumotlaringizni qoldiring va bepul vebinarga qo'shiling
-              </p>
 
               <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
-                <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-5">
-                  Shaxsiy ma'lumotlar
-                </p>
 
                 <div className="space-y-5">
                   {/* Name */}
