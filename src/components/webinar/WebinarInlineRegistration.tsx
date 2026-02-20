@@ -91,10 +91,10 @@ export const WebinarInlineRegistration = () => {
                 <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs md:text-sm font-semibold">
                   Bepul
                 </span>
-                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-foreground text-background text-xs md:text-sm font-semibold">
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-semibold">
                   27 fevral
                 </span>
-                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-foreground text-background text-xs md:text-sm font-semibold">
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-semibold">
                   soat 16:00da
                 </span>
               </div>
@@ -140,7 +140,7 @@ export const WebinarInlineRegistration = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={!canSubmit() || isSubmitting}
-                  className="w-full bg-foreground text-background font-semibold text-lg py-4 rounded-full hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                  className="w-full bg-primary text-primary-foreground font-semibold text-lg py-4 rounded-full hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                 >
                   {isSubmitting ? "Yuborilmoqda..." : "Yuborish"}
                 </button>
