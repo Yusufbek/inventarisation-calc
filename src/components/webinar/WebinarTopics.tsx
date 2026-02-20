@@ -58,10 +58,10 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
           <div className="flex justify-center mt-8">
             <button
               onClick={onRegisterClick}
-              className="bg-foreground text-background font-semibold text-lg px-12 py-4 rounded-full hover:opacity-90 transition-opacity flex items-center gap-2"
+              className="group bg-primary text-primary-foreground font-semibold text-lg px-12 py-4 rounded-full hover:bg-primary/90 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all flex items-center gap-2"
             >
               Vebinarga yozilish
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
