@@ -11,6 +11,7 @@ import ThankYouVariant from "./pages/ThankYouVariant";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import WebinarFoydaWebinar from "./pages/WebinarFoydaWebinar";
+import WebinarFoydaWebinarV2 from "./pages/WebinarFoydaWebinarV2";
 import WebinarInventarizatsiyaPdf from "./pages/WebinarInventarizatsiyaPdf";
 import WebinarSuccess from "./pages/WebinarSuccess";
 
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/health-calc" element={<HealthCalc />} />
           <Route path="/health-calc/test" element={<HealthCalc isTestMode />} />
           <Route path="/webinar/foyda-webinar" element={<WebinarFoydaWebinar />} />
+          <Route path="/webinar/foyda-webinar-v2" element={<WebinarFoydaWebinarV2 />} />
           <Route path="/webinar/foyda-webinar/success" element={<WebinarSuccess />} />
           <Route path="/webinar/inventarizatsiya-pdf" element={<WebinarInventarizatsiyaPdf />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />

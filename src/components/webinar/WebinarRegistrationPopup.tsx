@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { CheckCircle } from "lucide-react";
 import { getFormattedFridayDate } from "./WebinarCTA";
+import { event as fbEvent } from "@/lib/fpixel";
 
 interface WebinarRegistrationPopupProps {
   isOpen: boolean;
@@ -25,11 +26,11 @@ const getUtmParams = () => {
 };
 
 export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistrationPopupProps) => {
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
   const [willAttend, setWillAttend] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
@@ -68,7 +69,7 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
       });
       const data = await response.json();
       if (data.access === "granted") {
-        navigate("/webinar/foyda-webinar/success");
+        setIsSuccess(true);
       }
     } catch (error) {
       console.error("Failed to submit registration:", error);
@@ -84,6 +85,39 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
   };
 
   const daysUntilFriday = getDaysUntilFriday();
+
+  const handleTelegramClick = () => {
+    fbEvent("WebinarFinished");
+  };
+
+  if (isSuccess) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md rounded-3xl">
+          <div className="flex flex-col items-center text-center py-6 space-y-4">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Tabriklaymiz!
+            </h2>
+            <p className="text-muted-foreground">
+              Siz vebinarga muvaffaqiyatli ro'yxatdan o'tdingiz. Telegram guruhimizga qo'shiling:
+            </p>
+            <a
+              href="https://t.me/+xJFGhkvsilJiYjZi"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleTelegramClick}
+              className="inline-flex items-center justify-center bg-primary text-primary-foreground font-semibold text-base px-8 py-3 rounded-full hover:bg-primary/90 transition-all"
+            >
+              Telegram guruhga qo'shilish
+            </a>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

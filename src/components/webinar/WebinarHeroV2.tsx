@@ -1,10 +1,10 @@
 import { BillzLogo } from "@/components/BillzLogo";
 
-interface WebinarHeroProps {
+interface WebinarHeroV2Props {
   onRegisterClick: () => void;
 }
 
-export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
+export const WebinarHeroV2 = ({ onRegisterClick }: WebinarHeroV2Props) => {
   return (
     <section className="bg-background py-8 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
@@ -25,7 +25,7 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
                 27 fevral
               </span>
               <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
-                soat 16:00da
+                soat 11:00da
               </span>
             </div>
             
