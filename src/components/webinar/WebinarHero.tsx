@@ -18,7 +18,7 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
           <div className="flex-1 text-center lg:text-left">
             {/* Tag Pills */}
             <div className="flex flex-wrap gap-2 mb-6 justify-center lg:justify-start">
-              <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs md:text-sm font-medium">
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs md:text-sm font-semibold">
                 Bepul Vebinar
               </span>
               <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
