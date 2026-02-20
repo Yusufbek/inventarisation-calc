@@ -7,27 +7,48 @@ interface WebinarTopicsProps {
 const topics = [
   {
     icon: Calculator,
+    step: "01",
     title: "Kassa va moliyaviy intizom",
     description:
-      "Chetlab sotish holatlari va kassadagi kamomad (\"minus\") paydo bo'lishining sabablarini aniqlash hamda ularni bartaraf etish usullari.",
+      "Chetlab sotish va kassadagi kamomadni aniqlash hamda bartaraf etish usullari.",
+    gradient: "from-primary/10 to-primary/5",
+    iconBg: "bg-primary/15",
+    iconColor: "text-primary",
+    borderColor: "border-l-primary",
+    badgeBg: "bg-primary/10",
+    badgeText: "text-primary",
   },
   {
     icon: ShieldCheck,
+    step: "02",
     title: "Mulk himoyasi",
     description:
-      "O'g'rilik, tovarlarni almashtirib qo'yish va yashirin yo'qotishlarning oldini olish bo'yicha amaliy choralar.",
+      "O'g'rilik va yashirin yo'qotishlarning oldini olish bo'yicha amaliy choralar.",
+    gradient: "from-emerald-50 to-emerald-50/50",
+    iconBg: "bg-emerald-100",
+    iconColor: "text-emerald-600",
+    borderColor: "border-l-emerald-500",
+    badgeBg: "bg-emerald-50",
+    badgeText: "text-emerald-600",
   },
   {
     icon: PackageSearch,
+    step: "03",
     title: "Hisob-kitob nazorati",
     description:
-      "Narxlar o'zgarishi, mahsulot miqdori bilan bog'liq firibgarliklar va noto'g'ri hisob-kitoblarni qanday aniqlash mumkinligi.",
+      "Narx va miqdor bilan bog'liq firibgarliklarni aniqlash usullari.",
+    gradient: "from-amber-50 to-amber-50/50",
+    iconBg: "bg-amber-100",
+    iconColor: "text-amber-600",
+    borderColor: "border-l-amber-500",
+    badgeBg: "bg-amber-50",
+    badgeText: "text-amber-600",
   },
 ];
 
 export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
   return (
-    <section className="bg-secondary/30 py-12 md:py-16 lg:py-20">
+    <section className="bg-background py-12 md:py-16 lg:py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground text-center mb-4">
@@ -43,10 +64,13 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
             {topics.map((topic, i) => (
               <div
                 key={i}
-                className="bg-card border border-border rounded-2xl p-5 md:p-6"
+                className={`relative bg-gradient-to-br ${topic.gradient} border border-border border-l-4 ${topic.borderColor} rounded-2xl p-6 md:p-7 hover:shadow-lg transition-all duration-300`}
               >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                  <topic.icon className="w-5 h-5 text-primary" />
+                <span className={`absolute top-4 right-4 text-xs font-bold ${topic.badgeText} ${topic.badgeBg} rounded-full w-8 h-8 flex items-center justify-center`}>
+                  {topic.step}
+                </span>
+                <div className={`w-14 h-14 rounded-xl ${topic.iconBg} flex items-center justify-center mb-4`}>
+                  <topic.icon className={`w-7 h-7 ${topic.iconColor}`} />
                 </div>
                 <h3 className="text-foreground font-bold text-base md:text-lg mb-2">
                   {topic.title}
