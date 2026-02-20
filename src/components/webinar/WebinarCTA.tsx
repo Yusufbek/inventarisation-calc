@@ -45,6 +45,9 @@ export const getFormattedFridayDate = (): string => {
 };
 
 export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
+  const handleClick = onRegisterClick ?? (() => {
+    document.getElementById("registration")?.scrollIntoView({ behavior: "smooth" });
+  });
   const nextFridayFormatted = getFormattedFridayDate();
 
   return (
@@ -116,7 +119,7 @@ export const WebinarCTA = ({ onRegisterClick }: WebinarCTAProps) => {
             {/* CTA Button */}
             <div className="text-center">
               <button
-                onClick={onRegisterClick}
+                onClick={handleClick}
                 className="inline-flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold text-base md:text-lg px-10 md:px-14 py-4 md:py-5 rounded-full hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] group"
               >
                 Vebinarga yozilish

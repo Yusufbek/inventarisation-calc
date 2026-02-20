@@ -1,39 +1,30 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { WebinarHero } from "@/components/webinar/WebinarHero";
-import { WebinarTrust } from "@/components/webinar/WebinarTrust";
-import { WebinarMission } from "@/components/webinar/WebinarMission";
 import { WebinarSpeaker } from "@/components/webinar/WebinarSpeaker";
+import { WebinarTopics } from "@/components/webinar/WebinarTopics";
+import { WebinarBonuses } from "@/components/webinar/WebinarBonuses";
 import { WebinarCTA } from "@/components/webinar/WebinarCTA";
-import { WebinarRegistrationPopup } from "@/components/webinar/WebinarRegistrationPopup";
+import { WebinarInlineRegistration } from "@/components/webinar/WebinarInlineRegistration";
 import { pageView } from "@/lib/fpixel";
 
-const WebinarFoydaWebinar = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+const scrollToRegistration = () => {
+  document.getElementById("registration")?.scrollIntoView({ behavior: "smooth" });
+};
 
+const WebinarFoydaWebinar = () => {
   useEffect(() => {
-    // Fire page view on mount
     pageView();
-    
-    // Scroll to top
     window.scrollTo(0, 0);
   }, []);
 
-  const handleRegisterClick = () => {
-    setIsPopupOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      <WebinarHero onRegisterClick={handleRegisterClick} />
-      <WebinarTrust />
-      <WebinarMission onRegisterClick={handleRegisterClick} />
+      <WebinarHero onRegisterClick={scrollToRegistration} />
       <WebinarSpeaker />
-      <WebinarCTA onRegisterClick={handleRegisterClick} />
-      
-      <WebinarRegistrationPopup 
-        isOpen={isPopupOpen} 
-        onClose={() => setIsPopupOpen(false)} 
-      />
+      <WebinarTopics onRegisterClick={scrollToRegistration} />
+      <WebinarBonuses />
+      <WebinarCTA onRegisterClick={scrollToRegistration} />
+      <WebinarInlineRegistration />
     </div>
   );
 };

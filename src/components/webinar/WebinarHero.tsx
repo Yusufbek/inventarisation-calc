@@ -16,10 +16,18 @@ export const WebinarHero = ({ onRegisterClick }: WebinarHeroProps) => {
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           {/* Content */}
           <div className="flex-1 text-center lg:text-left">
-            {/* Tag Label */}
-            <span className="inline-block text-primary text-xs md:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
-              BILLZ VEBINAR
-            </span>
+            {/* Tag Pills */}
+            <div className="flex flex-wrap gap-2 mb-6 justify-center lg:justify-start">
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary text-xs md:text-sm font-medium">
+                Bepul Vebinar
+              </span>
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
+                27 fevral
+              </span>
+              <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-medium">
+                soat 16:00da
+              </span>
+            </div>
             
             {/* Headline */}
             <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground leading-[1.1] mb-6">
