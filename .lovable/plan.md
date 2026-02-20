@@ -1,45 +1,39 @@
 
 
-# Unified Button Style and UI/UX Review
+# Update Success Text and Redirect to New Success Page
 
-## 1. Unify All CTA Buttons to Primary Blue Style
+## 1. Update success message text
+Change the text in both `WebinarInlineRegistration.tsx` (line 167) and `WebinarRegistrationPopup.tsx` (line 221) from:
+> "Siz vebinarga muvaffaqiyatli ro'yxatdan o'tdingiz. Telegram guruhimizga qo'shiling:"
 
-The reference image shows a rounded blue button (`bg-primary text-primary-foreground`). Currently, some buttons use dark (`bg-foreground text-background`) instead. These need to be changed:
+to:
+> "Siz vebinarga muvaffaqiyatli ro'yxatdan o'tdingiz. Vebinar bo'lib o'tadigan telegram guruhga qo'shilib oling"
 
-**WebinarTopics.tsx** (line 61):
-- Change `bg-foreground text-background` to `bg-primary text-primary-foreground`
-- Add `shadow-lg hover:shadow-xl hover:scale-[1.02]` for consistency with Hero CTA
-- Remove `hover:opacity-90`, use `hover:bg-primary/90` instead
+## 2. Create a dedicated success page
+**New file:** `src/pages/WebinarSuccess.tsx`
+- A standalone page with the success UI (green checkmark, congratulations message, updated text, Telegram button)
+- Includes the `WebinarFinished` pixel and CAPI tracking on Telegram button click
+- Clean, centered layout matching the current success state design
 
-**WebinarInlineRegistration.tsx** (line 143):
-- Change submit button from `bg-foreground text-background hover:bg-foreground/90` to `bg-primary text-primary-foreground hover:bg-primary/90`
+## 3. Register the route
+**File:** `src/App.tsx`
+- Add route: `/webinar/foyda-webinar/success` pointing to the new `WebinarSuccess` page
 
-Buttons already correct (no changes needed):
-- WebinarHero CTA -- already `bg-primary`
-- WebinarRegistrationPopup submit -- already `bg-primary`
+## 4. Redirect on successful submission instead of showing inline success
+**File:** `src/components/webinar/WebinarInlineRegistration.tsx`
+- Import `useNavigate` from `react-router-dom`
+- On successful webhook response (`data.access === "granted"`), call `navigate("/webinar/foyda-webinar/success")` instead of `setIsSuccess(true)`
+- Remove the inline success state UI and `isSuccess` state (no longer needed)
 
-## 2. UI/UX Refinements
-
-After reviewing all sections, here are additional polish items:
-
-**WebinarHero.tsx:**
-- No issues found -- clean and well-structured
-
-**WebinarTopics.tsx:**
-- Add `group` class to CTA button and `group-hover:translate-x-1 transition-transform` to the ArrowRight icon for micro-interaction consistency with WebinarCTA
-
-**WebinarBonuses.tsx:**
-- No issues found -- cards are clean
-
-**WebinarSpeaker.tsx:**
-- No issues found -- well-structured
-
-**WebinarInlineRegistration.tsx:**
-- Tag pills use inconsistent styles vs Hero: the "27 fevral" and "soat 16:00da" pills use `bg-foreground text-background` (dark) while Hero uses `border border-border bg-secondary/50 text-foreground` (light outlined). Unify to match the Hero style for consistency.
+**File:** `src/components/webinar/WebinarRegistrationPopup.tsx`
+- Same change: import `useNavigate`, redirect to `/webinar/foyda-webinar/success` on success
+- Remove inline success state UI and `isSuccess` state
 
 ### Technical Summary
+**Files to create:**
+- `src/pages/WebinarSuccess.tsx` -- standalone success page with Telegram CTA and tracking
 
 **Files to modify:**
-- `src/components/webinar/WebinarTopics.tsx` -- change CTA to primary blue, add hover animation
-- `src/components/webinar/WebinarInlineRegistration.tsx` -- change submit button to primary blue, fix tag pill styles to match Hero
-
+- `src/App.tsx` -- add `/webinar/foyda-webinar/success` route
+- `src/components/webinar/WebinarInlineRegistration.tsx` -- navigate to success page on submit, remove inline success UI
+- `src/components/webinar/WebinarRegistrationPopup.tsx` -- navigate to success page on submit, remove inline success UI
