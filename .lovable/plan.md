@@ -1,42 +1,35 @@
 
 
-# Enhance "Nimalarni o'rganasiz?" Section UI
+# UI Refinements for Webinar Page
 
-## Overview
-Make the topics section more visually appealing with unique colors per card, larger icons, subtle gradients, numbered badges, and tighter descriptions.
+## 1. Registration Form - Remove texts
+**File:** `src/components/webinar/WebinarInlineRegistration.tsx`
+- Remove the subtitle paragraph "Ma'lumotlaringizni qoldiring va bepul vebinarga qo'shiling" (line 109-111)
+- Remove the "Shaxsiy ma'lumotlar" label (line 114-116)
 
-## Changes to `src/components/webinar/WebinarTopics.tsx`
+## 2. Speaker Title Update
+**File:** `src/components/webinar/WebinarSpeaker.tsx`
+- Change line 39 from "Mijozlarni ulash va o'qitish bo'yicha rahbar" to "Do'konlarni avtomatlashtirish bo'yicha ekspert"
 
-### 1. Unique color scheme per card
-Each of the 3 cards gets its own color identity:
-- **Card 1 (Kassa)**: Blue/primary gradient background (`from-primary/10 to-primary/5`), blue icon
-- **Card 2 (Mulk himoyasi)**: Green/success gradient (`from-emerald-50 to-emerald-50/50`), green icon
-- **Card 3 (Hisob-kitob)**: Amber/orange gradient (`from-amber-50 to-amber-50/50`), amber icon
+## 3. Topics Description Design Enhancement
+**File:** `src/components/webinar/WebinarTopics.tsx`
+- Replace the plain paragraph (lines 58-61) with a styled card/banner:
+  - Add a subtle gradient background (`bg-gradient-to-r from-primary/5 to-primary/10`)
+  - Rounded corners (`rounded-2xl`), padding, and a left accent border (`border-l-4 border-primary`)
+  - Slightly larger text with better spacing
+  - Add a small icon (e.g., `Info` or `Target` from lucide) to the left for visual interest
 
-### 2. Larger, bolder icon containers
-- Increase icon container from `w-10 h-10` to `w-14 h-14`
-- Increase icon size from `w-5 h-5` to `w-7 h-7`
-- Add a numbered step badge (01, 02, 03) in the top-right corner of each card for visual structure
+## 4. Bonuses Section - Gradient Cards
+**File:** `src/components/webinar/WebinarBonuses.tsx`
+- Card 1: Apply a warm gradient background (`bg-gradient-to-br from-primary/10 via-primary/5 to-transparent`) with a subtle primary-colored border
+- Card 2: Apply a complementary gradient (`bg-gradient-to-br from-emerald-50 via-emerald-50/50 to-transparent`) with an emerald border accent
+- Add rounded icon containers (using `Users` and `BookOpen` from lucide) with colored backgrounds at the top of each card
+- Keep the gift-box image but ensure it blends well with the new gradient backgrounds
+- Increase card min-height slightly for more breathing room
 
-### 3. Card styling upgrades
-- Add gradient backgrounds instead of flat `bg-card`
-- Add a colored left border accent (`border-l-4`) matching each card's theme color
-- Add subtle hover shadow transition (`hover:shadow-lg`)
-- Slightly increase padding for breathing room
-
-### 4. Shorter description texts
-Trim descriptions to be punchier:
-1. "Chetlab sotish va kassadagi kamomadni aniqlash hamda bartaraf etish usullari."
-2. "O'g'rilik va yashirin yo'qotishlarning oldini olish bo'yicha amaliy choralar."
-3. "Narx va miqdor bilan bog'liq firibgarliklarni aniqlash usullari."
-
-### 5. Section background
-- Change from `bg-secondary/30` to white (`bg-background`) for a cleaner canvas that lets the colorful cards pop
-
-### Technical Details
-**File to modify:** `src/components/webinar/WebinarTopics.tsx`
-- Update the `topics` array to include per-card color config (gradient, iconBg, iconColor, borderColor, step number)
-- Update card JSX to use these per-card styles
-- Shorten description strings
-- Enlarge icon containers
-
+### Technical Summary
+**Files to modify:**
+- `src/components/webinar/WebinarInlineRegistration.tsx` - remove 2 text elements
+- `src/components/webinar/WebinarSpeaker.tsx` - update speaker role text
+- `src/components/webinar/WebinarTopics.tsx` - style the description as a highlighted banner
+- `src/components/webinar/WebinarBonuses.tsx` - add gradients, icons, and colored borders to cards
