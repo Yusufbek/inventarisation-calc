@@ -1,23 +1,45 @@
 
 
-# Adjust Topics Section Color and Add CTA
+# Unified Button Style and UI/UX Review
 
-## 1. Change dark section background to primary blue
-**File:** `src/components/webinar/WebinarTopics.tsx`
+## 1. Unify All CTA Buttons to Primary Blue Style
 
-The outer dark container currently uses `bg-[#1a1f36]` (dark navy). Change it to use the project's primary blue (`bg-primary`) so it matches the blue used throughout the site.
+The reference image shows a rounded blue button (`bg-primary text-primary-foreground`). Currently, some buttons use dark (`bg-foreground text-background`) instead. These need to be changed:
 
-- Line 25: `bg-[#1a1f36]` -> `bg-primary`
-- Inner cards stay `bg-white/5 border border-white/10` (they look fine on blue too)
+**WebinarTopics.tsx** (line 61):
+- Change `bg-foreground text-background` to `bg-primary text-primary-foreground`
+- Add `shadow-lg hover:shadow-xl hover:scale-[1.02]` for consistency with Hero CTA
+- Remove `hover:opacity-90`, use `hover:bg-primary/90` instead
 
-## 2. Add CTA button below the dark section
-Add a "Vebinarga yozilish" button centered below the blue container, using the `onRegisterClick` prop that already exists. Style it as a white/light button on the page background with an ArrowRight icon, rounded-full, similar to the CTA used in other sections.
+**WebinarInlineRegistration.tsx** (line 143):
+- Change submit button from `bg-foreground text-background hover:bg-foreground/90` to `bg-primary text-primary-foreground hover:bg-primary/90`
 
-- Import `ArrowRight` from lucide-react
-- Add the button after the blue container div, inside the max-w-5xl wrapper
-- Style: `bg-foreground text-background font-semibold text-lg px-12 py-4 rounded-full` with hover effects
+Buttons already correct (no changes needed):
+- WebinarHero CTA -- already `bg-primary`
+- WebinarRegistrationPopup submit -- already `bg-primary`
+
+## 2. UI/UX Refinements
+
+After reviewing all sections, here are additional polish items:
+
+**WebinarHero.tsx:**
+- No issues found -- clean and well-structured
+
+**WebinarTopics.tsx:**
+- Add `group` class to CTA button and `group-hover:translate-x-1 transition-transform` to the ArrowRight icon for micro-interaction consistency with WebinarCTA
+
+**WebinarBonuses.tsx:**
+- No issues found -- cards are clean
+
+**WebinarSpeaker.tsx:**
+- No issues found -- well-structured
+
+**WebinarInlineRegistration.tsx:**
+- Tag pills use inconsistent styles vs Hero: the "27 fevral" and "soat 16:00da" pills use `bg-foreground text-background` (dark) while Hero uses `border border-border bg-secondary/50 text-foreground` (light outlined). Unify to match the Hero style for consistency.
 
 ### Technical Summary
-**File to modify:** `src/components/webinar/WebinarTopics.tsx`
-- Change background color from navy to primary blue
-- Add CTA button beneath the section
+
+**Files to modify:**
+- `src/components/webinar/WebinarTopics.tsx` -- change CTA to primary blue, add hover animation
+- `src/components/webinar/WebinarInlineRegistration.tsx` -- change submit button to primary blue, fix tag pill styles to match Hero
+
