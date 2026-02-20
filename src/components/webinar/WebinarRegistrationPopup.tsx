@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Send } from "lucide-react";
 import { eventCustom } from "@/lib/fpixel";
 import { getFormattedFridayDate } from "./WebinarCTA";
+import { sendCapiEvent } from '@/lib/capi';
 
 interface WebinarRegistrationPopupProps {
   isOpen: boolean;
@@ -101,8 +102,16 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
 
   const handleTelegramClick = () => {
     // Fire pixel event only once
-    if (!hasTrackedWebinarFinished.current) {
+    if (!hasTrackedWebinarFinished.current) {      
+      const eventId = crypto.randomUUID();
       eventCustom("WebinarFinished", { content_name: "Foyda webinar" });
+      sendCapiEvent({
+        eventName: "WebinarFinished",
+        eventId: eventId,
+        customData: {
+          content_name: "Foyda webinar",
+        },
+      });
       hasTrackedWebinarFinished.current = true;
     }
     

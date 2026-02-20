@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Send } from "lucide-react";
 import { eventCustom } from "@/lib/fpixel";
 import { getFormattedFridayDate } from "./WebinarCTA";
+import { sendCapiEvent } from '@/lib/capi';
 
 const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/22939f18-3a11-458d-8faf-33d30b92f10d";
 const TELEGRAM_GROUP_URL = "https://t.me/billzwebinar";
@@ -74,7 +75,15 @@ export const WebinarInlineRegistration = () => {
 
   const handleTelegramClick = () => {
     if (!hasTrackedWebinarFinished.current) {
+      const eventId = crypto.randomUUID();
       eventCustom("WebinarFinished", { content_name: "Foyda webinar" });
+      sendCapiEvent({
+        eventName: "WebinarFinished",
+        eventId: eventId,
+        customData: {
+          content_name: "Foyda webinar",
+        },
+      });
       hasTrackedWebinarFinished.current = true;
     }
     window.open(TELEGRAM_GROUP_URL, "_blank");
