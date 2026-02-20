@@ -23,9 +23,9 @@ const WebinarFoydaWebinar = () => {
       <WebinarHero onRegisterClick={openRegistration} />
       <WebinarMission onRegisterClick={openRegistration} />
       <WebinarTrust />
-      <WebinarCTA onRegisterClick={openRegistration} />
       <WebinarSpeaker />
       <WebinarBonuses />
+      <WebinarCTA onRegisterClick={openRegistration} />
       <WebinarRegistrationPopup
         isOpen={isPopupOpen}
         onClose={() => setIsPopupOpen(false)}
