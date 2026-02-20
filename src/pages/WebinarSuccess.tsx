@@ -3,7 +3,7 @@ import { Send } from "lucide-react";
 import { eventCustom } from "@/lib/fpixel";
 import { sendCapiEvent } from "@/lib/capi";
 
-const TELEGRAM_GROUP_URL = "https://t.me/billzwebinar";
+const TELEGRAM_GROUP_URL = "https://t.me/+iEKlHUfZdzQzYjMy";
 
 const WebinarSuccess = () => {
   const hasTrackedWebinarFinished = useRef(false);

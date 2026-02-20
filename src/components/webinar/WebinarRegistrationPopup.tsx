@@ -105,7 +105,7 @@ export const WebinarRegistrationPopup = ({ isOpen, onClose }: WebinarRegistratio
               Siz vebinarga muvaffaqiyatli ro'yxatdan o'tdingiz. Telegram guruhimizga qo'shiling:
             </p>
             <a
-              href="https://t.me/+xJFGhkvsilJiYjZi"
+              href="https://t.me/+iEKlHUfZdzQzYjMy"
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleTelegramClick}
