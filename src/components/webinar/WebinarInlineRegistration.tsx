@@ -104,7 +104,7 @@ export const WebinarInlineRegistration = () => {
                   27 fevral
                 </span>
                 <span className="inline-flex items-center px-4 py-1.5 rounded-full border border-border bg-secondary/50 text-foreground text-xs md:text-sm font-semibold">
-                  soat 16:00da
+                  soat 11:00da
                 </span>
               </div>
 
