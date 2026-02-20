@@ -64,12 +64,12 @@ export const WebinarTopics = ({ onRegisterClick }: WebinarTopicsProps) => {
             {topics.map((topic, i) => (
               <div
                 key={i}
-                className={`relative bg-gradient-to-br ${topic.gradient} border border-border border-l-4 ${topic.borderColor} rounded-2xl p-6 md:p-7 hover:shadow-lg transition-all duration-300`}
+                className={`relative bg-gradient-to-br ${topic.gradient} border border-border rounded-2xl p-6 md:p-7 hover:shadow-lg transition-all duration-300`}
               >
                 <span className={`absolute top-4 right-4 text-xs font-bold ${topic.badgeText} ${topic.badgeBg} rounded-full w-8 h-8 flex items-center justify-center`}>
                   {topic.step}
                 </span>
-                <div className={`w-14 h-14 rounded-xl ${topic.iconBg} flex items-center justify-center mb-4`}>
+                <div className={`w-14 h-14 rounded-2xl ${topic.iconBg} flex items-center justify-center mb-4`}>
                   <topic.icon className={`w-7 h-7 ${topic.iconColor}`} />
                 </div>
                 <h3 className="text-foreground font-bold text-base md:text-lg mb-2">

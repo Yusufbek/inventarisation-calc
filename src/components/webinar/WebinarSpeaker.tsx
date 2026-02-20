@@ -23,9 +23,9 @@ export const WebinarSpeaker = () => {
             <div className="w-full md:w-1/2 flex-shrink-0">
               <div className="relative">
                 <img
-                  src="/images/webinar/speaker-shohrukh-v2.jpg"
+                  src="/images/webinar/speaker-shohrukh-v3.png"
                   alt="Shohrukh Pirmuhametov"
-                  className="w-full max-w-sm md:max-w-md mx-auto rounded-3xl shadow-xl"
+                  className="w-full max-w-sm md:max-w-md mx-auto rounded-full shadow-xl"
                 />
                 {/* Decorative blur */}
                 <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-primary/10 rounded-full blur-3xl" />
@@ -44,7 +44,7 @@ export const WebinarSpeaker = () => {
               {/* Stats Cards - Side by Side */}
               <div className="flex flex-row gap-4 mb-8 justify-center md:justify-start">
                 <div className="flex-1 max-w-[160px] bg-secondary/50 rounded-2xl p-4 md:p-5 text-center">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <Calendar className="w-5 h-5 text-primary" />
                   </div>
                   <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">3</div>
@@ -52,7 +52,7 @@ export const WebinarSpeaker = () => {
                 </div>
 
                 <div className="flex-1 max-w-[160px] bg-secondary/50 rounded-2xl p-4 md:p-5 text-center">
-                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
                     <Users className="w-5 h-5 text-primary" />
                   </div>
                   <div className="text-2xl md:text-3xl font-bold text-foreground mb-1">500+</div>
