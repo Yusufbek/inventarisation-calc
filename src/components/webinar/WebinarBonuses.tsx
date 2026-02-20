@@ -39,7 +39,7 @@ export const WebinarBonuses = () => {
                 <img
                   src={bonus.icon}
                   alt={bonus.title}
-                  className="absolute bottom-4 right-4 w-20 sm:w-24 md:w-28 max-w-full h-auto"
+                  className={`absolute bottom-4 right-4 max-w-full h-auto ${bonus.title === "Bepul konsultatsiya" ? "w-24 sm:w-28 md:w-32" : "w-20 sm:w-24 md:w-28"}`}
                 />
               </div>
             ))}
