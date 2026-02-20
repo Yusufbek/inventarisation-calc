@@ -3,7 +3,6 @@ import { WebinarHero } from "@/components/webinar/WebinarHero";
 import { WebinarSpeaker } from "@/components/webinar/WebinarSpeaker";
 import { WebinarTopics } from "@/components/webinar/WebinarTopics";
 import { WebinarBonuses } from "@/components/webinar/WebinarBonuses";
-import { WebinarCTA } from "@/components/webinar/WebinarCTA";
 import { WebinarInlineRegistration } from "@/components/webinar/WebinarInlineRegistration";
 import { pageView } from "@/lib/fpixel";
 
@@ -20,10 +19,9 @@ const WebinarFoydaWebinar = () => {
   return (
     <div className="min-h-screen bg-background">
       <WebinarHero onRegisterClick={scrollToRegistration} />
-      <WebinarSpeaker />
       <WebinarTopics onRegisterClick={scrollToRegistration} />
       <WebinarBonuses />
-      <WebinarCTA onRegisterClick={scrollToRegistration} />
+      <WebinarSpeaker />
       <WebinarInlineRegistration />
     </div>
   );
