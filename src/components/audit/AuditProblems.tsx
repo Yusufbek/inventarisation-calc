@@ -36,10 +36,6 @@ export const AuditProblems = ({ onCtaClick }: AuditProblemsProps) => {
           ))}
         </div>
 
-        <p className="text-muted-foreground text-sm mb-5 md:mb-6">
-          Biz pulingiz aynan qayerdan chiqib ketayotganini va buning oldini olish yo'lini ko'rsatamiz.
-        </p>
-
         <button
           onClick={onCtaClick}
           className="w-full sm:w-auto bg-primary text-primary-foreground font-bold text-base md:text-lg px-6 md:px-8 py-3.5 md:py-4 rounded-full hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"

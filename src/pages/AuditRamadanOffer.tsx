@@ -28,7 +28,9 @@ const AuditRamadanOffer = () => {
   }, []);
 
   const goToForm = () => {
-    navigate("/audit/ramadan-offer/form");
+    const saved = sessionStorage.getItem("audit_utm_params");
+    const params = saved ? new URLSearchParams(JSON.parse(saved)).toString() : "";
+    navigate(`/audit/ramadan-offer/form${params ? `?${params}` : ""}`);
   };
 
   return (
