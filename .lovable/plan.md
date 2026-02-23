@@ -1,82 +1,67 @@
 
 
-# Ramadan Audit Landing Page
+# Audit Page: Mobile Fixes + Multi-Step Form
 
-## Overview
-Create a new high-conversion landing page at `/audit/ramadan-offer` with a countdown timer, problem/outcome framing, service details, trust signals, and a lead capture form. All CTAs scroll to the bottom form which collects name, phone, store revenue, and region.
+## 1. Mobile UI Fixes
 
-## Page Sections
+Fix responsive issues across all audit sections:
 
-### 1. Hero Section
-- Store interior image on the right (reuse `/images/webinar/hero-specialist.jpg` or a new store image like `/images/clothing-shop.png`)
-- Headline: "SHU RAMAZONDA DO'KONINGIZNI BEPUL AUDIT QILAMIZ"
-- Subtext about identifying hidden losses
-- "Kuniga faqat 5 ta do'kon tanlab olinadi" urgency line
-- CTA button scrolls to form
-- Trust line: "5000 dan ortiq do'kon egalari bizga ishonadi"
+- **AuditStickyTimer**: Make text smaller on mobile, stack vertically or truncate, ensure "Faqat 3 ta joy qoldi" shows on mobile too
+- **AuditHero**: Reduce heading size on mobile, ensure image doesn't overflow, tighten spacing
+- **AuditProblems**: Ensure cards stack cleanly on small screens with proper padding
+- **AuditServices**: Tighten mobile spacing, ensure price badge wraps properly
+- **AuditTrust**: Adjust padding/spacing for mobile
+- **AuditForm section header**: Keep as intro text on the landing page but CTA buttons now navigate to the form page
 
-### 2. Sticky Timer Bar (fixed on scroll)
-- Countdown timer starting from a set duration (e.g., resets daily or counts down to midnight)
-- Shows remaining spots: "Faqat 3 ta joy qoldi"
-- Fixed to top of screen on scroll with high z-index
+## 2. Multi-Step Form on Separate Page
 
-### 3. Problem to Outcome Section
-- Headline: "Savdo bor-u... lekin foyda yo'qmi?"
-- Four problem cards with icons (lock, money, tag, chart)
-- Bottom text about showing where money leaks
-- CTA button
+Instead of an inline form at the bottom, CTA buttons will navigate to a new route (`/audit/ramadan-offer/form`) that shows a one-question-per-page wizard with 6 steps:
 
-### 4. What You Get Section
-- Five audit service items with icons
-- Crossed-out price ($100) with "BEPUL" Ramadan offer
-- CTA button
+**Step 1**: Ismingiz (text input)
+**Step 2**: Telefon raqamingiz (phone input with +998 prefix)
+**Step 3**: Do'koningiz nomi (text input)
+**Step 4**: Do'koningiz segmenti (single select from 14 options: Kiyim do'koni, Poyabzal do'koni, Oziq-ovqat do'koni, Qurilish mollari do'koni, Kosmetika do'koni, Aksessuar do'koni, Elektronika do'koni, Uy-ro'zg'or buyumlari, Dorixona, Kafe va restoran, Ishlab chiqarish, Ombor, Boshqa)
+**Step 5**: Kunlik tushum (taxminan) qancha? (single select: 500 000 so'mdan kamroq / 600 000 - 2 500 000 so'm / 2 500 000 - 25 000 000 so'm / 25 000 000 dan ko'proq so'm)
+**Step 6**: Viloyat (single select from existing 14 regions)
 
-### 5. Trust and Expertise Section
-- Headline: "Nima uchun do'kon egalari auditlarimizga ishonadi?"
-- Four trust points with checkmarks
-- Optional team/specialist images
+Each step shows a progress bar, the question, input field, and a "Keyingisi" (Next) button. The last step shows "Bepul auditga yozilish" as submit.
 
-### 6. Final CTA + Lead Form
-- Ramadan-themed header with moon icon
-- Urgency copy about 5 daily audits
-- Form fields: Name, Phone (+998 prefix), Store Revenue (dropdown/select), Region (dropdown/select)
-- Submit button: "Bepul auditga yozilish"
-- Sends data to the same webhook pattern used in webinar pages
-- On success: show thank you message or redirect
+On success, show a confirmation screen within the same page.
+
+## 3. Landing Page CTA Changes
+
+All "Bepul auditga yozilish" buttons on the landing page will navigate to `/audit/ramadan-offer/form` instead of scrolling to a bottom form. The bottom form section header text (Ramadan urgency copy) stays as a final CTA section but with a button that also navigates to the form page.
 
 ## Technical Details
 
-### Files to create (7):
-- `src/pages/AuditRamadanOffer.tsx` -- main page component, composes all sections
-- `src/components/audit/AuditHero.tsx` -- hero section with image, headline, CTA
-- `src/components/audit/AuditStickyTimer.tsx` -- fixed countdown bar with timer logic (useState + useEffect interval)
-- `src/components/audit/AuditProblems.tsx` -- problem/outcome section with 4 pain points
-- `src/components/audit/AuditServices.tsx` -- what you get section with 5 items + pricing
-- `src/components/audit/AuditTrust.tsx` -- trust/expertise section with checkmarks
-- `src/components/audit/AuditForm.tsx` -- final CTA + lead capture form (name, phone, revenue select, region select)
+### Files to create (1):
+- `src/pages/AuditFormPage.tsx` -- multi-step form page with 6 steps, progress bar, one question per page, submission logic, success state
 
-### Files to modify (1):
-- `src/App.tsx` -- add route `/audit/ramadan-offer` pointing to `AuditRamadanOffer`
+### Files to modify (7):
+- `src/App.tsx` -- add route `/audit/ramadan-offer/form`
+- `src/pages/AuditRamadanOffer.tsx` -- change `scrollToForm` to `useNavigate` to form page
+- `src/components/audit/AuditHero.tsx` -- mobile spacing/sizing fixes, change onCtaClick type
+- `src/components/audit/AuditStickyTimer.tsx` -- mobile text sizing fixes
+- `src/components/audit/AuditProblems.tsx` -- mobile padding fixes
+- `src/components/audit/AuditServices.tsx` -- mobile spacing fixes
+- `src/components/audit/AuditForm.tsx` -- simplify to just the CTA section with a navigation button (remove inline form fields)
 
-### Form Submission
-- Webhook URL: same n8n endpoint pattern (`https://n8n-m2.makebillz.top/webhook/...`) or a new one -- will use the existing webhook for now and include audit-specific fields
-- Payload: `{ name, phone, storeRevenue, region, type: "ramadan-audit", ...utmParams }`
-- UTM parameter collection (same pattern as webinar pages)
-- Phone validation with +998 prefix (same pattern)
-- Facebook Pixel tracking on page view and form submission
+### Form payload (updated):
+```json
+{
+  "name": "...",
+  "phone": "+998...",
+  "storeName": "...",
+  "storeSegment": "...",
+  "dailyRevenue": "...",
+  "region": "...",
+  "type": "ramadan-audit",
+  "utm_source": "...",
+  ...
+}
+```
 
-### Countdown Timer Logic
-- Timer counts down to the end of the current day (midnight)
-- Resets daily to create ongoing urgency
-- Uses `useState` + `setInterval` in `useEffect`
-
-### Revenue and Region Options
-- Revenue options: predefined ranges (e.g., "50 mln gacha", "50-200 mln", "200-500 mln", "500 mln dan ortiq")
-- Region options: Uzbekistan regions (Toshkent, Samarqand, Buxoro, etc.)
-
-### Styling
-- Follows existing design system (Tailwind + CSS variables)
-- Ramadan theme: moon/crescent accents in the final CTA section
-- Mobile-first responsive design
-- Sticky timer uses `fixed top-0` positioning with backdrop blur
+### Tracking:
+- Facebook Pixel `Lead` event on successful submission (same as current)
+- CAPI event on submission (same as current)
 
