@@ -1,29 +1,82 @@
 
 
-# Four Changes to Webinar Pages
+# Ramadan Audit Landing Page
 
-## 1. Add Foyda Webinar V2 card to the main page (CalculatorHub)
-Add a second webinar card in the "Vebinarlar" section of `src/components/CalculatorHub.tsx` that links to `/webinar/foyda-webinar-v2` with the title "Foyda Webinar V2".
+## Overview
+Create a new high-conversion landing page at `/audit/ramadan-offer` with a countdown timer, problem/outcome framing, service details, trust signals, and a lead capture form. All CTAs scroll to the bottom form which collects name, phone, store revenue, and region.
 
-## 2. Move CTA section to the bottom of V1 webinar page
-In `src/pages/WebinarFoydaWebinar.tsx`, move `<WebinarCTA>` from its current position (after Trust, before Speaker) to the very bottom (after Bonuses). New order: Hero, Mission, Trust, Speaker, Bonuses, CTA.
+## Page Sections
 
-## 3. Update speaker title text
-In `src/components/webinar/WebinarSpeaker.tsx` (line 39), change:
-- "Do'konlarni avtomatlashtirish bo'yicha ekspert"
-- to "Do'konlarni rivojlantirish bo'yicha ekspert"
+### 1. Hero Section
+- Store interior image on the right (reuse `/images/webinar/hero-specialist.jpg` or a new store image like `/images/clothing-shop.png`)
+- Headline: "SHU RAMAZONDA DO'KONINGIZNI BEPUL AUDIT QILAMIZ"
+- Subtext about identifying hidden losses
+- "Kuniga faqat 5 ta do'kon tanlab olinadi" urgency line
+- CTA button scrolls to form
+- Trust line: "5000 dan ortiq do'kon egalari bizga ishonadi"
 
-## 4. Remove all time references from V1 webinar page
-- **WebinarHero.tsx** (line 27-29): Remove the "soat 16:00da" pill entirely
-- **WebinarCTA.tsx** (lines 81-88): Remove the Clock/17:00 row from the date-time card. Also remove the `Clock` import.
+### 2. Sticky Timer Bar (fixed on scroll)
+- Countdown timer starting from a set duration (e.g., resets daily or counts down to midnight)
+- Shows remaining spots: "Faqat 3 ta joy qoldi"
+- Fixed to top of screen on scroll with high z-index
 
----
+### 3. Problem to Outcome Section
+- Headline: "Savdo bor-u... lekin foyda yo'qmi?"
+- Four problem cards with icons (lock, money, tag, chart)
+- Bottom text about showing where money leaks
+- CTA button
 
-### Technical Summary
+### 4. What You Get Section
+- Five audit service items with icons
+- Crossed-out price ($100) with "BEPUL" Ramadan offer
+- CTA button
 
-**Files to modify (4):**
-- `src/components/CalculatorHub.tsx` -- add V2 webinar card
-- `src/pages/WebinarFoydaWebinar.tsx` -- reorder sections (move CTA to bottom)
-- `src/components/webinar/WebinarSpeaker.tsx` -- update speaker title text
-- `src/components/webinar/WebinarHero.tsx` -- remove time pill
-- `src/components/webinar/WebinarCTA.tsx` -- remove clock/time row and Clock import
+### 5. Trust and Expertise Section
+- Headline: "Nima uchun do'kon egalari auditlarimizga ishonadi?"
+- Four trust points with checkmarks
+- Optional team/specialist images
+
+### 6. Final CTA + Lead Form
+- Ramadan-themed header with moon icon
+- Urgency copy about 5 daily audits
+- Form fields: Name, Phone (+998 prefix), Store Revenue (dropdown/select), Region (dropdown/select)
+- Submit button: "Bepul auditga yozilish"
+- Sends data to the same webhook pattern used in webinar pages
+- On success: show thank you message or redirect
+
+## Technical Details
+
+### Files to create (7):
+- `src/pages/AuditRamadanOffer.tsx` -- main page component, composes all sections
+- `src/components/audit/AuditHero.tsx` -- hero section with image, headline, CTA
+- `src/components/audit/AuditStickyTimer.tsx` -- fixed countdown bar with timer logic (useState + useEffect interval)
+- `src/components/audit/AuditProblems.tsx` -- problem/outcome section with 4 pain points
+- `src/components/audit/AuditServices.tsx` -- what you get section with 5 items + pricing
+- `src/components/audit/AuditTrust.tsx` -- trust/expertise section with checkmarks
+- `src/components/audit/AuditForm.tsx` -- final CTA + lead capture form (name, phone, revenue select, region select)
+
+### Files to modify (1):
+- `src/App.tsx` -- add route `/audit/ramadan-offer` pointing to `AuditRamadanOffer`
+
+### Form Submission
+- Webhook URL: same n8n endpoint pattern (`https://n8n-m2.makebillz.top/webhook/...`) or a new one -- will use the existing webhook for now and include audit-specific fields
+- Payload: `{ name, phone, storeRevenue, region, type: "ramadan-audit", ...utmParams }`
+- UTM parameter collection (same pattern as webinar pages)
+- Phone validation with +998 prefix (same pattern)
+- Facebook Pixel tracking on page view and form submission
+
+### Countdown Timer Logic
+- Timer counts down to the end of the current day (midnight)
+- Resets daily to create ongoing urgency
+- Uses `useState` + `setInterval` in `useEffect`
+
+### Revenue and Region Options
+- Revenue options: predefined ranges (e.g., "50 mln gacha", "50-200 mln", "200-500 mln", "500 mln dan ortiq")
+- Region options: Uzbekistan regions (Toshkent, Samarqand, Buxoro, etc.)
+
+### Styling
+- Follows existing design system (Tailwind + CSS variables)
+- Ramadan theme: moon/crescent accents in the final CTA section
+- Mobile-first responsive design
+- Sticky timer uses `fixed top-0` positioning with backdrop blur
+
