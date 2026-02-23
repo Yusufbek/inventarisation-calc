@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuditHero } from "@/components/audit/AuditHero";
 import { AuditStickyTimer } from "@/components/audit/AuditStickyTimer";
 import { AuditProblems } from "@/components/audit/AuditProblems";
@@ -8,23 +9,25 @@ import { AuditForm } from "@/components/audit/AuditForm";
 import * as fpixel from "@/lib/fpixel";
 
 const AuditRamadanOffer = () => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     fpixel.pageView();
     window.scrollTo(0, 0);
   }, []);
 
-  const scrollToForm = () => {
-    document.getElementById("audit-form")?.scrollIntoView({ behavior: "smooth" });
+  const goToForm = () => {
+    navigate("/audit/ramadan-offer/form");
   };
 
   return (
     <div className="min-h-screen bg-background pt-12">
       <AuditStickyTimer />
-      <AuditHero onCtaClick={scrollToForm} />
-      <AuditProblems onCtaClick={scrollToForm} />
-      <AuditServices onCtaClick={scrollToForm} />
+      <AuditHero onCtaClick={goToForm} />
+      <AuditProblems onCtaClick={goToForm} />
+      <AuditServices onCtaClick={goToForm} />
       <AuditTrust />
-      <AuditForm />
+      <AuditForm onCtaClick={goToForm} />
     </div>
   );
 };
