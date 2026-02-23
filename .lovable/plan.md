@@ -1,67 +1,82 @@
 
 
-# Audit Page: Mobile Fixes + Multi-Step Form
+# Fixes: Revenue Mapping, UTM Persistence, and Landing Page UI Cleanup
 
-## 1. Mobile UI Fixes
+## 1. Revenue Mapping for Webhook
 
-Fix responsive issues across all audit sections:
+In `AuditFormPage.tsx`, map the selected daily revenue option to a business size code before sending to the webhook:
 
-- **AuditStickyTimer**: Make text smaller on mobile, stack vertically or truncate, ensure "Faqat 3 ta joy qoldi" shows on mobile too
-- **AuditHero**: Reduce heading size on mobile, ensure image doesn't overflow, tighten spacing
-- **AuditProblems**: Ensure cards stack cleanly on small screens with proper padding
-- **AuditServices**: Tighten mobile spacing, ensure price badge wraps properly
-- **AuditTrust**: Adjust padding/spacing for mobile
-- **AuditForm section header**: Keep as intro text on the landing page but CTA buttons now navigate to the form page
+- "500 000 so'mdan kamroq" -> `nano`
+- "600 000 - 2 500 000 so'm" -> `micro`
+- "2 500 000 - 25 000 000 so'm" -> `small`
+- "25 000 000 dan ko'proq so'm" -> `medium`
 
-## 2. Multi-Step Form on Separate Page
+The payload will send `dailyRevenue: "nano"` (etc.) instead of the display text.
 
-Instead of an inline form at the bottom, CTA buttons will navigate to a new route (`/audit/ramadan-offer/form`) that shows a one-question-per-page wizard with 6 steps:
+## 2. UTM Persistence Fix
 
-**Step 1**: Ismingiz (text input)
-**Step 2**: Telefon raqamingiz (phone input with +998 prefix)
-**Step 3**: Do'koningiz nomi (text input)
-**Step 4**: Do'koningiz segmenti (single select from 14 options: Kiyim do'koni, Poyabzal do'koni, Oziq-ovqat do'koni, Qurilish mollari do'koni, Kosmetika do'koni, Aksessuar do'koni, Elektronika do'koni, Uy-ro'zg'or buyumlari, Dorixona, Kafe va restoran, Ishlab chiqarish, Ombor, Boshqa)
-**Step 5**: Kunlik tushum (taxminan) qancha? (single select: 500 000 so'mdan kamroq / 600 000 - 2 500 000 so'm / 2 500 000 - 25 000 000 so'm / 25 000 000 dan ko'proq so'm)
-**Step 6**: Viloyat (single select from existing 14 regions)
+The current approach saves UTMs on the landing page and reads them on the form page. The issue is likely that `navigate("/audit/ramadan-offer/form")` does a client-side route change, but the `sessionStorage` save runs inside `useEffect` which may not complete before navigation.
 
-Each step shows a progress bar, the question, input field, and a "Keyingisi" (Next) button. The last step shows "Bepul auditga yozilish" as submit.
+Fix: Instead of relying solely on `sessionStorage` saved in `useEffect`, also pass UTMs forward by appending them to the navigation URL as query params. Update `goToForm()` in `AuditRamadanOffer.tsx` to forward the stored UTM params:
 
-On success, show a confirmation screen within the same page.
+```
+const goToForm = () => {
+  const saved = sessionStorage.getItem("audit_utm_params");
+  const params = saved ? new URLSearchParams(JSON.parse(saved)).toString() : "";
+  navigate(`/audit/ramadan-offer/form${params ? `?${params}` : ""}`);
+};
+```
 
-## 3. Landing Page CTA Changes
+This ensures the form page always has UTMs available via URL params.
 
-All "Bepul auditga yozilish" buttons on the landing page will navigate to `/audit/ramadan-offer/form` instead of scrolling to a bottom form. The bottom form section header text (Ramadan urgency copy) stays as a final CTA section but with a button that also navigates to the form page.
+## 3. Landing Page UI Cleanup
+
+Simplify and declutter all sections for a cleaner, more elegant look:
+
+**AuditHero.tsx:**
+- Remove the BillzLogo from the hero (it's redundant with the sticky timer bar area)
+- Tighten text -- shorter, punchier subtext
+- Remove the gradient overlay on the image
+- Cleaner spacing
+
+**AuditProblems.tsx:**
+- Remove the extra paragraph below the cards ("Biz pulingiz aynan qayerdan...")
+- Keep it minimal: headline, cards, CTA
+
+**AuditServices.tsx:**
+- Remove the "Ramazon taklifi" small text line (redundant)
+- Keep the price crossing and BEPUL badge clean
+
+**AuditForm.tsx (bottom CTA section):**
+- Simplify to just a bold headline and CTA button
+- Remove the extra paragraph about "Ramazon oyi davomida..."
+- Remove the "RAMAZON TASHABBUSI" badge -- keep it clean with just headline + button
+
+**AuditTrust.tsx:**
+- Keep as is (already clean)
 
 ## Technical Details
 
-### Files to create (1):
-- `src/pages/AuditFormPage.tsx` -- multi-step form page with 6 steps, progress bar, one question per page, submission logic, success state
+### Files to modify (4):
 
-### Files to modify (7):
-- `src/App.tsx` -- add route `/audit/ramadan-offer/form`
-- `src/pages/AuditRamadanOffer.tsx` -- change `scrollToForm` to `useNavigate` to form page
-- `src/components/audit/AuditHero.tsx` -- mobile spacing/sizing fixes, change onCtaClick type
-- `src/components/audit/AuditStickyTimer.tsx` -- mobile text sizing fixes
-- `src/components/audit/AuditProblems.tsx` -- mobile padding fixes
-- `src/components/audit/AuditServices.tsx` -- mobile spacing fixes
-- `src/components/audit/AuditForm.tsx` -- simplify to just the CTA section with a navigation button (remove inline form fields)
+1. **`src/pages/AuditFormPage.tsx`**
+   - Add revenue-to-code mapping (`revenueMap` object)
+   - Use mapped value in payload instead of display text
 
-### Form payload (updated):
-```json
-{
-  "name": "...",
-  "phone": "+998...",
-  "storeName": "...",
-  "storeSegment": "...",
-  "dailyRevenue": "...",
-  "region": "...",
-  "type": "ramadan-audit",
-  "utm_source": "...",
-  ...
-}
-```
+2. **`src/pages/AuditRamadanOffer.tsx`**
+   - Update `goToForm()` to forward UTM params via URL query string
 
-### Tracking:
-- Facebook Pixel `Lead` event on successful submission (same as current)
-- CAPI event on submission (same as current)
+3. **`src/components/audit/AuditHero.tsx`**
+   - Remove BillzLogo
+   - Remove image gradient overlay
+   - Tighten spacing
+
+4. **`src/components/audit/AuditProblems.tsx`**
+   - Remove extra paragraph text below cards
+
+5. **`src/components/audit/AuditServices.tsx`**
+   - Remove "Ramazon taklifi" text line
+
+6. **`src/components/audit/AuditForm.tsx`**
+   - Simplify to just headline + CTA button (remove badge and extra paragraph)
 
