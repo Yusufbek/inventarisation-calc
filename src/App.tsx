@@ -15,6 +15,7 @@ import WebinarFoydaWebinarV2 from "./pages/WebinarFoydaWebinarV2";
 import WebinarInventarizatsiyaPdf from "./pages/WebinarInventarizatsiyaPdf";
 import WebinarSuccess from "./pages/WebinarSuccess";
 import AuditRamadanOffer from "./pages/AuditRamadanOffer";
+import AuditFormPage from "./pages/AuditFormPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/webinar/foyda-webinar/success" element={<WebinarSuccess />} />
           <Route path="/webinar/inventarizatsiya-pdf" element={<WebinarInventarizatsiyaPdf />} />
           <Route path="/audit/ramadan-offer" element={<AuditRamadanOffer />} />
+          <Route path="/audit/ramadan-offer/form" element={<AuditFormPage />} />
           <Route path="/thank-you/inventarisation-calc/:variant" element={<ThankYouVariant />} />
           {/* Backwards compatibility routes */}
           <Route path="/thank-you" element={<ThankYou />} />

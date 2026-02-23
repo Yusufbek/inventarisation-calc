@@ -28,21 +28,23 @@ export const AuditStickyTimer = () => {
   const pad = (n: number) => n.toString().padStart(2, "0");
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-foreground/95 backdrop-blur-md text-background py-2.5 shadow-lg">
-      <div className="container mx-auto px-4 flex items-center justify-between text-sm md:text-base">
-        <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 text-primary" />
-          <span>
-            Bugungi ro'yxatga olish{" "}
+    <div className="fixed top-0 left-0 right-0 z-50 bg-foreground/95 backdrop-blur-md text-background py-2 shadow-lg">
+      <div className="container mx-auto px-3 flex items-center justify-between text-xs sm:text-sm md:text-base gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+          <span className="truncate">
+            <span className="hidden sm:inline">Bugungi ro'yxatga olish </span>
+            <span className="sm:hidden">Ro'yxat </span>
             <span className="font-bold text-primary">
               {pad(timeLeft.hours)}:{pad(timeLeft.minutes)}:{pad(timeLeft.seconds)}
-            </span>{" "}
-            dan so'ng yakunlanadi
+            </span>
+            <span className="hidden sm:inline"> dan so'ng yakunlanadi</span>
           </span>
         </div>
-        <div className="hidden sm:flex items-center gap-1.5 text-destructive font-semibold">
-          <AlertTriangle className="h-4 w-4" />
-          Faqat 3 ta joy qoldi
+        <div className="flex items-center gap-1 sm:gap-1.5 text-destructive font-semibold flex-shrink-0">
+          <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          <span className="hidden sm:inline">Faqat 3 ta joy qoldi</span>
+          <span className="sm:hidden text-[10px]">3 joy qoldi</span>
         </div>
       </div>
     </div>
