@@ -15,6 +15,16 @@ export const AuditTrust = () => {
           Nima uchun do'kon egalari auditlarimizga ishonadi?
         </h2>
 
+        {/* Experts photo */}
+        <div className="mb-6 md:mb-10">
+          <img
+            src="/images/audit-experts.png"
+            alt="Bizning mutaxassislar jamoasi"
+            className="w-full max-w-md mx-auto rounded-2xl"
+            loading="lazy"
+          />
+        </div>
+
         <div className="space-y-3 md:space-y-4 text-left max-w-xl mx-auto">
           {trustPoints.map((point) => (
             <div key={point} className="flex items-start gap-3">
