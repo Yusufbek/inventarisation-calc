@@ -48,8 +48,8 @@ export const AuditHero = ({ onCtaClick }: AuditHeroProps) => {
           <div className="flex-1 relative w-full max-w-sm md:max-w-none">
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="/images/clothing-shop.png"
-                alt="Do'kon ichki ko'rinishi"
+                src="/images/audit-hero.png"
+                alt="Do'kon audit ko'rinishi"
                 className="w-full h-auto object-cover"
                 loading="eager"
               />

@@ -52,6 +52,7 @@ const regionOptions = [
 const TOTAL_STEPS = 6;
 
 const getUtmParams = () => {
+  // Check URL params first, then fallback to sessionStorage (passed from landing page)
   const params = new URLSearchParams(window.location.search);
   const utmParams: Record<string, string> = {};
   params.forEach((value, key) => {
@@ -59,6 +60,15 @@ const getUtmParams = () => {
       utmParams[key] = value;
     }
   });
+  // If no UTMs in current URL, try sessionStorage (saved from landing page)
+  if (Object.keys(utmParams).length === 0) {
+    const saved = sessionStorage.getItem("audit_utm_params");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch { /* ignore */ }
+    }
+  }
   return utmParams;
 };
 
@@ -152,7 +162,7 @@ const AuditFormPage = () => {
 
   const handleBack = () => {
     if (step > 1) setStep(step - 1);
-    else navigate("/audit/ramadan-offer");
+    else navigate("/");
   };
 
   if (isSuccess) {
@@ -167,7 +177,7 @@ const AuditFormPage = () => {
             Tez orada mutaxassisimiz siz bilan bog'lanadi.
           </p>
           <button
-            onClick={() => navigate("/audit/ramadan-offer")}
+            onClick={() => navigate("/")}
             className="mt-4 text-primary font-semibold hover:underline"
           >
             Bosh sahifaga qaytish
@@ -269,7 +279,7 @@ const AuditFormPage = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 container mx-auto px-4 py-8 max-w-lg">
+      <div className="flex-1 container mx-auto px-4 py-8 pb-28 max-w-lg">
         <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6">
           {stepLabels[step]}
         </h2>
@@ -277,8 +287,8 @@ const AuditFormPage = () => {
         {renderStepContent()}
       </div>
 
-      {/* Bottom button */}
-      <div className="border-t border-border/50 bg-background">
+      {/* Fixed bottom button */}
+      <div className="fixed bottom-0 left-0 right-0 border-t border-border/50 bg-background z-40">
         <div className="container mx-auto px-4 py-4 max-w-lg">
           <button
             onClick={handleNext}

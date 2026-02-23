@@ -26,7 +26,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<AuditRamadanOffer />} />
           <Route path="/inventarisation-calc/:variant" element={<InventarisationCalc />} />
           <Route path="/inventarisation-calc/:variant/test" element={<InventarisationCalc isTestMode />} />
           <Route path="/inventarisation-calc/formwall" element={<FormWallCalc />} />

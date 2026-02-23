@@ -14,6 +14,17 @@ const AuditRamadanOffer = () => {
   useEffect(() => {
     fpixel.pageView();
     window.scrollTo(0, 0);
+    // Save UTM params to sessionStorage so the form page can access them
+    const params = new URLSearchParams(window.location.search);
+    const utmParams: Record<string, string> = {};
+    params.forEach((value, key) => {
+      if (key.startsWith("utm_") || key === "fbclid") {
+        utmParams[key] = value;
+      }
+    });
+    if (Object.keys(utmParams).length > 0) {
+      sessionStorage.setItem("audit_utm_params", JSON.stringify(utmParams));
+    }
   }, []);
 
   const goToForm = () => {
