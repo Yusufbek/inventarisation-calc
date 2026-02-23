@@ -150,6 +150,16 @@ const AuditFormPage = () => {
         customData: { content_name: "ramadan-audit" },
       });
 
+      const auditEventId = crypto.randomUUID();
+      fpixel.eventCustom("AuditRegistered", { content_name: "ramadan-audit" }, auditEventId);
+      sendCapiEvent({
+        eventName: "AuditRegistered",
+        eventId: auditEventId,
+        phones: [phone],
+        externalId: getBrowserId(),
+        customData: { content_name: "ramadan-audit" },
+      });
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Audit form submission error:", error);
