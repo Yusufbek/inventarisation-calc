@@ -7,7 +7,7 @@ import { BillzLogo } from "@/components/BillzLogo";
 import * as fpixel from "@/lib/fpixel";
 import { sendCapiEvent, getBrowserId } from "@/lib/capi";
 
-const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/22939f18-3a11-458d-8faf-33d30b92f10d";
+const WEBHOOK_URL = "https://n8n-m2.makebillz.top/webhook/4f02b59c-af4d-48ca-bba3-cfb0313c0a37";
 
 const segmentOptions = [
   "Kiyim do'koni",
