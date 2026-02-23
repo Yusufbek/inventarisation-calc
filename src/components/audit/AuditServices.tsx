@@ -41,8 +41,6 @@ export const AuditServices = ({ onCtaClick }: AuditServicesProps) => {
           </span>
         </div>
 
-        <p className="text-sm text-muted-foreground mb-5 md:mb-6">Ramazon taklifi</p>
-
         <button
           onClick={onCtaClick}
           className="w-full sm:w-auto bg-primary text-primary-foreground font-bold text-base md:text-lg px-6 md:px-8 py-3.5 md:py-4 rounded-full hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all"

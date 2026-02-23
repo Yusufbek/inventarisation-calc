@@ -116,12 +116,19 @@ const AuditFormPage = () => {
     const utmParams = getUtmParams();
     const eventId = crypto.randomUUID();
 
+    const revenueMap: Record<string, string> = {
+      [revenueOptions[0]]: "nano",
+      [revenueOptions[1]]: "micro",
+      [revenueOptions[2]]: "small",
+      [revenueOptions[3]]: "medium",
+    };
+
     const payload = {
       name: name.trim(),
       phone,
       storeName: storeName.trim(),
       storeSegment,
-      dailyRevenue,
+      dailyRevenue: revenueMap[dailyRevenue] || dailyRevenue,
       region,
       type: "ramadan-audit",
       ...utmParams,

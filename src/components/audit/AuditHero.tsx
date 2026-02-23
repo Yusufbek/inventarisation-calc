@@ -1,4 +1,3 @@
-import { BillzLogo } from "@/components/BillzLogo";
 import { Users } from "lucide-react";
 
 interface AuditHeroProps {
@@ -9,10 +8,6 @@ export const AuditHero = ({ onCtaClick }: AuditHeroProps) => {
   return (
     <section className="relative overflow-hidden bg-background pt-4 md:pt-6 pb-8 md:pb-20">
       <div className="container mx-auto px-4">
-        <div className="flex justify-center mb-6 md:mb-8">
-          <BillzLogo />
-        </div>
-
         <div className="flex flex-col md:flex-row items-center gap-6 md:gap-12">
           {/* Left content */}
           <div className="flex-1 text-center md:text-left space-y-4 md:space-y-6">
@@ -22,7 +17,7 @@ export const AuditHero = ({ onCtaClick }: AuditHeroProps) => {
             </h1>
 
             <p className="text-muted-foreground text-sm md:text-lg max-w-lg mx-auto md:mx-0">
-              Biz yashirin yo'qotishlarni aniqlab, foydani oshirish bo'yicha aniq reja taqdim etamiz.
+              Yashirin yo'qotishlarni aniqlab, foydani oshirish rejasini taqdim etamiz.
             </p>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-destructive/10 text-destructive text-xs md:text-sm font-semibold">
@@ -53,7 +48,6 @@ export const AuditHero = ({ onCtaClick }: AuditHeroProps) => {
                 className="w-full h-auto object-cover"
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent" />
             </div>
           </div>
         </div>
