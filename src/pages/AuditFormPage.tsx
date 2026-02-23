@@ -141,20 +141,10 @@ const AuditFormPage = () => {
         body: JSON.stringify(payload),
       });
 
-      fpixel.event("Lead", { content_name: "ramadan-audit" }, eventId);
-      sendCapiEvent({
-        eventName: "Lead",
-        eventId,
-        phones: [phone],
-        externalId: getBrowserId(),
-        customData: { content_name: "ramadan-audit" },
-      });
-
-      const auditEventId = crypto.randomUUID();
-      fpixel.eventCustom("AuditRegistered", { content_name: "ramadan-audit" }, auditEventId);
+      fpixel.eventCustom("AuditRegistered", { content_name: "ramadan-audit" }, eventId);
       sendCapiEvent({
         eventName: "AuditRegistered",
-        eventId: auditEventId,
+        eventId,
         phones: [phone],
         externalId: getBrowserId(),
         customData: { content_name: "ramadan-audit" },
