@@ -10,6 +10,7 @@ import magnetCalcIcon from "@/assets/telegram-bot.webp";
 import healthCalcIcon from "@/assets/health-calc-icon.png";
 import webinarIcon from "/images/webinar/webinar-icon.png";
 import pdfIcon from "/images/pdf-icon.png";
+import auditIcon from "@/assets/audit-icon.png";
 
 export const CalculatorHub = () => {
   const navigate = useNavigate();
@@ -178,6 +179,30 @@ export const CalculatorHub = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   navigate('/webinar/inventarizatsiya-pdf');
+                }}
+              >
+                Boshlash
+              </Button>
+            </div>
+          </Card>
+          <Card 
+            className="overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-primary group flex flex-row items-center mt-3 md:mt-4"
+            onClick={() => navigate('/audit/ramadan-offer')}
+          >
+            <div className="w-24 h-24 md:w-32 md:h-32 flex-shrink-0 overflow-hidden bg-gradient-to-br from-secondary to-background flex items-center justify-center p-4 rounded-lg">
+              <img 
+                src={auditIcon} 
+                alt="Audit Ramadan Offer icon"
+                className="w-full h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
+              />
+            </div>
+            <div className="flex-1 flex items-center justify-between px-4 md:px-6 py-4">
+              <CardTitle className="text-lg md:text-2xl lg:text-3xl">Audit Ramadan Offer</CardTitle>
+              <Button 
+                className="h-10 md:h-12 px-6 md:px-8 text-sm md:text-base"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/audit/ramadan-offer');
                 }}
               >
                 Boshlash
