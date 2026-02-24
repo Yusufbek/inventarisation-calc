@@ -183,12 +183,6 @@ const AuditFormPage = () => {
           <p className="text-muted-foreground">
             Tez orada mutaxassisimiz siz bilan bog'lanadi.
           </p>
-          <button
-            onClick={() => navigate("/")}
-            className="mt-4 text-primary font-semibold hover:underline"
-          >
-            Bosh sahifaga qaytish
-          </button>
         </div>
       </div>
     );
