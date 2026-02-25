@@ -1,23 +1,31 @@
 
 
-# Two Changes: Remove Success Page Link + Add Audit Card to Homepage
+# Filter Ineligible Store Segments in Audit Form
 
-## 1. Remove "Bosh sahifaga qaytish" link from success screen
+## What changes
 
-In `src/pages/AuditFormPage.tsx`, remove the button/link at lines 186-191 that says "Bosh sahifaga qaytish". The success screen will just show the checkmark, confirmation title, and subtitle -- no navigation link.
+When a user completes all 6 steps but their selected store segment is one of the ineligible categories ("Dorixona", "Kafe va restoran", "Ishlab chiqarish"), instead of sending the webhook and showing the success screen, they will see a different message explaining their store type is not eligible for the audit.
 
-## 2. Add Audit Ramadan Offer card to CalculatorHub
+## Technical details
 
-In `src/components/CalculatorHub.tsx`, add a new card under the "Amaliy Qo'llanmalar" section for the Audit Ramadan Offer. The uploaded golden "A" image will be copied to `src/assets/audit-icon.png` and used as the card icon. The card will link to `/audit/ramadan-offer`.
+**File: `src/pages/AuditFormPage.tsx`**
 
-## Technical Details
+1. Define an array of ineligible segments:
+   ```
+   const INELIGIBLE_SEGMENTS = ["Dorixona", "Kafe va restoran", "Ishlab chiqarish"];
+   ```
 
-### Files to modify:
+2. Add a new state `isIneligible` (boolean, default false).
 
-1. **`src/pages/AuditFormPage.tsx`** -- Remove lines 186-191 (the "Bosh sahifaga qaytish" button)
+3. In `handleNext`, when `step === TOTAL_STEPS`:
+   - Check if `storeSegment` is in `INELIGIBLE_SEGMENTS`
+   - If yes: set `isIneligible = true` (no webhook, no pixel events)
+   - If no: call `handleSubmit()` as before
 
-2. **`src/components/CalculatorHub.tsx`** -- Add a new Card after the Inventarizatsiya PDF card, with the audit icon image, title "Audit Ramadan Offer", and a "Boshlash" button linking to `/audit/ramadan-offer`
+4. Add an early return for `isIneligible` state (similar to the success screen) showing:
+   - An `XCircle` or `AlertCircle` icon (from lucide-react)
+   - Title: "Afsuski, sizning do'koningiz audit uchun mos emas"
+   - Subtitle: "Hozircha biz faqat chakana savdo do'konlari uchun audit xizmatini taqdim etamiz."
 
-### New asset:
-- Copy `user-uploads://ChatGPT_Image_24_февр._2026_г._09_57_46.png` to `src/assets/audit-icon.png`
+No webhook call, no pixel event -- just a static rejection screen.
 
