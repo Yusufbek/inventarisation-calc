@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, AlertCircle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { BillzLogo } from "@/components/BillzLogo";
@@ -49,6 +49,8 @@ const regionOptions = [
   "Qoraqalpog'iston",
 ];
 
+const INELIGIBLE_SEGMENTS = ["Dorixona", "Kafe va restoran", "Ishlab chiqarish"];
+
 const TOTAL_STEPS = 6;
 
 const getUtmParams = () => {
@@ -77,6 +79,7 @@ const AuditFormPage = () => {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isIneligible, setIsIneligible] = useState(false);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+998");
@@ -161,7 +164,11 @@ const AuditFormPage = () => {
   const handleNext = () => {
     if (!canProceed()) return;
     if (step === TOTAL_STEPS) {
-      handleSubmit();
+      if (INELIGIBLE_SEGMENTS.includes(storeSegment)) {
+        setIsIneligible(true);
+      } else {
+        handleSubmit();
+      }
     } else {
       setStep(step + 1);
     }
@@ -171,6 +178,22 @@ const AuditFormPage = () => {
     if (step > 1) setStep(step - 1);
     else navigate("/");
   };
+
+  if (isIneligible) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <div className="text-center space-y-4 max-w-md">
+          <AlertCircle className="h-16 w-16 text-destructive mx-auto" />
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+            Afsuski, sizning do'koningiz audit uchun mos emas
+          </h2>
+          <p className="text-muted-foreground">
+            Hozircha biz faqat chakana savdo do'konlari uchun audit xizmatini taqdim etamiz.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isSuccess) {
     return (
